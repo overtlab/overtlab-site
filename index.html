@@ -5,28 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Overt Lab — Investigative Design Studio</title>
 <meta name="description" content="Overt Lab maps structures of public power using publicly available data. All relevant data is public. Contemporary power operates overtly.">
+<meta property="og:title" content="Overt Lab" />
+<meta property="og:description" content="Investigative design studio. We assemble publicly available signals into spatial and structural evidence." />
+<meta property="og:type" content="website" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
-  --ink:    #0d0d0d;
-  --ink-2:  #3a3a3a;
-  --ink-3:  #8a8a8a;
-  --ink-4:  #b8b8b8;
-  --paper:  #f5f4f0;
-  --paper-2:#eeede9;
-  --rule:   #d4d3cf;
-  --red:    #b83225;
-  --blue:   #1a3f7a;
+  --ink:    #0e1a1f;
+  --ink-2:  #3a4a52;
+  --ink-3:  #8a9aa2;
+  --ink-4:  #b8c4c8;
+  --paper:  #f4f3ef;
+  --rule:   #dddbd5;
+  --red:    #b8321e;
   --mono:   'DM Mono', 'Courier New', monospace;
   --sans:   'DM Sans', system-ui, sans-serif;
-  --col-w:  1200px;
 }
 
-html { font-size: 15px; scroll-behavior: smooth; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
 body {
   background: var(--paper);
   color: var(--ink);
@@ -37,394 +38,319 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── NAV ── */
+/* NAV */
 nav {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  padding: 28px 56px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 48px;
-  height: 52px;
-  border-bottom: 1px solid var(--rule);
-  position: sticky; top: 0;
-  background: rgba(245,244,240,0.97);
-  backdrop-filter: blur(12px);
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(244,243,239,0.95);
+  backdrop-filter: blur(10px);
   z-index: 100;
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s;
 }
+nav.scrolled { border-color: var(--rule); }
 .nav-logo {
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .22em;
+  font-size: 12px;
+  letter-spacing: .14em;
   color: var(--ink);
+  font-weight: 500;
   text-decoration: none;
   text-transform: uppercase;
 }
-.nav-center {
+.nav-logo span { color: var(--ink-3); }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .25em;
-  color: var(--ink-3);
-  text-transform: uppercase;
-  text-align: center;
-}
-.nav-right {
-  display: flex;
-  justify-content: flex-end;
-  gap: 32px;
-  list-style: none;
-}
-.nav-right a {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .2em;
+  font-size: 10px;
+  letter-spacing: .16em;
   color: var(--ink-3);
   text-decoration: none;
   text-transform: uppercase;
-  transition: color .12s;
+  transition: color .15s;
 }
-.nav-right a:hover { color: var(--ink); }
+.nav-links a:hover { color: var(--ink); }
 
-/* ── HERO ── */
-.hero {
-  max-width: var(--col-w);
-  margin: 0 auto;
-  width: 100%;
-  padding: 96px 48px 80px;
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 96px;
-  align-items: end;
-  border-bottom: 1px solid var(--rule);
-}
-.hero-kicker {
+/* HERO */
+.hero { padding: 200px 56px 160px; max-width: 900px; }
+.hero-label {
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .28em;
+  font-size: 10px;
+  letter-spacing: .24em;
   color: var(--ink-3);
   text-transform: uppercase;
-  margin-bottom: 32px;
+  margin-bottom: 48px;
   display: flex;
   align-items: center;
   gap: 14px;
 }
-.hero-kicker::before {
+.hero-label::before {
   content: '';
   display: block;
   width: 24px;
   height: 1px;
   background: var(--ink-3);
 }
-h1 {
-  font-family: var(--sans);
-  font-size: clamp(40px, 4.5vw, 66px);
-  font-weight: 300;
+.hero-title {
+  font-size: clamp(42px, 6vw, 80px);
   line-height: 1.06;
-  letter-spacing: -.025em;
+  letter-spacing: -.03em;
+  font-weight: 200;
   color: var(--ink);
-  margin-bottom: 40px;
+  margin-bottom: 56px;
 }
-h1 strong {
-  font-weight: 400;
-}
+.hero-title strong { font-weight: 400; }
+.hero-title em { font-style: normal; color: var(--ink-3); }
 .hero-body {
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.85;
   color: var(--ink-2);
   font-weight: 300;
-  max-width: 440px;
-}
-.hero-right {
+  max-width: 560px;
   border-left: 1px solid var(--rule);
-  padding-left: 48px;
-}
-.axiom {
-  padding: 22px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.axiom:last-child { border-bottom: none; padding-bottom: 0; }
-.axiom-label {
-  font-family: var(--mono);
-  font-size: 8.5px;
-  letter-spacing: .24em;
-  color: var(--ink-4);
-  text-transform: uppercase;
-  margin-bottom: 9px;
-}
-.axiom-text {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--ink-2);
-  font-weight: 300;
+  padding-left: 28px;
 }
 
-/* ── TICKER ── */
-.ticker-wrap {
-  background: var(--ink);
-  overflow: hidden;
+/* TICKER */
+.ticker {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
   padding: 11px 0;
-  border-bottom: 1px solid #222;
+  overflow: hidden;
+  background: var(--ink);
 }
-.ticker-track {
+.ticker-inner {
   display: flex;
   animation: ticker 40s linear infinite;
   white-space: nowrap;
 }
 .ticker-item {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 9.5px;
   letter-spacing: .2em;
-  color: rgba(245,244,240,0.45);
-  padding: 0 44px;
+  color: rgba(244,243,239,0.38);
+  padding: 0 48px;
   flex-shrink: 0;
 }
-.ticker-item b { color: rgba(245,244,240,0.9); font-weight: 500; margin-right: 8px; }
-@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.ticker-item strong { color: rgba(244,243,239,0.85); margin-right: 10px; }
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
-/* ── INVESTIGATIONS INDEX ── */
-.investigations {
-  max-width: var(--col-w);
-  margin: 0 auto;
-  width: 100%;
-  padding: 0 48px;
-}
-.inv-header {
-  display: grid;
-  grid-template-columns: 60px 1fr 160px 160px;
-  gap: 0;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--ink);
-  margin-bottom: 0;
-}
-.inv-header-cell {
+/* INVESTIGATIONS */
+.investigations { padding: 120px 56px; border-bottom: 1px solid var(--rule); }
+.section-eyebrow {
   font-family: var(--mono);
-  font-size: 8.5px;
-  letter-spacing: .22em;
+  font-size: 10px;
+  letter-spacing: .24em;
   color: var(--ink-3);
   text-transform: uppercase;
+  margin-bottom: 64px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--ink-3);
+}
+.inv-table { width: 100%; border-top: 1px solid var(--rule); }
 .inv-row {
   display: grid;
-  grid-template-columns: 60px 1fr 160px 160px;
-  gap: 0;
+  grid-template-columns: 48px 1fr 180px 100px 32px;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 0;
   border-bottom: 1px solid var(--rule);
   text-decoration: none;
   color: inherit;
   transition: background .12s;
-  position: relative;
 }
-.inv-row:hover { background: var(--paper-2); }
-.inv-row-n {
+.inv-row:hover { background: rgba(14,26,31,.03); }
+.inv-row:hover .inv-arrow { opacity: 1; transform: translate(3px,-3px); }
+.inv-row:hover .inv-title { color: var(--ink); }
+.inv-n {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10px;
+  letter-spacing: .18em;
   color: var(--ink-4);
-  padding: 32px 0;
-  display: flex;
-  align-items: flex-start;
-  padding-top: 34px;
-}
-.inv-row-main {
-  padding: 32px 48px 32px 0;
-  border-left: none;
+  padding-left: 4px;
 }
 .inv-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 8.5px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.status-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.inv-title {
-  font-size: 22px;
-  font-weight: 300;
-  line-height: 1.2;
-  letter-spacing: -.015em;
-  color: var(--ink);
-  margin-bottom: 10px;
-}
-.inv-subtitle {
   font-family: var(--mono);
   font-size: 9px;
-  letter-spacing: .16em;
-  color: var(--ink-3);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-.inv-desc {
-  font-size: 13.5px;
-  line-height: 1.75;
-  color: var(--ink-2);
-  font-weight: 300;
-  max-width: 580px;
-}
-.inv-row-meta {
-  padding: 34px 24px 32px;
-  border-left: 1px solid var(--rule);
-}
-.inv-meta-label {
-  font-family: var(--mono);
-  font-size: 8px;
   letter-spacing: .2em;
-  color: var(--ink-4);
-  text-transform: uppercase;
-  margin-bottom: 4px;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
 }
-.inv-meta-val {
+.inv-status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.inv-title {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--ink-2);
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  transition: color .12s;
+}
+.inv-tags {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  color: var(--ink-4);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+.inv-meta {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: var(--ink-3);
+  line-height: 2;
+}
+.inv-meta strong { color: var(--ink-2); font-weight: 500; }
+.inv-year {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-.inv-meta-val:last-child { margin-bottom: 0; }
-.inv-row-status {
-  padding: 34px 0 32px 32px;
-  border-left: 1px solid var(--rule);
+  letter-spacing: .1em;
+  color: var(--ink-4);
 }
 .inv-arrow {
   font-size: 16px;
-  color: var(--ink-4);
-  transition: transform .15s, color .15s;
-  margin-top: 2px;
-  display: block;
-}
-.inv-row:hover .inv-arrow { color: var(--ink); transform: translate(3px,-3px); }
-
-/* upcoming row */
-.inv-upcoming {
-  display: grid;
-  grid-template-columns: 60px 1fr 160px 160px;
-  border-bottom: 1px solid var(--rule);
-  padding: 28px 0;
-  opacity: .45;
-}
-.inv-upcoming-n {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink-4);
-}
-.inv-upcoming-text {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .2em;
   color: var(--ink-3);
+  opacity: 0;
+  transition: opacity .12s, transform .15s;
+}
+.inv-row-placeholder {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: center;
+}
+.inv-placeholder-n {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--ink-4);
+  padding-left: 4px;
+}
+.inv-placeholder-text {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  color: var(--ink-4);
   text-transform: uppercase;
-  padding-top: 2px;
 }
 
-/* ── METHODOLOGY ── */
+/* METHODOLOGY */
 .methodology {
-  max-width: var(--col-w);
-  margin: 0 auto;
-  width: 100%;
-  padding: 80px 48px;
-  border-top: 1px solid var(--rule);
+  padding: 120px 56px;
+  border-bottom: 1px solid var(--rule);
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: 80px;
   align-items: start;
 }
-.method-sticky-label {
+.methodology-label {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: .24em;
   color: var(--ink-3);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   position: sticky;
-  top: 72px;
+  top: 100px;
 }
-.method-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border-top: 1px solid var(--rule);
+.methodology-label::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--ink-3);
 }
 .method-item {
-  padding: 36px 40px 36px 0;
+  padding: 36px 0;
   border-bottom: 1px solid var(--rule);
-  border-right: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 32px;
+  align-items: start;
 }
-.method-item:nth-child(even) { padding-right: 0; padding-left: 40px; border-right: none; }
-.method-item:nth-child(3),
-.method-item:nth-child(4) { border-bottom: none; }
+.method-item:first-child { padding-top: 0; border-top: 1px solid var(--rule); }
 .method-n {
   font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .2em;
+  font-size: 10px;
+  letter-spacing: .18em;
   color: var(--ink-4);
-  margin-bottom: 12px;
+  padding-top: 3px;
 }
 .method-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--ink);
   margin-bottom: 10px;
   letter-spacing: -.01em;
 }
-.method-body {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--ink-2);
+.method-text {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--ink-3);
   font-weight: 300;
 }
 
-/* ── FOOTER ── */
+/* FOOTER */
 footer {
   margin-top: auto;
   border-top: 1px solid var(--rule);
-  padding: 24px 48px;
+  padding: 28px 56px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
-.footer-l {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .18em;
-  color: var(--ink-3);
-  text-transform: uppercase;
-}
-.footer-r {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .15em;
-  color: var(--ink-4);
-  text-transform: uppercase;
-}
+.footer-l { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--ink-3); }
+.footer-l strong { color: var(--ink); }
+.footer-r { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; color: var(--ink-4); text-transform: uppercase; }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-  nav { padding: 0 20px; grid-template-columns: 1fr 1fr; }
-  .nav-center { display: none; }
-  .hero { grid-template-columns: 1fr; padding: 56px 20px 48px; gap: 48px; }
-  .hero-right { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 32px; }
-  .investigations { padding: 0 20px; }
-  .inv-header, .inv-row, .inv-upcoming { grid-template-columns: 40px 1fr; }
-  .inv-header-cell:nth-child(3), .inv-header-cell:nth-child(4),
-  .inv-row-meta, .inv-row-status,
-  .inv-upcoming > *:nth-child(3), .inv-upcoming > *:nth-child(4) { display: none; }
-  .methodology { grid-template-columns: 1fr; padding: 48px 20px; gap: 24px; }
-  .method-sticky-label { position: static; }
-  .method-grid { grid-template-columns: 1fr; }
-  .method-item { border-right: none; padding-left: 0 !important; padding-right: 0 !important; }
-  .method-item:nth-child(3) { border-bottom: 1px solid var(--rule); }
-  footer { padding: 20px; }
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  nav { padding: 20px 24px; }
+  .hero { padding: 140px 24px 100px; }
+  .investigations, .methodology { padding: 80px 24px; }
+  .methodology { grid-template-columns: 1fr; gap: 40px; }
+  .methodology-label { position: static; }
+  .inv-row { grid-template-columns: 36px 1fr; gap: 20px; }
+  .inv-meta, .inv-year, .inv-arrow { display: none; }
+  footer { padding: 24px; }
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="/">Overt Lab</a>
-  <div class="nav-center">Investigative Design Studio</div>
-  <ul class="nav-right">
+<nav id="nav">
+  <a class="nav-logo" href="/">Overt<span>Lab</span></a>
+  <ul class="nav-links">
     <li><a href="#investigations">Investigations</a></li>
     <li><a href="#methodology">Methodology</a></li>
     <li><a href="mailto:hello@overtlab.org">Contact</a></li>
@@ -432,116 +358,109 @@ footer {
 </nav>
 
 <section class="hero">
-  <div class="hero-left">
-    <div class="hero-kicker">Montréal, Canada — Est. 2024</div>
-    <h1>All relevant<br>data is <strong>public.</strong><br>Power operates<br>overtly.</h1>
-    <p class="hero-body">Overt Lab assembles publicly available signals into spatial and structural evidence. We map systems of power — financial, military, extractive, infrastructural — and let people draw their own conclusions.</p>
-  </div>
-  <div class="hero-right">
-    <div class="axiom">
-      <div class="axiom-label">01 — Premise</div>
-      <div class="axiom-text">Contemporary power does not hide. It files permits, publishes annual reports, registers subsidiaries, and tenders contracts. The record is public. The assembly is the work.</div>
-    </div>
-    <div class="axiom">
-      <div class="axiom-label">02 — Method</div>
-      <div class="axiom-text">We collect, cross-reference, and spatialize data from government filings, corporate disclosures, international registers, and verified journalism. Nothing in our work is speculative.</div>
-    </div>
-    <div class="axiom">
-      <div class="axiom-label">03 — Position</div>
-      <div class="axiom-text">Not accusatory. Not activist. Not sensational. We map structures and let people draw conclusions.</div>
-    </div>
-  </div>
+  <div class="hero-label">Investigative Design Studio</div>
+  <h1 class="hero-title">
+    All relevant<br>
+    data is <strong>public.</strong><br>
+    <em>Power operates<br>overtly.</em>
+  </h1>
+  <p class="hero-body">
+    Overt Lab assembles publicly available signals into spatial and structural evidence. We map systems of power — financial, military, extractive, infrastructural — and let people draw their own conclusions.
+  </p>
 </section>
 
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <span class="ticker-item"><b>$2.504B CAD</b> Canadian Military Exports 2024</span>
-    <span class="ticker-item"><b>51.7%</b> Share destined Saudi Arabia</span>
-    <span class="ticker-item"><b>63 units</b> LAVs shipped to Saudi Arabia 2024</span>
-    <span class="ticker-item"><b>$416.7M</b> Exports to Ukraine 2023</span>
-    <span class="ticker-item"><b>$30.6M</b> Record Israel exports 2023</span>
-    <span class="ticker-item"><b>61+</b> Canadian LAVs destroyed in Yemen</span>
-    <span class="ticker-item"><b>Source</b> Global Affairs Canada · RCAM · Public Record</span>
-    <span class="ticker-item"><b>$2.504B CAD</b> Canadian Military Exports 2024</span>
-    <span class="ticker-item"><b>51.7%</b> Share destined Saudi Arabia</span>
-    <span class="ticker-item"><b>63 units</b> LAVs shipped to Saudi Arabia 2024</span>
-    <span class="ticker-item"><b>$416.7M</b> Exports to Ukraine 2023</span>
-    <span class="ticker-item"><b>$30.6M</b> Record Israel exports 2023</span>
-    <span class="ticker-item"><b>61+</b> Canadian LAVs destroyed in Yemen</span>
-    <span class="ticker-item"><b>Source</b> Global Affairs Canada · RCAM · Public Record</span>
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item"><strong>$2.504B CAD</strong> Canadian Military Exports 2024</span>
+    <span class="ticker-item"><strong>51.7%</strong> Share Destined Saudi Arabia</span>
+    <span class="ticker-item"><strong>63 Units</strong> LAVs Shipped 2024</span>
+    <span class="ticker-item"><strong>$416.7M</strong> Exports to Ukraine 2023</span>
+    <span class="ticker-item"><strong>$30.6M</strong> Record Israel Exports 2023</span>
+    <span class="ticker-item"><strong>61+</strong> Canadian LAVs Destroyed in Yemen</span>
+    <span class="ticker-item"><strong>Source</strong> Global Affairs Canada · RCAM · Public Record</span>
+    <span class="ticker-item"><strong>$2.504B CAD</strong> Canadian Military Exports 2024</span>
+    <span class="ticker-item"><strong>51.7%</strong> Share Destined Saudi Arabia</span>
+    <span class="ticker-item"><strong>63 Units</strong> LAVs Shipped 2024</span>
+    <span class="ticker-item"><strong>$416.7M</strong> Exports to Ukraine 2023</span>
+    <span class="ticker-item"><strong>$30.6M</strong> Record Israel Exports 2023</span>
+    <span class="ticker-item"><strong>61+</strong> Canadian LAVs Destroyed in Yemen</span>
+    <span class="ticker-item"><strong>Source</strong> Global Affairs Canada · RCAM · Public Record</span>
   </div>
 </div>
 
 <section class="investigations" id="investigations">
-  <div class="inv-header">
-    <div class="inv-header-cell">No.</div>
-    <div class="inv-header-cell">Investigation</div>
-    <div class="inv-header-cell">Dataset</div>
-    <div class="inv-header-cell">Status</div>
-  </div>
+  <div class="section-eyebrow">Investigations</div>
+  <div class="inv-table">
 
-  <a class="inv-row" href="investigations/canadian-arms/">
-    <div class="inv-row-n">001</div>
-    <div class="inv-row-main">
-      <div class="inv-status">
-        <div class="status-dot" style="background:var(--red)"></div>
-        <span style="color:var(--red);font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;">Live</span>
-        <span style="color:var(--ink-3);font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;">— Updated 2024</span>
+    <a class="inv-row" href="investigations/canadian-arms/">
+      <div class="inv-n">001</div>
+      <div class="inv-main">
+        <div class="inv-status"><div class="inv-status-dot"></div>Live</div>
+        <div class="inv-title">Canadian Military Exports — Global Flow Map</div>
+        <div class="inv-tags">Arms Trade · Corporate Network · Known Deployments</div>
       </div>
-      <div class="inv-title">Canadian Military Exports<br>Global Flow Map</div>
-      <div class="inv-subtitle">Arms Trade · Corporate Network · Known Deployments</div>
-      <div class="inv-desc">A structural map of Canadian military exports 2021–2024. Four billion dollars in annual flows. Five corporate exporters. Five conflict zones with documented Canadian equipment. All data sourced from Global Affairs Canada annual reports and parliamentary filings.</div>
-    </div>
-    <div class="inv-row-meta">
-      <div class="inv-meta-label">Dataset</div>
-      <div class="inv-meta-val">2021–2024</div>
-      <div class="inv-meta-label">Destinations</div>
-      <div class="inv-meta-val">20 Countries</div>
-      <div class="inv-meta-label">Source</div>
-      <div class="inv-meta-val">GAC · RCAM</div>
-    </div>
-    <div class="inv-row-status">
-      <span class="inv-arrow">↗</span>
-    </div>
-  </a>
+      <div class="inv-meta">
+        Dataset <strong>2021–2024</strong><br>
+        Destinations <strong>20 Countries</strong><br>
+        Source <strong>GAC · RCAM</strong>
+      </div>
+      <div class="inv-year">2024</div>
+      <div class="inv-arrow">↗</div>
+    </a>
 
-  <div class="inv-upcoming">
-    <div class="inv-upcoming-n">002</div>
-    <div class="inv-upcoming-text">Next investigation — in development</div>
+    <div class="inv-row-placeholder">
+      <div class="inv-placeholder-n">002</div>
+      <div class="inv-placeholder-text">Next investigation — in development</div>
+    </div>
+
   </div>
-
 </section>
 
 <section class="methodology" id="methodology">
-  <div class="method-sticky-label">Methodology</div>
-  <div class="method-grid">
+  <div class="methodology-label">Methodology</div>
+  <div class="method-list">
     <div class="method-item">
       <div class="method-n">01</div>
-      <div class="method-title">Source Primacy</div>
-      <div class="method-body">Every data point traces to a primary source — government filings, statutory reports, UN registers, corporate disclosures. Secondary sources are used only to interpret or contextualize primary data.</div>
+      <div class="method-body">
+        <div class="method-title">Source Primacy</div>
+        <div class="method-text">Every data point traces to a primary source — government filings, statutory reports, UN registers, corporate disclosures. Secondary sources are used only to interpret or contextualize primary data.</div>
+      </div>
     </div>
     <div class="method-item">
       <div class="method-n">02</div>
-      <div class="method-title">Structural Evidence</div>
-      <div class="method-body">We document relationships between entities — financial, contractual, geographic, temporal. We do not speculate about intent. Structure is the evidence.</div>
+      <div class="method-body">
+        <div class="method-title">Structural Evidence</div>
+        <div class="method-text">We document relationships between entities — financial, contractual, geographic, temporal. We do not speculate about intent. Structure is the evidence.</div>
+      </div>
     </div>
     <div class="method-item">
       <div class="method-n">03</div>
-      <div class="method-title">Spatial Reasoning</div>
-      <div class="method-body">Data is rendered spatially wherever meaningful. Geography, network topology, and temporal sequence reveal patterns that tabular data obscures.</div>
+      <div class="method-body">
+        <div class="method-title">Spatial Reasoning</div>
+        <div class="method-text">Data is rendered spatially wherever meaningful. Geography, network topology, and temporal sequence reveal patterns that tabular data obscures.</div>
+      </div>
     </div>
     <div class="method-item">
       <div class="method-n">04</div>
-      <div class="method-title">Open Sources Only</div>
-      <div class="method-body">Overt Lab does not use leaked documents, anonymous sources, or non-public information. If it cannot be verified from public record, it does not appear in our work.</div>
+      <div class="method-body">
+        <div class="method-title">Open Sources Only</div>
+        <div class="method-text">Overt Lab does not use leaked documents, anonymous sources, or non-public information. If it cannot be verified from public record, it does not appear in our work.</div>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-l">Overt Lab — Investigative Design Studio — Montréal</div>
-  <div class="footer-r">All relevant data is public · Power operates overtly</div>
+  <div class="footer-l"><strong>Overt Lab</strong> — Investigative Design Studio</div>
+  <div class="footer-r">All relevant data is public · Contemporary power operates overtly</div>
 </footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+</script>
 
 </body>
 </html>
