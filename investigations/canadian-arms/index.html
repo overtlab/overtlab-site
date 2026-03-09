@@ -409,85 +409,89 @@ const TYPE_COLOR = {"Ground Vehicles":"#1a6040","Small Arms":"#b83225","Aircraft
 // All URLs use the correct MD5-hashed Wikimedia Commons thumbnail path.
 // Hash algorithm: md5(filename), take first 1 and 2 hex chars as directory prefix.
 // All filenames confirmed from Commons category listings.
-const LAV_MAIN   = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg";
-const LAV_LATVIA = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg";
-const APACHE     = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/AH-64_Apache_Iraq.jpg/560px-AH-64_Apache_Iraq.jpg";
-const ASLAV      = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/ASLAV_Disrupt.jpg/560px-ASLAV_Disrupt.jpg";
-const BASTILLE   = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Bastille_Day_2008_n3.jpg/560px-Bastille_Day_2008_n3.jpg";
+// Self-hosted images — committed to repo at investigations/canadian-arms/img/
+// Downloaded from Wikimedia Commons (public domain / CC licensed)
+const IMGS = {
+  LAV_MAIN:   "img/lav-main.jpg",
+  LAV_NATO:   "img/lav-nato.jpg",
+  APACHE:     "img/apache.jpg",
+  ASLAV:      "img/aslav.jpg",
+  BASTILLE:   "img/bastille.jpg"
+};
 
 const DEST_IMAGES = {
   "Saudi Arabia": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "GDLS-C LAV III on public display — the exact platform delivered to Saudi Arabia under the $15B contract. 61+ confirmed destroyed in Yemen.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Ukraine": {
-    url: LAV_LATVIA,
+    articleKey: "LAV_NATO",
     caption: "Canadian LAV III on NATO deployment. Canada supplied $416.7M in ACVs to Ukraine in 2023, plus 8 Leopard 2 tanks and C7/C8 rifles.",
     credit: "NATO / Public Domain"
   },
   "Germany": {
-    url: LAV_LATVIA,
+    articleKey: "LAV_NATO",
     caption: "Canadian LAV III on NATO deployment in Latvia, 2019. Germany received $221.6M in Canadian armoured vehicles in 2022 — record since reunification.",
     credit: "NATO / Public Domain"
   },
   "United Kingdom": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "GDLS-C LAV III. UK MoD is a multiyear CAE customer for simulation and training. Britain also receives Canadian aerospace technology.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Israel": {
-    url: APACHE,
+    articleKey: "APACHE",
     caption: "AH-64 Apache attack helicopter — CAE Inc. simulators trained IAF pilots on this platform. Permits to Israel suspended Jan 8, 2024.",
     credit: "US DoD / Public Domain"
   },
   "Qatar": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Qatar received $49M (2022), $73M (2023), $65M (2024) in Canadian simulation systems from CAE Inc., Saint-Laurent, QC. Freedom House: Not Free.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Australia": {
-    url: ASLAV,
+    articleKey: "ASLAV",
     caption: "Australian ASLAV — the LAV III derivative operated by Australia. Five Eyes partner and consistent Canadian military technology customer.",
     credit: "Australian Dept. of Defence / Public Domain"
   },
   "Poland": {
-    url: LAV_LATVIA,
+    articleKey: "LAV_NATO",
     caption: "NATO armoured forces on eastern flank deployment. Poland received $60M+ in Canadian ground vehicles as NATO rearming accelerated post-2022.",
     credit: "NATO / Public Domain"
   },
   "France": {
-    url: BASTILLE,
+    articleKey: "BASTILLE",
     caption: "French military parade, Paris. France receives Canadian aerospace technology and components under NATO cooperation agreements.",
     credit: "Eutouring / CC BY-SA 3.0"
   },
   "UAE": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Streit Group (Ontario-owned, UAE-manufactured) exports armoured vehicles to UAE, circumventing Canadian export permit requirements.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Algeria": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Algeria: Freedom House Not Free. Received Canadian mixed military exports 2021–2024 despite documented human rights concerns.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Chad": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Chad: Freedom House Not Free. Received Canadian small arms. Sahel conflict context — one of the world's most fragile states.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Turkey": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Turkish Armed Forces. Canadian exports suspended after drone-component controversy, then resumed 2024 under Notice No. 1108.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Netherlands": {
-    url: LAV_LATVIA,
+    articleKey: "LAV_NATO",
     caption: "NATO deployment, Latvia. Netherlands received $18M in Canadian technology exports in 2024.",
     credit: "NATO / Public Domain"
   },
   "South Korea": {
-    url: LAV_MAIN,
+    articleKey: "LAV_MAIN",
     caption: "Republic of Korea. Indo-Pacific partner. $12M in Canadian technology exports in 2024.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
@@ -678,7 +682,8 @@ function buildFlows(){
     const col=TYPE_COLOR[d.mainType]||"#666",sw=Math.max(0.7,d.share*14),alpha=Math.max(0.1,Math.min(0.6,0.07+d.share));
     const p=document.createElementNS(NS,"path");
     p.setAttribute("class","arc");p.setAttribute("d",arcD(ca.x,ca.y,dc.x,dc.y));
-    p.setAttribute("stroke",col);p.setAttribute("stroke-width",sw);p.setAttribute("stroke-opacity",alpha);
+    p.setAttribute("stroke",col);p.setAttribute("stroke-width","0.6");p.setAttribute("stroke-opacity","0");
+    p.setAttribute("stroke-dasharray","2 5");p.setAttribute("stroke-linecap","round");
     p.dataset.dest=d.name;al.appendChild(p);
   });
   data.destinations.forEach(d=>{
@@ -701,6 +706,16 @@ function buildFlows(){
     }
     g.addEventListener("mouseenter",()=>onHover(d.name));
     g.addEventListener("mouseleave",()=>onLeave());
+    g.addEventListener("click",()=>{
+      if(lockedCountry===d.name){ lockedCountry=null; onLeave(); }
+      else {
+        lockedCountry=d.name;
+        showPanel(d.name);
+        document.querySelectorAll("#arc-layer path").forEach(p=>{
+          p.setAttribute("stroke-opacity", p.dataset.dest===d.name ? "0.55" : "0");
+        });
+      }
+    });
     nl.appendChild(g);
   });
   const cg=document.createElementNS(NS,"g");
@@ -722,10 +737,9 @@ function renderPanel(name, imgUrl, imgCaption, imgCredit) {
   const d = MAP_DATA[activeYear].destinations.find(x=>x.name===name); if(!d) return;
   const imgHtml = imgUrl ? `
     <div style="margin-bottom:14px;">
-      <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--paper-2);overflow:hidden;">
-        <img id="panel-img-${name.replace(/\s/g,'_')}" src="${imgUrl}" alt="${name}"
-          style="width:100%;height:100%;display:block;object-fit:cover;"
-          onerror="this.style.opacity=0;this.parentNode.dataset.failed=1">
+      <div style="width:100%;aspect-ratio:16/9;background:var(--paper-2);overflow:hidden;">
+        <img src="${imgUrl}" alt="${name}" style="width:100%;height:100%;object-fit:cover;display:block;"
+          onerror="this.parentNode.style.display='none'">
       </div>
       <div style="padding:6px 0 4px;font-size:9px;line-height:1.6;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;">${imgCaption}</div>
       <div style="font-size:8px;color:var(--ink-4);font-family:var(--mono);letter-spacing:.1em;padding-bottom:12px;border-bottom:1px solid var(--rule);">${imgCredit}</div>
@@ -738,26 +752,29 @@ function renderPanel(name, imgUrl, imgCaption, imgCredit) {
     "<div class='d-note'>"+d.note+"</div>";
 }
 
+let lockedCountry = null;
 function onHover(name){
   const d=MAP_DATA[activeYear].destinations.find(x=>x.name===name);if(!d)return;
   document.querySelectorAll("#arc-layer path").forEach(p=>{
     const isThis=p.dataset.dest===name;
-    p.setAttribute("stroke-opacity",isThis?"0.9":"0.03");
-    p.setAttribute("stroke-width",isThis?Math.max(2,d.share*14):"0.4");
+    p.setAttribute("stroke-opacity",isThis?"0.55":"0");
+    p.setAttribute("stroke-width","0.6");
   });
-
-  const img = DEST_IMAGES[name];
-  // Show panel immediately with image (or skeleton)
-  renderPanel(name, img ? img.url : null, img ? img.caption : '', img ? img.credit : '');
+  if(!lockedCountry){ showPanel(name); }
+}
+function showPanel(name){
+  const imgMeta = DEST_IMAGES[name];
+  const url = imgMeta && imgMeta.articleKey ? IMGS[imgMeta.articleKey] : null;
+  renderPanel(name, url, imgMeta ? imgMeta.caption||'' : '', imgMeta ? imgMeta.credit||'' : '');
 }
 function onLeave(){
-  const data=MAP_DATA[activeYear];
   document.querySelectorAll("#arc-layer path").forEach(p=>{
-    const d=data.destinations.find(x=>x.name===p.dataset.dest);if(!d)return;
-    p.setAttribute("stroke-opacity",Math.max(0.1,Math.min(0.6,0.07+d.share)));
-    p.setAttribute("stroke-width",Math.max(0.7,d.share*14));
+    const isLocked = lockedCountry && p.dataset.dest===lockedCountry;
+    p.setAttribute("stroke-opacity", isLocked ? "0.55" : "0");
   });
-  document.getElementById("map-detail").innerHTML="<div class='sp-empty'>Hover a destination<br>to see detail.</div>";
+  if(!lockedCountry){
+    document.getElementById("map-detail").innerHTML="<div class='sp-empty'>Hover or click a destination<br>to see detail.</div>";
+  }
 }
 function setYear(yr){
   activeYear=yr;
