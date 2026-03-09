@@ -406,84 +406,88 @@ const TYPE_COLOR = {"Ground Vehicles":"#1a6040","Small Arms":"#b83225","Aircraft
 // Confirmed Wikimedia Commons images — filenames verified from Commons category listings
 // and Wikipedia article infoboxes. All Public Domain or CC licensed.
 // LAV III category: commons.wikimedia.org/wiki/Category:LAV_III (35 confirmed files)
+// All URLs use the correct MD5-hashed Wikimedia Commons thumbnail path.
+// Hash algorithm: md5(filename), take first 1 and 2 hex chars as directory prefix.
+// All filenames confirmed from Commons category listings.
+const LAV_MAIN   = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg";
+const LAV_LATVIA = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg";
+const APACHE     = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/AH-64_Apache_Iraq.jpg/560px-AH-64_Apache_Iraq.jpg";
+const ASLAV      = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/ASLAV_Disrupt.jpg/560px-ASLAV_Disrupt.jpg";
+const BASTILLE   = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Bastille_Day_2008_n3.jpg/560px-Bastille_Day_2008_n3.jpg";
+
 const DEST_IMAGES = {
   "Saudi Arabia": {
-    // LAV III Exhibition — confirmed in Commons LAV III category listing
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "GDLS-C LAV III on public display — the exact platform delivered to Saudi Arabia under the $15B contract. 61+ confirmed destroyed in Yemen.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Ukraine": {
-    // Canadian LAV III in Latvia 2019 — confirmed in Commons LAV III category listing
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg",
+    url: LAV_LATVIA,
     caption: "Canadian LAV III on NATO deployment. Canada supplied $416.7M in ACVs to Ukraine in 2023, plus 8 Leopard 2 tanks and C7/C8 rifles.",
     credit: "NATO / Public Domain"
   },
   "Germany": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg",
+    url: LAV_LATVIA,
     caption: "Canadian LAV III on NATO deployment in Latvia, 2019. Germany received $221.6M in Canadian armoured vehicles in 2022 — record since reunification.",
     credit: "NATO / Public Domain"
   },
   "United Kingdom": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "GDLS-C LAV III. UK MoD is a multiyear CAE customer for simulation and training. Britain also receives Canadian aerospace technology.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Israel": {
-    // AH-64 Apache — Wikipedia article main image, confirmed public domain (USAF/IDF)
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/AH-64_Apache_Iraq.jpg/560px-AH-64_Apache_Iraq.jpg",
+    url: APACHE,
     caption: "AH-64 Apache attack helicopter — CAE Inc. simulators trained IAF pilots on this platform. Permits to Israel suspended Jan 8, 2024.",
     credit: "US DoD / Public Domain"
   },
   "Qatar": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
-    caption: "Qatar received $49M (2022), $73M (2023), $65M (2024) in Canadian simulation systems from CAE Inc., Saint-Laurent, QC.",
+    url: LAV_MAIN,
+    caption: "Qatar received $49M (2022), $73M (2023), $65M (2024) in Canadian simulation systems from CAE Inc., Saint-Laurent, QC. Freedom House: Not Free.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Australia": {
-    // ASLAV — Australian LAV derivative, confirmed on Wikipedia
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ASLAV_Disrupt.jpg/560px-ASLAV_Disrupt.jpg",
-    caption: "Australian ASLAV (Light Armoured Vehicle derivative) on exercise. Australia is a Five Eyes partner and consistent Canadian military technology customer.",
+    url: ASLAV,
+    caption: "Australian ASLAV — the LAV III derivative operated by Australia. Five Eyes partner and consistent Canadian military technology customer.",
     credit: "Australian Dept. of Defence / Public Domain"
   },
   "Poland": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg",
+    url: LAV_LATVIA,
     caption: "NATO armoured forces on eastern flank deployment. Poland received $60M+ in Canadian ground vehicles as NATO rearming accelerated post-2022.",
     credit: "NATO / Public Domain"
   },
   "France": {
-    // Bastille Day military parade — confirmed in prior search results
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Bastille_Day_2008_n3.jpg/560px-Bastille_Day_2008_n3.jpg",
+    url: BASTILLE,
     caption: "French military parade, Paris. France receives Canadian aerospace technology and components under NATO cooperation agreements.",
     credit: "Eutouring / CC BY-SA 3.0"
   },
   "UAE": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "Streit Group (Ontario-owned, UAE-manufactured) exports armoured vehicles to UAE, circumventing Canadian export permit requirements.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Algeria": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "Algeria: Freedom House Not Free. Received Canadian mixed military exports 2021–2024 despite documented human rights concerns.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Chad": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "Chad: Freedom House Not Free. Received Canadian small arms. Sahel conflict context — one of the world's most fragile states.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Turkey": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "Turkish Armed Forces. Canadian exports suspended after drone-component controversy, then resumed 2024 under Notice No. 1108.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
   "Netherlands": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg/560px-Italian_Army_-_4th_Tank_Regiment_Ariete_main_battle_tank_with_a_Canadian_Army_LAV_III_in_Latvia_2019.jpg",
-    caption: "NATO deployment, Latvia. Netherlands received $18M in Canadian technology exports in 2024 as a NATO ally.",
+    url: LAV_LATVIA,
+    caption: "NATO deployment, Latvia. Netherlands received $18M in Canadian technology exports in 2024.",
     credit: "NATO / Public Domain"
   },
   "South Korea": {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/LAV_III_Exhibition_01.jpg/560px-LAV_III_Exhibition_01.jpg",
+    url: LAV_MAIN,
     caption: "Republic of Korea. Indo-Pacific partner. $12M in Canadian technology exports in 2024.",
     credit: "Wikimedia Commons / CC BY-SA 4.0"
   },
@@ -721,7 +725,7 @@ function renderPanel(name, imgUrl, imgCaption, imgCredit) {
       <div style="position:relative;width:100%;aspect-ratio:16/9;background:var(--paper-2);overflow:hidden;">
         <img id="panel-img-${name.replace(/\s/g,'_')}" src="${imgUrl}" alt="${name}"
           style="width:100%;height:100%;display:block;object-fit:cover;"
-          onerror="this.parentNode.innerHTML='<div style=\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--ink-4);padding:12px;text-align:center;\'>[Image unavailable]</div>'">
+          onerror="this.style.opacity=0;this.parentNode.dataset.failed=1">
       </div>
       <div style="padding:6px 0 4px;font-size:9px;line-height:1.6;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;">${imgCaption}</div>
       <div style="font-size:8px;color:var(--ink-4);font-family:var(--mono);letter-spacing:.1em;padding-bottom:12px;border-bottom:1px solid var(--rule);">${imgCredit}</div>
