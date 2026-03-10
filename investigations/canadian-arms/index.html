@@ -6,23 +6,24 @@
 <title>Overt Lab — Canadian Military Exports</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/favicon-180.png">  
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="/favicon-180.png">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --ink:#0d0d0d;--ink-2:#3a3a3a;--ink-3:#7a7a7a;--ink-4:#b0b0b0;
-  --paper:#f5f4f0;--paper-2:#eeecea;--rule:#d4d3cf;--rule-2:#e5e4e0;
-  --ocean:#cfd8e3;--land:#d6d2c8;--land-b:#b8b4aa;
-  --red:#b83225;--blue:#1a3f7a;--green:#1a6040;--amber:#8a5200;
-  --mono:"DM Mono","Courier New",monospace;--sans:"DM Sans",system-ui,sans-serif;
+  --bg:#ffffff;--bg-2:#f7f7f5;
+  --ink:#0d0f0e;--ink-2:#3a3c3a;--ink-3:#8a8880;--ink-4:#c8c6c0;
+  --paper:#ffffff;--paper-2:#f7f7f5;--rule:#e4e4e0;--rule-2:#efefed;
+  --ocean:#d4dce8;--land:#e0ddd8;--land-b:#c8c4bc;
+  --yellow:#f5c800;--red:#b83225;--blue:#1a3f7a;--green:#1a6040;--amber:#8a5200;
+  --mono:'Courier New',Courier,monospace;--sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 html,body{height:100%;overflow:hidden;}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
 #hdr{flex-shrink:0;height:46px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;border-bottom:1px solid var(--rule);padding:0 0 0 20px;background:var(--paper);}
-.hdr-logo{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink);text-decoration:none;text-transform:uppercase;}
+.hdr-logo{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.hdr-logo-box{background:var(--ink);padding:4px 7px 3px;display:inline-flex;align-items:center;}
+.hdr-logo-box span{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--yellow);text-transform:uppercase;line-height:1;}
+.hdr-logo-box span em{font-style:normal;color:#ffffff;}
 .hdr-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--ink-3);text-transform:uppercase;padding-left:20px;}
 .hdr-right{font-family:var(--mono);font-size:8px;letter-spacing:.15em;color:var(--ink-4);padding:0 18px;border-left:1px solid var(--rule);height:100%;display:flex;align-items:center;gap:16px;flex-shrink:0;}
 .hdr-right strong{color:var(--ink);}
@@ -125,7 +126,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 </head>
 <body>
 <div id="hdr">
-  <a class="hdr-logo" href="/">Overt Lab</a>
+  <a class="hdr-logo" href="/"><div class="hdr-logo-box"><span>Overt<em>Lab</em></span></div></a>
   <div class="hdr-title">&#8212; Canadian Military Exports, 2021&#8211;2024</div>
   <div class="hdr-right">
     <span>Year: <strong id="hdr-yr">2023</strong></span>
@@ -703,7 +704,7 @@ function buildFlows(){
     if(d.share>0.014){
       const t=document.createElementNS(NS,"text");
       t.setAttribute("y",r+10);t.setAttribute("text-anchor","middle");
-      t.setAttribute("font-family","DM Mono,Courier New,monospace");
+      t.setAttribute("font-family","Courier New,Courier,monospace");
       t.setAttribute("font-size","7.5");t.setAttribute("fill","#2a2a2a");t.setAttribute("pointer-events","none");
       t.textContent=d.name;g.appendChild(t);
     }
@@ -731,7 +732,7 @@ function buildFlows(){
   const ct=document.createElementNS(NS,"text");
   ct.setAttribute("x",COORDS["Canada"].x);ct.setAttribute("y",COORDS["Canada"].y-11);
   ct.setAttribute("text-anchor","middle");ct.setAttribute("font-size","8");
-  ct.setAttribute("font-family","DM Mono,Courier New,monospace");
+  ct.setAttribute("font-family","Courier New,Courier,monospace");
   ct.setAttribute("font-weight","500");ct.setAttribute("fill","#0d0d0d");ct.textContent="CANADA";
   cg.appendChild(ct);nl.appendChild(cg);
 }
