@@ -10,18 +10,18 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#ffffff;--bg-2:#f7f7f5;
-  --ink:#0d0f0e;--ink-2:#3a3c3a;--ink-3:#8a8880;--ink-4:#c8c6c0;
-  --paper:#ffffff;--paper-2:#f7f7f5;--rule:#e4e4e0;--rule-2:#efefed;
-  --ocean:#d4dce8;--land:#e0ddd8;--land-b:#c8c4bc;
-  --yellow:#f5c800;--red:#b83225;--blue:#1a3f7a;--green:#1a6040;--amber:#8a5200;
+  --bg:#0d0f0e;--bg-2:#141614;
+  --ink:#f0ede6;--ink-2:#c8c4bc;--ink-3:#8a8880;--ink-4:#4a4840;
+  --paper:#0d0f0e;--paper-2:#141614;--rule:#242622;--rule-2:#1c1e1c;
+  --ocean:#0a0e12;--land:#1e2018;--land-b:#2a2c24;
+  --yellow:#f5c800;--red:#c0392b;--blue:#3a6fba;--green:#2a8050;--amber:#a06820;
   --mono:'Courier New',Courier,monospace;--sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
 }
 html,body{height:100%;overflow:hidden;}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
 #hdr{flex-shrink:0;height:46px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;border-bottom:1px solid var(--rule);padding:0 0 0 20px;background:var(--paper);}
 .hdr-logo{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0;}
-.hdr-logo-box{background:var(--ink);padding:4px 7px 3px;display:inline-flex;align-items:center;}
+.hdr-logo-box{background:#0d0f0e;padding:4px 7px 3px;display:inline-flex;align-items:center;}
 .hdr-logo-box span{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--yellow);text-transform:uppercase;line-height:1;}
 .hdr-logo-box span em{font-style:normal;color:#ffffff;}
 .hdr-title{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--ink-3);text-transform:uppercase;padding-left:20px;}
@@ -29,38 +29,53 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .hdr-right strong{color:var(--ink);}
 .blink{animation:blink 3s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-#tabs{flex-shrink:0;display:flex;border-bottom:1px solid var(--ink);background:var(--paper);}
+#tabs{flex-shrink:0;display:flex;border-bottom:1px solid var(--rule);background:var(--paper);}
 .tab{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;padding:10px 20px;border:none;border-right:1px solid var(--rule);background:transparent;color:var(--ink-3);cursor:pointer;text-transform:uppercase;transition:all .12s;}
-.tab:hover{color:var(--ink);background:var(--paper-2);}
-.tab.active{background:var(--ink);color:var(--paper);}
+.tab:hover{color:var(--ink);background:var(--bg-2);}
+.tab.active{background:var(--yellow);color:#0d0f0e;border-color:var(--yellow);}
 #main{flex:1;position:relative;overflow:hidden;}
 .view{position:absolute;inset:0;display:none;}
 .view.active{display:flex;}
 #view-map{flex-direction:row;}
-#map-area{flex:1;position:relative;overflow:hidden;background:var(--ocean);}
+#map-area{flex:1;position:relative;overflow:hidden;background:var(--ocean);cursor:grab;}
 #world-svg{width:100%;height:100%;display:block;}
-.country{fill:var(--land);stroke:var(--land-b);stroke-width:0.4;transition:fill .1s;}
-.country.dest{fill:#c8c4b8;}
-.country.origin{fill:#a8a49a;}
+.country{fill:var(--land);stroke:var(--land-b);stroke-width:0.4;transition:fill 0.4s, stroke 0.3s, stroke-width 0.3s;}
+.country.dest{fill:#252e20;stroke:#3a4030;}
+.country.origin{fill:#2a2c24;stroke:#3a3c30;}
+.country.hovered{stroke:#ffffff !important;stroke-width:0.6 !important;fill:#303828;}
 .arc{fill:none;stroke-linecap:round;transition:stroke-opacity .15s,stroke-width .15s;}
 #year-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:1px;z-index:10;}
-.yr-btn{font-family:var(--mono);font-size:8px;letter-spacing:.15em;padding:5px 14px;border:1px solid rgba(212,211,207,.8);background:rgba(245,244,240,.92);color:var(--ink-3);cursor:pointer;transition:all .12s;text-transform:uppercase;}
+.yr-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;padding:5px 10px;border:1px solid var(--rule);background:rgba(13,15,14,.85);color:var(--ink-3);cursor:pointer;transition:all .12s;text-transform:uppercase;}
 .yr-btn:hover{border-color:var(--ink-3);color:var(--ink);}
-.yr-btn.active{border-color:var(--ink);background:var(--ink);color:var(--paper);}
-#map-legend{position:absolute;bottom:20px;left:16px;z-index:10;background:rgba(245,244,240,.94);border:1px solid var(--rule);padding:10px 14px;}
-.leg-row{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;}
+.yr-btn.active{border-color:var(--yellow);background:var(--yellow);color:#0d0f0e;}
+#play-btn{font-family:var(--mono);font-size:11px;padding:5px 11px;border:1px solid var(--rule);background:rgba(13,15,14,.85);color:var(--ink-3);cursor:pointer;transition:all .12s;line-height:1;}
+#play-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+#play-btn.playing{color:var(--yellow);border-color:var(--yellow);}
+#zoom-controls{position:absolute;top:12px;right:16px;z-index:20;display:flex;flex-direction:column;gap:1px;}
+.zoom-btn{font-family:var(--mono);font-size:14px;width:28px;height:28px;border:1px solid var(--rule);background:rgba(13,15,14,.88);color:var(--ink-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;line-height:1;user-select:none;}
+.zoom-btn:hover{background:#242622;color:var(--ink);}
+.zoom-btn:active{background:#2a2c2a;}
+#zoom-reset{font-size:8px;letter-spacing:.1em;}
+.leg-row{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;cursor:pointer;padding:3px 5px;border:1px solid transparent;transition:border-color .15s,color .15s;}
 .leg-row:last-child{margin-bottom:0;}
+.leg-row:hover{color:var(--ink);border-color:var(--rule);}
+.leg-row.active{color:var(--ink);border-color:var(--ink-3);}
+.leg-row span:first-of-type{flex:1;}
+.leg-val{color:var(--yellow);font-size:7.5px;letter-spacing:.08em;white-space:nowrap;}
+#leg-reset{display:none;margin-top:8px;padding-top:7px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--ink-3);cursor:pointer;text-align:center;}
+#leg-reset:hover{color:var(--ink);}
 .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-#map-totals{position:absolute;bottom:20px;right:16px;z-index:10;background:rgba(245,244,240,.94);border:1px solid var(--rule);padding:10px 16px;text-align:right;}
+#map-totals{position:absolute;bottom:20px;right:16px;z-index:10;background:rgba(13,15,14,.92);border:1px solid var(--rule);padding:10px 16px;text-align:right;}
+#map-legend{position:absolute;bottom:20px;left:16px;z-index:10;background:rgba(13,15,14,.92);border:1px solid var(--rule);padding:10px 14px;}
 .t-label{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:var(--ink-4);text-transform:uppercase;margin-bottom:2px;}
-.t-val{font-family:var(--mono);font-size:19px;color:var(--red);letter-spacing:.02em;line-height:1.1;}
-.t-sub{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--ink-4);margin-top:3px;}
-#side-panel{width:256px;flex-shrink:0;border-left:1px solid var(--rule);display:flex;flex-direction:column;background:var(--paper);}
+.t-val{font-family:var(--mono);font-size:19px;color:var(--yellow);letter-spacing:.02em;line-height:1.1;transition:opacity 0.3s;}
+.t-sub{font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--ink-4);margin-top:3px;transition:opacity 0.3s;}
+#side-panel{width:256px;flex-shrink:0;border-left:1px solid var(--rule);display:flex;flex-direction:column;background:var(--bg-2);}
 .sp-label{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--ink-4);text-transform:uppercase;padding:12px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;}
 .sp-body{flex:1;overflow-y:auto;padding:16px;}
 .sp-empty{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--ink-4);line-height:2;}
 .detail-name{font-size:18px;font-weight:300;color:var(--ink);margin-bottom:14px;line-height:1.2;}
-.d-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--rule-2);font-family:var(--mono);font-size:9px;}
+.d-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:9px;}
 .d-lbl{color:var(--ink-4);letter-spacing:.14em;text-transform:uppercase;}
 .d-val{color:var(--ink);font-weight:500;}
 .d-val.red{color:var(--red);}
@@ -68,27 +83,27 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .d-note{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);font-size:12px;line-height:1.75;color:var(--ink-2);font-weight:300;}
 .scroll-view{overflow:hidden;}
 .sv-inner{flex:1;overflow-y:auto;}
-.sv-panel{width:256px;flex-shrink:0;border-left:1px solid var(--rule);overflow-y:auto;padding:16px;font-size:12px;line-height:1.8;color:var(--ink-2);font-weight:300;}
+.sv-panel{width:256px;flex-shrink:0;border-left:1px solid var(--rule);overflow-y:auto;padding:16px;font-size:12px;line-height:1.8;color:var(--ink-2);font-weight:300;background:var(--bg-2);}
 .sv-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--ink-4);text-transform:uppercase;margin-bottom:14px;display:block;}
 .tl-yblock{border-bottom:1px solid var(--rule);}
-.tl-yhead{padding:11px 24px;background:var(--paper-2);border-bottom:1px solid var(--rule-2);display:flex;align-items:baseline;gap:14px;}
+.tl-yhead{padding:11px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:14px;}
 .tl-yn{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--ink);}
 .tl-ytot{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ink-3);}
 .tl-rows{padding:7px 24px 11px;}
 .tl-row{display:flex;align-items:center;gap:10px;padding:3px 0;}
 .tl-name{font-family:var(--mono);font-size:9px;letter-spacing:.05em;width:128px;flex-shrink:0;text-align:right;color:var(--ink-2);}
-.tl-track{flex:1;height:11px;background:var(--rule-2);}
+.tl-track{flex:1;height:11px;background:var(--rule);}
 .tl-fill{height:100%;display:flex;align-items:center;}
 .tl-val{font-family:var(--mono);font-size:7px;color:#fff;padding:0 4px;letter-spacing:.04em;white-space:nowrap;}
 .corp-entry{border-bottom:1px solid var(--rule);}
 .corp-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 24px;cursor:pointer;transition:background .12s;}
-.corp-hdr:hover{background:var(--paper-2);}
+.corp-hdr:hover{background:var(--bg-2);}
 .corp-name{font-size:13.5px;font-weight:400;color:var(--ink);margin-bottom:2px;}
 .corp-hq{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;}
 .corp-tag{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;padding:3px 8px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px;}
-.corp-body{display:none;padding:0 24px 16px;border-top:1px solid var(--rule-2);}
+.corp-body{display:none;padding:0 24px 16px;border-top:1px solid var(--rule);}
 .corp-body.open{display:block;}
-.corp-field{display:flex;gap:14px;padding:6px 0;border-bottom:1px solid var(--rule-2);font-size:12px;line-height:1.65;}
+.corp-field{display:flex;gap:14px;padding:6px 0;border-bottom:1px solid var(--rule);font-size:12px;line-height:1.65;}
 .corp-field:last-of-type{border-bottom:none;}
 .corp-flbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:78px;padding-top:1px;}
 .corp-fval{color:var(--ink-2);font-weight:300;}
@@ -103,12 +118,12 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .ops-period{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;}
 .ops-badge{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;padding:3px 9px;border:1px solid;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
 .ops-body{padding:0 24px 14px;}
-.ops-field{display:flex;gap:14px;padding:7px 0;border-top:1px solid var(--rule-2);font-size:12px;line-height:1.7;}
+.ops-field{display:flex;gap:14px;padding:7px 0;border-top:1px solid var(--rule);font-size:12px;line-height:1.7;}
 .ops-flbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:120px;padding-top:1px;}
 .ops-fval{color:var(--ink-2);font-weight:300;}
 .src-tier{border-bottom:1px solid var(--rule);}
-.src-tier-hdr{padding:10px 24px;background:var(--paper-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;}
-.src-entry{padding:13px 24px;border-bottom:1px solid var(--rule-2);border-left:3px solid transparent;}
+.src-tier-hdr{padding:10px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;}
+.src-entry{padding:13px 24px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;}
 .src-entry:last-child{border-bottom:none;}
 .src-title{font-size:13px;font-weight:400;color:var(--ink);margin-bottom:2px;line-height:1.35;}
 .src-pub{font-family:var(--mono);font-size:7.5px;letter-spacing:.13em;color:var(--ink-4);margin-bottom:5px;text-transform:uppercase;}
@@ -119,15 +134,15 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .src-btn.web:hover{background:var(--blue);color:#fff;}
 .src-btn.pdf{border-color:var(--red);color:var(--red);}
 .src-btn.pdf:hover{background:var(--red);color:#fff;}
-#src-bar{flex-shrink:0;height:21px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;color:var(--ink-4);text-transform:uppercase;background:var(--paper-2);}
-.export-btn{font-family:var(--mono);font-size:8px;letter-spacing:.14em;padding:9px 12px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;width:100%;text-transform:uppercase;transition:all .12s;margin-top:12px;display:block;}
-.export-btn:hover{background:transparent;color:var(--ink);}
+#src-bar{flex-shrink:0;height:21px;border-top:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.15em;color:var(--ink-4);text-transform:uppercase;background:var(--bg-2);}
+.export-btn{font-family:var(--mono);font-size:8px;letter-spacing:.14em;padding:9px 12px;border:1px solid var(--yellow);background:transparent;color:var(--yellow);cursor:pointer;width:100%;text-transform:uppercase;transition:all .12s;margin-top:12px;display:block;}
+.export-btn:hover{background:var(--yellow);color:#0d0f0e;}
 </style>
 </head>
 <body>
 <div id="hdr">
   <a class="hdr-logo" href="/"><div class="hdr-logo-box"><span>Overt<em>Lab</em></span></div></a>
-  <div class="hdr-title">&#8212; Canadian Military Exports, 2021&#8211;2024</div>
+  <div class="hdr-title">&#8212; Canadian Military Exports, 2017&#8211;2024</div>
   <div class="hdr-right">
     <span>Year: <strong id="hdr-yr">2023</strong></span>
     <span><span class="blink">&#9679;</span>&nbsp;Verified</span>
@@ -328,29 +343,42 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 <path id="c728" class="country" d="M551.647,240.561L549.59,238.771L549.026,237.624L547.735,238.193L546.663,238.015L546.04,238.466L545,238.143L543.563,235.921L543.186,235.069L541.434,234.003L540.828,232.386L539.843,231.225L538.261,229.822L538.23,228.947L536.945,227.858L535.351,226.81L536.055,226.514L536.838,226.008L537.394,223.601L538.002,222.352L539.66,221.983L540.076,222.726L541.3,224.294L541.946,224.527L542.77,224.066L544.439,224.157L544.768,224.713L547.077,224.713L547.139,224.157L548.32,223.647L548.543,222.863L549.404,222.307L551.383,223.879L552.577,223.601L553.676,221.659L554.9,220.182L554.661,218.563L554.08,217.774L555.464,217.637L555.603,217.035L556.681,217.222L556.461,219.211L556.801,221.153L558.022,222.215L558.322,223.141L558.316,224.481L558.643,224.536L558.719,226.632L558.388,227.457L557.163,227.521L556.403,229.056L557.835,229.248L559.038,230.56L559.46,231.635L560.532,232.259L561.952,235.187L560.406,236.964L558.996,238.566L557.579,239.805L555.948,239.8L554.08,240.429L552.603,239.828Z"/>
         </g>
         <g id="arc-layer"></g>
+        <g id="outline-layer"></g>
         <g id="node-layer"></g>
         <g id="particle-layer"></g>
       </g>
-      <path fill="none" stroke="#7a8a95" stroke-width="0.8" d="M249.65,32.374L480,32.374L710.35,32.374L729.849,34.352L744.873,37.935L767.536,47.851L785.754,59.61L802.276,72.287L832.211,99.501L856.99,128.663L875.713,158.885L888.574,189.352L896.058,219.724L898.514,250L896.058,280.276L888.574,310.648L875.713,341.115L856.99,371.337L832.211,400.499L802.276,427.713L785.754,440.39L767.536,452.149L744.873,462.065L729.849,465.648L710.35,467.626L480,467.626L249.65,467.626L230.151,465.648L215.127,462.065L192.464,452.149L174.246,440.39L157.724,427.713L127.789,400.499L103.01,371.337L84.287,341.115L71.426,310.648L63.942,280.276L61.486,250L63.942,219.724L71.426,189.352L84.287,158.885L103.01,128.663L127.789,99.501L157.724,72.287L174.246,59.61L192.464,47.851L215.127,37.935L230.151,34.352L249.65,32.374Z"/>
+      <path fill="none" stroke="#1e2420" stroke-width="0.8" d="M249.65,32.374L480,32.374L710.35,32.374L729.849,34.352L744.873,37.935L767.536,47.851L785.754,59.61L802.276,72.287L832.211,99.501L856.99,128.663L875.713,158.885L888.574,189.352L896.058,219.724L898.514,250L896.058,280.276L888.574,310.648L875.713,341.115L856.99,371.337L832.211,400.499L802.276,427.713L785.754,440.39L767.536,452.149L744.873,462.065L729.849,465.648L710.35,467.626L480,467.626L249.65,467.626L230.151,465.648L215.127,462.065L192.464,452.149L174.246,440.39L157.724,427.713L127.789,400.499L103.01,371.337L84.287,341.115L71.426,310.648L63.942,280.276L61.486,250L63.942,219.724L71.426,189.352L84.287,158.885L103.01,128.663L127.789,99.501L157.724,72.287L174.246,59.61L192.464,47.851L215.127,37.935L230.151,34.352L249.65,32.374Z"/>
     </svg>
     <div id="year-bar">
+      <button id="play-btn" title="Play timeline">&#9654;</button>
+      <button class="yr-btn" data-y="2017">2017</button>
+      <button class="yr-btn" data-y="2018">2018</button>
+      <button class="yr-btn" data-y="2019">2019</button>
+      <button class="yr-btn" data-y="2020">2020</button>
       <button class="yr-btn" data-y="2021">2021</button>
       <button class="yr-btn" data-y="2022">2022</button>
-      <button class="yr-btn active" data-y="2023">2023</button>
-      <button class="yr-btn" data-y="2024">2024</button>
+      <button class="yr-btn" data-y="2023">2023</button>
+      <button class="yr-btn active" data-y="2024">2024</button>
+    </div>
+    <div id="zoom-controls">
+      <button class="zoom-btn" id="zoom-in">+</button>
+      <button class="zoom-btn" id="zoom-out">&#8722;</button>
+      <button class="zoom-btn" id="zoom-reset">RST</button>
     </div>
     <div id="map-legend">
-      <div class="leg-row"><div class="leg-dot" style="background:#1a6040"></div>Ground Vehicles</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#b83225"></div>Small Arms</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#1a3f7a"></div>Aircraft / Aerospace</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#8a5200"></div>Technology</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#5a1a70"></div>Explosives</div>
-      <div class="leg-row"><div class="leg-dot" style="background:#1a6a7a"></div>Training</div>
+      <div class="leg-row" data-type="Ground Vehicles"><div class="leg-dot" style="background:#2a9060"></div><span>Ground Vehicles</span><span class="leg-val" id="lv-Ground Vehicles"></span></div>
+      <div class="leg-row" data-type="Small Arms"><div class="leg-dot" style="background:#c0392b"></div><span>Small Arms</span><span class="leg-val" id="lv-Small Arms"></span></div>
+      <div class="leg-row" data-type="Aircraft"><div class="leg-dot" style="background:#3a6fba"></div><span>Aircraft / Aerospace</span><span class="leg-val" id="lv-Aircraft"></span></div>
+      <div class="leg-row" data-type="Technology"><div class="leg-dot" style="background:#c07820"></div><span>Technology</span><span class="leg-val" id="lv-Technology"></span></div>
+      <div class="leg-row" data-type="Explosives"><div class="leg-dot" style="background:#5a1a70"></div><span>Explosives</span><span class="leg-val" id="lv-Explosives"></span></div>
+      <div class="leg-row" data-type="Training"><div class="leg-dot" style="background:#1a6a7a"></div><span>Training</span><span class="leg-val" id="lv-Training"></span></div>
+      <div class="leg-row" data-type="Mixed"><div class="leg-dot" style="background:#7a8a92"></div><span>Mixed</span><span class="leg-val" id="lv-Mixed"></span></div>
+      <div id="leg-reset">× clear filter</div>
     </div>
     <div id="map-totals">
       <div class="t-label">Total non-US exports</div>
-      <div class="t-val" id="total-val">$2.143B CAD</div>
-      <div class="t-sub" id="total-ctx">19 countries &middot; 2023</div>
+      <div class="t-val" id="total-val">$2.504B CAD</div>
+      <div class="t-sub" id="total-ctx">20 countries &middot; 2024</div>
     </div>
   </div>
   <div id="side-panel">
@@ -401,9 +429,131 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 </div>
 <div id="src-bar">RCAM &middot; Global Affairs Canada &middot; Project Ploughshares &middot; All data: public record</div>
 <script>
+// ── PAN / ZOOM ENGINE ─────────────────────────────────────
+const SVG_W = 960, SVG_H = 500;
+let vb = { x: 0, y: 0, w: SVG_W, h: SVG_H }; // current viewBox
+const MIN_ZOOM = 1, MAX_ZOOM = 12;
+let isDragging = false, dragStart = null, vbAtDrag = null;
+
+function getZoom() { return SVG_W / vb.w; }
+function clampVB(v) {
+  const z = SVG_W / v.w;
+  v.w = Math.max(SVG_W / MAX_ZOOM, Math.min(SVG_W, v.w));
+  v.h = Math.max(SVG_H / MAX_ZOOM, Math.min(SVG_H, v.h));
+  v.x = Math.max(0, Math.min(SVG_W - v.w, v.x));
+  v.y = Math.max(0, Math.min(SVG_H - v.h, v.y));
+  return v;
+}
+function applyVB() {
+  const svg = document.getElementById('world-svg');
+  svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+  // Scale labels inversely so they don't grow huge when zoomed in
+  const zoom = SVG_W / vb.w;
+  const labelSize = Math.max(3, 7.5 / zoom);
+  const labelOffset = Math.max(5, (3 + 10) / zoom);
+  document.querySelectorAll('#node-layer text').forEach(t => {
+    t.setAttribute('font-size', labelSize);
+    t.setAttribute('y', labelOffset);
+  });
+}
+function zoomBy(factor, cx, cy) {
+  // cx, cy in SVG coords — zoom toward that point
+  if (cx === undefined) { cx = vb.x + vb.w / 2; cy = vb.y + vb.h / 2; }
+  const newW = vb.w / factor, newH = vb.h / factor;
+  vb.x = cx - (cx - vb.x) / factor;
+  vb.y = cy - (cy - vb.y) / factor;
+  vb.w = newW; vb.h = newH;
+  vb = clampVB(vb);
+  applyVB();
+}
+function resetZoom() {
+  vb = { x: 0, y: 0, w: SVG_W, h: SVG_H };
+  applyVB();
+}
+function svgPoint(el, clientX, clientY) {
+  const rect = el.getBoundingClientRect();
+  return {
+    x: vb.x + (clientX - rect.left) / rect.width  * vb.w,
+    y: vb.y + (clientY - rect.top)  / rect.height * vb.h
+  };
+}
+
+// Scroll to zoom
+document.getElementById('map-area').addEventListener('wheel', e => {
+  e.preventDefault();
+  const svg = document.getElementById('world-svg');
+  const pt = svgPoint(svg, e.clientX, e.clientY);
+  const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  zoomBy(factor, pt.x, pt.y);
+}, { passive: false });
+
+// Drag to pan
+document.getElementById('map-area').addEventListener('mousedown', e => {
+  if (e.button !== 0) return;
+  isDragging = true;
+  dragStart = { x: e.clientX, y: e.clientY };
+  vbAtDrag = { ...vb };
+  document.getElementById('map-area').style.cursor = 'grabbing';
+});
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  const svg = document.getElementById('world-svg');
+  const rect = svg.getBoundingClientRect();
+  const dx = -(e.clientX - dragStart.x) / rect.width  * vb.w;
+  const dy = -(e.clientY - dragStart.y) / rect.height * vb.h;
+  vb.x = vbAtDrag.x + dx;
+  vb.y = vbAtDrag.y + dy;
+  vb = clampVB(vb);
+  applyVB();
+});
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  document.getElementById('map-area').style.cursor = '';
+});
+
+// Touch pinch + drag
+let lastTouches = null;
+document.getElementById('map-area').addEventListener('touchstart', e => {
+  lastTouches = e.touches;
+  if (e.touches.length === 1) {
+    isDragging = true;
+    dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    vbAtDrag = { ...vb };
+  }
+}, { passive: true });
+document.getElementById('map-area').addEventListener('touchmove', e => {
+  e.preventDefault();
+  const svg = document.getElementById('world-svg');
+  if (e.touches.length === 2) {
+    // Pinch zoom
+    const t = e.touches;
+    const newDist = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    const oldDist = Math.hypot(lastTouches[0].clientX - lastTouches[1].clientX, lastTouches[0].clientY - lastTouches[1].clientY);
+    const midX = (t[0].clientX + t[1].clientX) / 2;
+    const midY = (t[0].clientY + t[1].clientY) / 2;
+    const pt = svgPoint(svg, midX, midY);
+    zoomBy(newDist / oldDist, pt.x, pt.y);
+    lastTouches = t;
+  } else if (e.touches.length === 1 && isDragging) {
+    const rect = svg.getBoundingClientRect();
+    const dx = -(e.touches[0].clientX - dragStart.x) / rect.width  * vb.w;
+    const dy = -(e.touches[0].clientY - dragStart.y) / rect.height * vb.h;
+    vb.x = vbAtDrag.x + dx;
+    vb.y = vbAtDrag.y + dy;
+    vb = clampVB(vb);
+    applyVB();
+  }
+}, { passive: false });
+document.getElementById('map-area').addEventListener('touchend', () => { isDragging = false; });
+
+// Button controls
+document.getElementById('zoom-in') .addEventListener('click', () => zoomBy(1.5));
+document.getElementById('zoom-out').addEventListener('click', () => zoomBy(1 / 1.5));
+document.getElementById('zoom-reset').addEventListener('click', resetZoom);
+// ─────────────────────────────────────────────────────────
 const COORDS = {"Saudi Arabia":{"x":581.8,"y":185.3},"Ukraine":{"x":545.6,"y":118.1},"Germany":{"x":501.2,"y":112.4},"United Kingdom":{"x":476,"y":105.2},"Qatar":{"x":595.5,"y":181.8},"Israel":{"x":557.1,"y":165},"Australia":{"x":782.4,"y":317.4},"Poland":{"x":520.3,"y":110.3},"France":{"x":484.8,"y":125.5},"UAE":{"x":602.2,"y":185.3},"Algeria":{"x":486.7,"y":174.5},"Netherlands":{"x":490.6,"y":109.3},"Turkey":{"x":555.8,"y":144.7},"South Korea":{"x":758.1,"y":151.5},"Chad":{"x":523,"y":208.3},"Canada":{"x":297.2,"y":90.2}};
-const DEST_IDS = {"Saudi Arabia":"682","Ukraine":"804","Germany":"276","United Kingdom":"826","Qatar":"634","Israel":"376","Australia":"36","Poland":"616","France":"250","UAE":"784","Algeria":"12","Netherlands":"528","Turkey":"792","South Korea":"410","Chad":"148","Canada":"124"};
-const TYPE_COLOR = {"Ground Vehicles":"#1a6040","Small Arms":"#b83225","Aircraft":"#1a3f7a","Technology":"#8a5200","Explosives":"#5a1a70","Training":"#1a6a7a","Mixed":"#4a5a62"};
+const DEST_IDS = {"Saudi Arabia":"682","Ukraine":"804","Germany":"276","United Kingdom":"826","Qatar":"634","Israel":"376","Australia":"036","Poland":"616","France":"250","UAE":"784","Algeria":"012","Netherlands":"528","Turkey":"792","South Korea":"410","Chad":"148","Canada":"124"};
+const TYPE_COLOR = {"Ground Vehicles":"#2a9060","Small Arms":"#c0392b","Aircraft":"#3a6fba","Technology":"#c07820","Explosives":"#8a2a90","Training":"#2a8a9a","Mixed":"#7a8a92"};
 
 // Images: Wikimedia Commons public domain / CC licensed
 // Showing Canadian equipment confirmed in use or exported to each destination
@@ -505,9 +655,58 @@ const DEST_IMAGES = {
 const _imgCache = {};
 
 function destClass(n){return["Saudi Arabia","Israel","Qatar","UAE","Algeria","Chad"].includes(n)?"red":["Ukraine","Germany","United Kingdom","Poland","France","Australia","Netherlands","Turkey","South Korea"].includes(n)?"blue":"amber";}
-const TLC={red:"#b83225",blue:"#1a3f7a",amber:"#8a5200"};
+const TLC={red:"#c0392b",blue:"#3a6fba",amber:"#c07820"};
 
 const MAP_DATA={
+ 2017:{total:"$1.031B CAD",countries:15,destinations:[
+  {name:"Saudi Arabia",val:497.5,mainType:"Ground Vehicles",note:"48.25% of non-US total. LAV 700 deliveries begin under 2014 contract. Federal Court confirmed permit legality Jan 2017.",share:.4825},
+  {name:"Australia",val:115.8,mainType:"Technology",note:"Five Eyes partner. Second largest non-US destination in 2016 report cycle.",share:.112},
+  {name:"United Kingdom",val:89.5,mainType:"Technology",note:"NATO ally. Second largest 2017. Aerospace and technology exports.",share:.0868},
+  {name:"Germany",val:45,mainType:"Ground Vehicles",note:"NATO ally. Steady armoured vehicle customer.",share:.044},
+  {name:"Turkey",val:38,mainType:"Mixed",note:"NATO ally. Exports suspended Oct 2019 after Syria incursion.",share:.037},
+  {name:"France",val:32,mainType:"Technology",note:"NATO ally.",share:.031},
+  {name:"Netherlands",val:22,mainType:"Technology",note:"NATO ally.",share:.021},
+  {name:"UAE",val:18,mainType:"Mixed",note:"Freedom House: Not Free.",share:.017},
+  {name:"Israel",val:14,mainType:"Aircraft",note:"Pre-Oct 7. Aerospace components.",share:.014},
+  {name:"South Korea",val:12,mainType:"Technology",note:"Indo-Pacific partner.",share:.012},
+ ]},
+ 2018:{total:"$2.069B CAD",countries:16,destinations:[
+  {name:"Saudi Arabia",val:1282,mainType:"Ground Vehicles",note:"61.96% of non-US total. Record LAV deliveries. Review announced Oct 2018 after Khashoggi murder — no new permits issued from Oct 2018.",share:.6196},
+  {name:"Belgium",val:153.9,mainType:"Ground Vehicles",note:"Second largest. LAVs fitted with John Cockerill turrets, then transshipped to France to train Saudi security forces. Amnesty International documented Saudi training use.",share:.0744},
+  {name:"United Kingdom",val:76.8,mainType:"Technology",note:"NATO ally.",share:.037},
+  {name:"France",val:64.2,mainType:"Technology",note:"NATO ally.",share:.031},
+  {name:"Germany",val:42,mainType:"Ground Vehicles",note:"NATO ally.",share:.020},
+  {name:"Turkey",val:35,mainType:"Mixed",note:"NATO ally.",share:.017},
+  {name:"Spain",val:28,mainType:"Mixed",note:"NATO ally.",share:.014},
+  {name:"Italy",val:22,mainType:"Technology",note:"NATO ally.",share:.011},
+  {name:"Australia",val:20,mainType:"Technology",note:"Five Eyes.",share:.010},
+  {name:"UAE",val:15,mainType:"Mixed",note:"Freedom House: Not Free.",share:.007},
+ ]},
+ 2019:{total:"$3.770B CAD",countries:18,destinations:[
+  {name:"Saudi Arabia",val:2864,mainType:"Ground Vehicles",note:"76% of non-US total — record. 183 ACVs per UNROCA. Permit review ongoing but pre-existing permits not revoked. LAV deliveries continued despite freeze on new permits.",share:.76},
+  {name:"Belgium",val:151.7,mainType:"Ground Vehicles",note:"LAVs for Saudi training in France. When combined with direct Saudi exports, total Saudi-bound LAV exports exceed $3B in 2019.",share:.040},
+  {name:"Turkey",val:151.4,mainType:"Mixed",note:"Exports suspended Oct 2019 after Turkish military action in northeastern Syria.",share:.040},
+  {name:"United Kingdom",val:116,mainType:"Technology",note:"NATO ally. 54% increase from 2018.",share:.031},
+  {name:"Singapore",val:39.8,mainType:"Technology",note:"Asia-Pacific defence relationship.",share:.011},
+  {name:"Japan",val:36,mainType:"Technology",note:"Indo-Pacific partner.",share:.010},
+  {name:"UAE",val:36.6,mainType:"Mixed",note:"Freedom House: Not Free. Active in Yemen coalition.",share:.010},
+  {name:"Germany",val:38.9,mainType:"Ground Vehicles",note:"NATO ally.",share:.010},
+  {name:"Australia",val:61.3,mainType:"Technology",note:"Five Eyes partner.",share:.016},
+  {name:"Spain",val:24.5,mainType:"Mixed",note:"NATO ally.",share:.0065},
+  {name:"France",val:20.3,mainType:"Technology",note:"Decline from $64.2M in 2018.",share:.0054},
+ ]},
+ 2020:{total:"$1.966B CAD",countries:17,destinations:[
+  {name:"Saudi Arabia",val:1310,mainType:"Ground Vehicles",note:"66.6% of non-US total. $1.05B USD. Permit freeze lifted April 2020 — government found 'no substantial risk'. UN Experts on Yemen named Canada as conflict-fuelling supplier same year.",share:.666},
+  {name:"Germany",val:110,mainType:"Ground Vehicles",note:"NATO ally. Post-COVID baseline.",share:.056},
+  {name:"United Kingdom",val:95,mainType:"Technology",note:"NATO ally.",share:.048},
+  {name:"Australia",val:55,mainType:"Technology",note:"Five Eyes.",share:.028},
+  {name:"Turkey",val:28,mainType:"Mixed",note:"Resumed exports. Presumption of denial for Group 2 items unless exceptional circumstances.",share:.014},
+  {name:"France",val:25,mainType:"Technology",note:"NATO ally.",share:.013},
+  {name:"Israel",val:22,mainType:"Aircraft",note:"Pre-Oct 7. Aerospace components.",share:.011},
+  {name:"UAE",val:18,mainType:"Mixed",note:"Freedom House: Not Free. Yemen coalition.",share:.009},
+  {name:"Algeria",val:15,mainType:"Mixed",note:"Freedom House: Not Free.",share:.0076},
+  {name:"Qatar",val:14,mainType:"Training",note:"CAE simulation contracts beginning to grow.",share:.0071},
+ ]},
  2021:{total:"$2.0B CAD",countries:18,destinations:[
   {name:"Saudi Arabia",val:1742,mainType:"Ground Vehicles",note:"652 LAVs cumulative since 2017. GDLS-C LAV 700. Ongoing 2014 contract.",share:.87},
   {name:"Germany",val:110,mainType:"Ground Vehicles",note:"NATO ally. Growing armoured vehicle customer.",share:.055},
@@ -561,24 +760,24 @@ const MAP_DATA={
 };
 
 const CORP_DATA=[
- {name:"General Dynamics Land Systems-Canada",hq:"London, Ontario",type:"Prime Contractor",tc:"#b83225",contracts:"$15B CAD (2014 Saudi contract); $2.9B (2009); 2,500+ LAVs to Saudi Arabia since 1993.",products:"LAV 700, LAV 6, LAV 25, Bison APC, LAV III",clients:"Saudi Arabia (SANG, Royal Guard), Ukraine (2022-24), Canadian Armed Forces",crown:"Canadian Commercial Corporation (federal crown) is legal prime contractor.",finance:"Export Development Canada provided $650M loan Sept 2019 after Saudi Arabia missed $1.5B USD in payments.",ops:[
+ {name:"General Dynamics Land Systems-Canada",hq:"London, Ontario",type:"Prime Contractor",tc:"#c0392b",contracts:"$15B CAD (2014 Saudi contract); $2.9B (2009); 2,500+ LAVs to Saudi Arabia since 1993.",products:"LAV 700, LAV 6, LAV 25, Bison APC, LAV III",clients:"Saudi Arabia (SANG, Royal Guard), Ukraine (2022-24), Canadian Armed Forces",crown:"Canadian Commercial Corporation (federal crown) is legal prime contractor.",finance:"Export Development Canada provided $650M loan Sept 2019 after Saudi Arabia missed $1.5B USD in payments.",ops:[
   {title:"Confirmed — Yemen (2015-Present)",cls:"red",txt:"61+ LAV-25s destroyed/captured per Lost Armour database. Urgent permits approved July 2015, four months after war began."},
   {title:"Confirmed — Bahrain (2011)",cls:"red",txt:"Canadian-made LAVs deployed by Saudi National Guard to suppress civilian protests."},
   {title:"Authorized — Ukraine (2022-2024)",cls:"blue",txt:"$416.7M in ACVs 2023. 8 Leopard 2 tanks donated. Additional military aid via DND outside RCAM reporting."},
  ]},
- {name:"CAE Inc.",hq:"Saint-Laurent, Quebec",type:"Simulation & Training",tc:"#1a3f7a",contracts:"Multiyear deals: Saudi Arabia, Qatar, Israel IAF, UK MoD, NATO. C$100M+ military contracts 2013 alone.",products:"Full-motion flight simulators, mission training systems, UAS operator training",clients:"Saudi Arabia, Qatar ($49-73M/yr), Israeli Air Force, UK MoD, NATO, 45+ locations",crown:"Publicly traded: TSX/NYSE CAE. No crown involvement.",finance:"Annual revenue ~$2.4B CAD. Defence ~40% of total.",ops:[
+ {name:"CAE Inc.",hq:"Saint-Laurent, Quebec",type:"Simulation & Training",tc:"#3a6fba",contracts:"Multiyear deals: Saudi Arabia, Qatar, Israel IAF, UK MoD, NATO. C$100M+ military contracts 2013 alone.",products:"Full-motion flight simulators, mission training systems, UAS operator training",clients:"Saudi Arabia, Qatar ($49-73M/yr), Israeli Air Force, UK MoD, NATO, 45+ locations",crown:"Publicly traded: TSX/NYSE CAE. No crown involvement.",finance:"Annual revenue ~$2.4B CAD. Defence ~40% of total.",ops:[
   {title:"Confirmed — Israel / Gaza Context",cls:"red",txt:"CAE simulators trained IAF pilots on helicopters deployed in 2008-09 Gaza operation."},
   {title:"Documented — Qatar (Ongoing)",cls:"blue",txt:"$49M (2022), $73M (2023), $65M (2024). Qatar: Freedom House Not Free."},
  ]},
- {name:"PGW Defence Technologies",hq:"Winnipeg, Manitoba",type:"Small Arms",tc:"#8a5200",contracts:"Canadian Forces C14 Timberwolf. Saudi Arabia 5,000 rifles 2016-2019. Ukraine $770K USD (2018).",products:"C14 Timberwolf (.338 Lapua), LRT-3 (.50 BMG)",clients:"Canadian Forces, Saudi Royal Land Force, UAE, Ukrainian Ground Forces, UK SAS",crown:"Private. Now largely wound down.",finance:"Peak ~$12.5M+/yr revenue during Saudi contracts.",ops:[
+ {name:"PGW Defence Technologies",hq:"Winnipeg, Manitoba",type:"Small Arms",tc:"#c07820",contracts:"Canadian Forces C14 Timberwolf. Saudi Arabia 5,000 rifles 2016-2019. Ukraine $770K USD (2018).",products:"C14 Timberwolf (.338 Lapua), LRT-3 (.50 BMG)",clients:"Canadian Forces, Saudi Royal Land Force, UAE, Ukrainian Ground Forces, UK SAS",crown:"Private. Now largely wound down.",finance:"Peak ~$12.5M+/yr revenue during Saudi contracts.",ops:[
   {title:"Confirmed — Yemen Diversion (2016)",cls:"red",txt:"LRT-3 rifles sold to Saudi Arabia appeared in Houthi hands within months."},
   {title:"Authorized — Ukraine (2018-2022)",cls:"blue",txt:"$770K LRT-3 contract to Ukrainian Ground Forces 2018. Confirmed in use by Ukrainian snipers."},
  ]},
- {name:"Streit Group",hq:"Ontario / UAE (manufacturing)",type:"Armoured Vehicles",tc:"#b83225",contracts:"Vehicles to 100+ countries via UAE base. Circumvents Canadian export permit requirements.",products:"Spartan APC, bulletproof vehicles, armoured personnel carriers",clients:"Saudi Arabia, UAE, Yemeni government forces, Sudan, Libya (under Canadian sanctions)",crown:"Private. UAE base used to bypass Canadian export controls.",finance:"9M sq ft UAE industrial park. Tripled during Yemen war.",ops:[
+ {name:"Streit Group",hq:"Ontario / UAE (manufacturing)",type:"Armoured Vehicles",tc:"#c0392b",contracts:"Vehicles to 100+ countries via UAE base. Circumvents Canadian export permit requirements.",products:"Spartan APC, bulletproof vehicles, armoured personnel carriers",clients:"Saudi Arabia, UAE, Yemeni government forces, Sudan, Libya (under Canadian sanctions)",crown:"Private. UAE base used to bypass Canadian export controls.",finance:"9M sq ft UAE industrial park. Tripled during Yemen war.",ops:[
   {title:"Confirmed — Yemen (2015-Present)",cls:"red",txt:"Dozens of Streit Spartan APCs destroyed in Yemen 2020 alone."},
   {title:"Confirmed — Sanctions Circumvention",cls:"red",txt:"Sales to Sudan and Libya — both under Canadian sanctions. U.S. fined Streit 2015."},
  ]},
- {name:"Colt Canada (Diemaco)",hq:"Kitchener, Ontario",type:"Small Arms",tc:"#8a5200",contracts:"Primary C7/C8 supplier to Canadian Forces and NATO allies.",products:"C7 rifle (5.56mm), C8 carbine, C9 LMG",clients:"Canadian Forces, Netherlands, Denmark, Norway, UK, Germany, Ukraine",crown:"Private (subsidiary Colt's Manufacturing Co.).",finance:"Major NATO small arms supplier.",ops:[
+ {name:"Colt Canada (Diemaco)",hq:"Kitchener, Ontario",type:"Small Arms",tc:"#c07820",contracts:"Primary C7/C8 supplier to Canadian Forces and NATO allies.",products:"C7 rifle (5.56mm), C8 carbine, C9 LMG",clients:"Canadian Forces, Netherlands, Denmark, Norway, UK, Germany, Ukraine",crown:"Private (subsidiary Colt's Manufacturing Co.).",finance:"Major NATO small arms supplier.",ops:[
   {title:"Authorized — Ukraine (2022)",cls:"blue",txt:"C7/C8 confirmed in use by Ukrainian forces 2022, from stocks originally procured for Kurdish forces in Iraq."},
  ]},
 ];
@@ -589,25 +788,29 @@ const OPS_DATA=[
  {title:"Bahrain — Domestic Crackdown",period:"March 2011",status:"confirmed",badge:"Confirmed",equipment:"Canadian-made LAVs (GDLS-C) deployed by Saudi SANG",supplier:"GDLS-C — vehicles from earlier Saudi contracts",value:"Indirect use.",evidence:"Canadian government acknowledged LAVs deployed to Bahrain. At least 35 civilians killed.",gov:"Canada stated it did not believe vehicles were used against protesters.",treaty:"Pre-dates ATT accession. First documented overseas use of Canadian LAVs against civilians."},
 ];
 const SOURCES=[
- {group:"Tier 1 — Government / Official",color:"#1a6040",entries:[
+ {group:"Tier 1 — Government / Official",color:"#2a9060",entries:[
   {title:"Report on Exports of Military Goods from Canada — 2024",pub:"Global Affairs Canada, June 2025",desc:"Total non-US $2.504B CAD. Saudi Arabia 51.7%. Israel permit pause documented.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2024-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2024-marchandises-militaires-en.pdf"},
   {title:"Report on Exports of Military Goods from Canada — 2023",pub:"Global Affairs Canada, May 2024",desc:"Saudi Arabia $904.6M (42.2%). Ukraine $416.7M. Israel record $30.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2023-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2023-marchandises-militaires-en-v2.pdf"},
   {title:"Report on Exports of Military Goods from Canada — 2022",pub:"Global Affairs Canada, May 2023",desc:"Total $2.204B CAD. Saudi Arabia $1.151B (54%). Germany $221.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2022-marchandises-militaires.aspx?lang=eng",pdf:null},
-  {title:"Report on Exports of Military Goods from Canada — 2021",pub:"Global Affairs Canada, 2022",desc:"Total $3.1B CAD. Saudi Arabia dominant.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2021-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {title:"Report on Exports of Military Goods from Canada — 2021",pub:"Global Affairs Canada, 2022",desc:"Total $3.1B CAD. Saudi Arabia dominant. Japan $280.4M second-largest non-US destination.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2021-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {title:"Report on Exports of Military Goods from Canada — 2020",pub:"Global Affairs Canada, 2021",desc:"Total $1.966B CAD. Saudi Arabia $1.31B (66.6%). Permit freeze on Saudi Arabia lifted April 2020.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2020-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {title:"Report on Exports of Military Goods from Canada — 2019",pub:"Global Affairs Canada, May 2020",desc:"Record total $3.77B. Saudi Arabia $2.864B (76%). Belgium $151.7M for Saudi training LAVs. Turkey suspended Oct 2019.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2019-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military_goods-2019-marchandises_militaires-eng.pdf"},
+  {title:"Report on Exports of Military Goods from Canada — 2018",pub:"Global Affairs Canada, June 2019",desc:"Total $2.069B. Saudi Arabia $1.282B (61.96%). Khashoggi murder triggers permit review Oct 2018.",web:"https://www.international.gc.ca/trade-commerce/assets/pdfs/controls-controles/reports-rapports/military_goods-2018-marchandises_militaires-eng.pdf",pdf:null},
+  {title:"Report on Exports of Military Goods from Canada — 2017",pub:"Global Affairs Canada, June 2018",desc:"Total $1.031B. Saudi Arabia $497.5M (48.25%). LAV 700 deliveries begin under 2014 contract.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2017-marchandises-militaires.aspx?lang=eng",pdf:null},
  ]},
- {group:"Tier 2 — Research Institutions",color:"#1a3f7a",entries:[
+ {group:"Tier 2 — Research Institutions",color:"#3a6fba",entries:[
   {title:"Canada's Soaring Arms Exports: What the 2024 Numbers Reveal",pub:"Project Ploughshares, Sept 2025",desc:"Canada's highest non-Saudi exports ever at $1.21B.",web:"https://ploughshares.ca/canadas-soaring-arms-exports-what-the-2024-numbers-reveal/",pdf:null},
   {title:"Canada's Weapons Exports in 2023",pub:"Project Ploughshares, May 2025",desc:"49% of exports to Freedom House Not Free states.",web:"https://ploughshares.ca/canadas-weapons-exports-in-2023/",pdf:null},
   {title:"Exposing Canadian Military Exports to Israel",pub:"Arms Embargo Now, July 2025",desc:"47+ confirmed shipments Canada to Israel post-Oct 7 2023.",web:"https://armsembargonow.ca",pdf:"https://armsembargonow.ca/wp-content/uploads/2025/07/Exposing-Canadian-Military-Exports-to-Israel_07292025_compressed-.pdf"},
  ]},
- {group:"Tier 3 — Investigative Journalism",color:"#8a5200",entries:[
+ {group:"Tier 3 — Investigative Journalism",color:"#c07820",entries:[
   {title:"Canada Funneled Arms to Saudis via Opaque U.S. Program",pub:"The Breach, 2024",desc:"Urgent permits July 2015, four months after war began.",web:"https://breachmedia.ca/canada-funneled-saudi-arabia-lavs-opaque-american-program/",pdf:null},
   {title:"Saudis Appear to be Using Canadian-Made Combat Vehicles Against Yemeni Rebels",pub:"Globe and Mail, 2016",desc:"First documentation of Canadian LAVs near Yemen border.",web:"https://www.theglobeandmail.com/news/politics/saudi-arms-used-against-yemeni-rebels-seem-to-match-canadian-lavs/article28846678/",pdf:null},
   {title:"Canadian Small Arms & Light Weapons in Ukraine",pub:"The Armourers Bench, 2023",desc:"C7/C8 rifles, CADEX CDX, PGW LRT-3 in Ukrainian service.",web:"https://armourersbench.com/2023/01/22/canadian-small-arms-light-weapons-in-ukraine/",pdf:null},
  ]},
 ];
 
-let activeYear=2023;
+let activeYear=2024;
 // ── PARTICLE ANIMATION ───────────────────────────────
 const NS = "http://www.w3.org/2000/svg";
 let particles = [];
@@ -653,6 +856,7 @@ function buildParticles() {
     const speed = 0.003 + d.share * 0.003;
     for (let i = 0; i < count; i++) {
       const p = new Particle(ca.x, ca.y, dc.x, dc.y, col, speed * (0.7 + Math.random() * 0.6));
+      p.el.dataset.dest = d.name;
       pLayer.appendChild(p.el);
       particles.push(p);
     }
@@ -677,7 +881,38 @@ function highlightCountries(yr){
   });
 }
 function arcD(x1,y1,x2,y2){const mx=(x1+x2)/2,my=Math.min(y1,y2)-Math.abs(x2-x1)*0.24;return"M"+x1+","+y1+" Q"+mx+","+my+" "+x2+","+y2;}
-function buildFlows(){
+let hoveredCountry = null;
+function setOutline(name){
+  const ol = document.getElementById("outline-layer");
+  ol.innerHTML = "";
+  if(!name) return;
+  const cid = DEST_IDS[name];
+  if(!cid) return;
+  const src = document.getElementById("c"+cid);
+  if(!src) return;
+  const clone = document.createElementNS(NS, "path");
+  clone.setAttribute("d", src.getAttribute("d"));
+  clone.setAttribute("fill", "none");
+  clone.setAttribute("stroke", "#ffffff");
+  clone.setAttribute("stroke-width", "0.6");
+  clone.setAttribute("stroke-opacity", "0.9");
+  clone.setAttribute("pointer-events", "none");
+  ol.appendChild(clone);
+}
+function clearOutline(){ document.getElementById("outline-layer").innerHTML=""; hoveredCountry=null; }
+function buildFlows(fadeIn){
+  // Strip ALL country listeners by cloning every country path
+  document.querySelectorAll("#countries-g .country").forEach(el=>{
+    const fresh=el.cloneNode(true);
+    el.parentNode.replaceChild(fresh,el);
+    fresh.style.cursor="";
+  });
+  clearOutline();
+  hoveredCountry=null;
+  // Reset all country fills to defaults
+  document.querySelectorAll("#countries-g .country").forEach(el=>{
+    el.style.fill="";el.style.stroke="";
+  });
   const al=document.getElementById("arc-layer"),nl=document.getElementById("node-layer");
   al.innerHTML="";nl.innerHTML="";
   const data=MAP_DATA[activeYear],ca=COORDS["Canada"];
@@ -688,42 +923,84 @@ function buildFlows(){
     p.setAttribute("class","arc");p.setAttribute("d",arcD(ca.x,ca.y,dc.x,dc.y));
     p.setAttribute("stroke",col);p.setAttribute("stroke-width","0.6");p.setAttribute("stroke-opacity","0");
     p.setAttribute("stroke-dasharray","2 5");p.setAttribute("stroke-linecap","round");
-    p.dataset.dest=d.name;al.appendChild(p);
+    p.dataset.dest=d.name;
+    if(fadeIn){p.style.opacity="0";p.style.transition="opacity 0.5s";}
+    al.appendChild(p);
   });
   data.destinations.forEach(d=>{
     const dc=COORDS[d.name];if(!dc)return;
-    const col=TYPE_COLOR[d.mainType]||"#666",r=Math.max(3.5,Math.min(18,2.5+d.share*36));
-    const g=document.createElementNS(NS,"g");
-    g.setAttribute("transform","translate("+dc.x+","+dc.y+")");g.style.cursor="crosshair";g.dataset.dest=d.name;
-    const oc=document.createElementNS(NS,"circle");
-    oc.setAttribute("r",r);oc.setAttribute("fill",col);oc.setAttribute("fill-opacity","0.15");
-    oc.setAttribute("stroke",col);oc.setAttribute("stroke-width","1");
-    const ic=document.createElementNS(NS,"circle");
-    ic.setAttribute("r",r*0.48);ic.setAttribute("fill",col);ic.setAttribute("fill-opacity","0.9");
-    g.appendChild(oc);g.appendChild(ic);
-    if(d.share>0.014){
-      const t=document.createElementNS(NS,"text");
-      t.setAttribute("y",r+10);t.setAttribute("text-anchor","middle");
-      t.setAttribute("font-family","Courier New,Courier,monospace");
-      t.setAttribute("font-size","7.5");t.setAttribute("fill","#2a2a2a");t.setAttribute("pointer-events","none");
-      t.textContent=d.name;g.appendChild(t);
+    const col=TYPE_COLOR[d.mainType]||"#666";
+
+    // Color the country fill directly
+    const cid=DEST_IDS[d.name];
+    const countryEl=cid?document.getElementById("c"+cid):null;
+    if(countryEl){
+      countryEl.style.fill=col+"44"; // dim tinted fill
+      countryEl.style.stroke=col+"88";
     }
-    g.addEventListener("mouseenter",()=>onHover(d.name));
-    g.addEventListener("mouseleave",()=>onLeave());
-    g.addEventListener("click",()=>{
-      if(lockedCountry===d.name){ lockedCountry=null; onLeave(); }
-      else {
-        lockedCountry=d.name;
-        showPanel(d.name);
-        document.querySelectorAll("#arc-layer path").forEach(p=>{
-          p.setAttribute("stroke-opacity", p.dataset.dest===d.name ? "0.55" : "0");
-        });
-      }
-    });
+
+    // Label only in node layer (no circles)
+    const g=document.createElementNS(NS,"g");
+    g.setAttribute("transform","translate("+dc.x+","+dc.y+")");
+    g.setAttribute("pointer-events","none");
+    g.dataset.dest=d.name;
+    const t=document.createElementNS(NS,"text");
+    t.setAttribute("y","0");t.setAttribute("text-anchor","middle");
+    t.setAttribute("dominant-baseline","middle");
+    t.setAttribute("font-family","Courier New,Courier,monospace");
+    t.setAttribute("font-size","7.5");t.setAttribute("fill","#c8c4bc");t.setAttribute("pointer-events","none");
+    t.setAttribute("font-weight","500");
+    t.textContent=d.name;g.appendChild(t);
+    if(fadeIn){g.style.opacity="0";g.style.transition="opacity 0.5s";}
     nl.appendChild(g);
+
+    // Attach hover/click to the country SVG path
+    if(countryEl){
+      countryEl.style.cursor="crosshair";
+      countryEl.addEventListener("mouseenter",()=>{
+        if(lockedCountry) return;
+        hoveredCountry=d.name;
+        onHover(d.name);
+        setOutline(d.name);
+      });
+      countryEl.addEventListener("mouseleave",()=>{
+        if(lockedCountry) return;
+        hoveredCountry=null;
+        clearOutline();
+        onLeave();
+      });
+      countryEl.addEventListener("click",()=>{
+        if(lockedCountry===d.name){
+          // Unlock
+          lockedCountry=null;
+          clearOutline();
+          document.querySelectorAll("#arc-layer path").forEach(p=>p.setAttribute("stroke-opacity","0"));
+          document.querySelectorAll("#node-layer g[data-dest]").forEach(el=>el.setAttribute("opacity","1"));
+          document.querySelectorAll("#particle-layer circle").forEach(el=>el.setAttribute("opacity","1"));
+          restoreCountries();
+          document.getElementById("map-detail").innerHTML="<div class='sp-empty'>Hover or click a destination<br>to see detail.</div>";
+        } else {
+          if(lockedCountry) clearOutline();
+          lockedCountry=d.name;
+          hoveredCountry=null;
+          showPanel(d.name);
+          setOutline(d.name);
+          document.querySelectorAll("#arc-layer path").forEach(p=>{
+            p.setAttribute("stroke-opacity", p.dataset.dest===d.name ? "0.55" : "0");
+          });
+          document.querySelectorAll("#node-layer g[data-dest]").forEach(el=>{
+            el.setAttribute("opacity", el.dataset.dest===d.name ? "1" : "0.25");
+          });
+          document.querySelectorAll("#particle-layer circle").forEach(el=>{
+            el.setAttribute("opacity", el.dataset.dest===d.name ? "1" : "0.15");
+          });
+          dimCountries(d.name);
+        }
+      });
+    }
   });
   const cg=document.createElementNS(NS,"g");
-  [[11,"#0d0d0d",0.07],[6,"#0d0d0d",1],[2.5,"#f5f4f0",1]].forEach(([r,f,o])=>{
+  [[11,"#e8e6e0",0.06],[6,"#e8e6e0",1],[2.5,"#0d0f0e",1]].forEach(([r,f,o])=>{
     const c=document.createElementNS(NS,"circle");
     c.setAttribute("cx",COORDS["Canada"].x);c.setAttribute("cy",COORDS["Canada"].y);
     c.setAttribute("r",r);c.setAttribute("fill",f);c.setAttribute("fill-opacity",o);
@@ -733,8 +1010,16 @@ function buildFlows(){
   ct.setAttribute("x",COORDS["Canada"].x);ct.setAttribute("y",COORDS["Canada"].y-11);
   ct.setAttribute("text-anchor","middle");ct.setAttribute("font-size","8");
   ct.setAttribute("font-family","Courier New,Courier,monospace");
-  ct.setAttribute("font-weight","500");ct.setAttribute("fill","#0d0d0d");ct.textContent="CANADA";
+  ct.setAttribute("font-weight","500");ct.setAttribute("fill","#8a8880");ct.textContent="CANADA";
   cg.appendChild(ct);nl.appendChild(cg);
+  // Trigger fade-in on next paint if animated
+  if(fadeIn){
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        [...al.children,...nl.children].forEach(el=>{el.style.opacity="1";});
+      });
+    });
+  }
 }
 
 function renderPanel(name, imgUrl, imgCaption, imgCredit) {
@@ -748,23 +1033,59 @@ function renderPanel(name, imgUrl, imgCaption, imgCredit) {
       <div style="padding:6px 0 4px;font-size:9px;line-height:1.6;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;">${imgCaption}</div>
       <div style="font-size:8px;color:var(--ink-4);font-family:var(--mono);letter-spacing:.1em;padding-bottom:12px;border-bottom:1px solid var(--rule);">${imgCredit}</div>
     </div>` : '';
+  const typeCol = TYPE_COLOR[d.mainType] || "#8a8880";
   document.getElementById("map-detail").innerHTML = imgHtml +
     "<div class='detail-name'>"+name+"</div>"+
     "<div class='d-row'><span class='d-lbl'>Value</span><span class='d-val red'>"+fmtV(d.val)+"</span></div>"+
     "<div class='d-row'><span class='d-lbl'>Non-US share</span><span class='d-val'>"+(d.share*100).toFixed(1)+"%</span></div>"+
-    "<div class='d-row'><span class='d-lbl'>Category</span><span class='d-val blue'>"+d.mainType+"</span></div>"+
+    "<div class='d-row'><span class='d-lbl'>Category</span><span class='d-val' style='color:"+typeCol+"'>"+d.mainType+"</span></div>"+
     "<div class='d-note'>"+d.note+"</div>";
 }
 
 let lockedCountry = null;
+
+function dimCountries(focusName){
+  MAP_DATA[activeYear].destinations.forEach(d=>{
+    const cid=DEST_IDS[d.name];if(!cid)return;
+    const el=document.getElementById("c"+cid);if(!el)return;
+    const col=TYPE_COLOR[d.mainType]||"#666";
+    const passesFilter = !activeLegendType || d.mainType===activeLegendType;
+    if(d.name===focusName){
+      el.style.fill=col+"99";el.style.stroke=col+"cc";
+    } else {
+      el.style.fill=col+"10";el.style.stroke=col+"18";
+    }
+  });
+}
+function restoreCountries(){
+  MAP_DATA[activeYear].destinations.forEach(d=>{
+    const cid=DEST_IDS[d.name];if(!cid)return;
+    const el=document.getElementById("c"+cid);if(!el)return;
+    const col=TYPE_COLOR[d.mainType]||"#666";
+    const passesFilter = !activeLegendType || d.mainType===activeLegendType;
+    el.style.fill = passesFilter ? col+"44" : col+"10";
+    el.style.stroke = passesFilter ? col+"88" : col+"18";
+  });
+}
+
 function onHover(name){
+  if(lockedCountry) return;
   const d=MAP_DATA[activeYear].destinations.find(x=>x.name===name);if(!d)return;
   document.querySelectorAll("#arc-layer path").forEach(p=>{
-    const isThis=p.dataset.dest===name;
-    p.setAttribute("stroke-opacity",isThis?"0.55":"0");
-    p.setAttribute("stroke-width","0.6");
+    p.setAttribute("stroke-opacity", p.dataset.dest===name ? "0.55" : "0");
   });
-  if(!lockedCountry){ showPanel(name); }
+  document.querySelectorAll("#node-layer g[data-dest]").forEach(el=>{
+    const dest=MAP_DATA[activeYear].destinations.find(x=>x.name===el.dataset.dest);
+    const passesFilter = !activeLegendType || (dest && dest.mainType===activeLegendType);
+    el.setAttribute("opacity", el.dataset.dest===name ? "1" : (passesFilter ? "0.25" : "0.05"));
+  });
+  document.querySelectorAll("#particle-layer circle").forEach(el=>{
+    const dest=MAP_DATA[activeYear].destinations.find(x=>x.name===el.dataset.dest);
+    const passesFilter = !activeLegendType || (dest && dest.mainType===activeLegendType);
+    el.setAttribute("opacity", el.dataset.dest===name ? "1" : (passesFilter ? "0.15" : "0.03"));
+  });
+  dimCountries(name);
+  showPanel(name);
 }
 function showPanel(name){
   const imgMeta = DEST_IMAGES[name];
@@ -772,27 +1093,167 @@ function showPanel(name){
   renderPanel(name, url, imgMeta ? imgMeta.caption||'' : '', imgMeta ? imgMeta.credit||'' : '');
 }
 function onLeave(){
-  document.querySelectorAll("#arc-layer path").forEach(p=>{
-    const isLocked = lockedCountry && p.dataset.dest===lockedCountry;
-    p.setAttribute("stroke-opacity", isLocked ? "0.55" : "0");
-  });
-  if(!lockedCountry){
+  if(lockedCountry){
+    document.querySelectorAll("#arc-layer path").forEach(p=>{
+      p.setAttribute("stroke-opacity", p.dataset.dest===lockedCountry ? "0.55" : "0");
+    });
+    document.querySelectorAll("#node-layer g[data-dest]").forEach(el=>{
+      el.setAttribute("opacity", el.dataset.dest===lockedCountry ? "1" : "0.25");
+    });
+    document.querySelectorAll("#particle-layer circle").forEach(el=>{
+      el.setAttribute("opacity", el.dataset.dest===lockedCountry ? "1" : "0.15");
+    });
+    dimCountries(lockedCountry);
+  } else {
+    document.querySelectorAll("#arc-layer path").forEach(p=>p.setAttribute("stroke-opacity","0"));
+    document.querySelectorAll("#node-layer g[data-dest]").forEach(el=>el.setAttribute("opacity","1"));
+    document.querySelectorAll("#particle-layer circle").forEach(el=>el.setAttribute("opacity","1"));
+    restoreCountries();
+    clearOutline();
     document.getElementById("map-detail").innerHTML="<div class='sp-empty'>Hover or click a destination<br>to see detail.</div>";
   }
 }
-function setYear(yr){
+
+
+function setYear(yr, animate){
+  // Clear any locked country outline
+  if(lockedCountry){
+    const prevId=DEST_IDS[lockedCountry];
+    if(prevId){const prevEl=document.getElementById("c"+prevId);if(prevEl)prevEl.classList.remove("hovered");}
+    lockedCountry=null;
+  }
   activeYear=yr;
   document.querySelectorAll(".yr-btn").forEach(b=>b.classList.toggle("active",parseInt(b.dataset.y)===yr));
   document.getElementById("hdr-yr").textContent=yr;
   const d=MAP_DATA[yr];
   document.getElementById("total-val").textContent=d.total;
   document.getElementById("total-ctx").textContent=d.countries+" countries \xb7 "+yr;
-  highlightCountries(yr);buildFlows();buildParticles();
+
+  if(animate){
+    const al=document.getElementById("arc-layer"),nl=document.getElementById("node-layer"),pl=document.getElementById("particle-layer");
+    const tv=document.getElementById("total-val"),ts=document.getElementById("total-ctx");
+    // Only fade the totals counter, not the map
+    tv.style.opacity="0"; ts.style.opacity="0";
+    buildFlows(false);
+    buildParticles();
+    updateLegendValues();
+    if(activeLegendType) applyLegendFilter(activeLegendType);
+    requestAnimationFrame(()=>{ tv.style.opacity="1"; ts.style.opacity="1"; });
+  } else {
+    highlightCountries(yr);buildFlows(false);buildParticles();updateLegendValues();
+    if(activeLegendType) applyLegendFilter(activeLegendType);
+  }
 }
-document.querySelectorAll(".yr-btn").forEach(btn=>{btn.addEventListener("click",()=>setYear(parseInt(btn.dataset.y)));});
+document.querySelectorAll(".yr-btn").forEach(btn=>{btn.addEventListener("click",()=>{stopPlayback();setYear(parseInt(btn.dataset.y),false);});});
+
+// ── PLAYBACK ──
+// ── LEGEND FILTER ──
+let activeLegendType = null;
+
+function updateLegendValues(){
+  const data = MAP_DATA[activeYear];
+  const totals = {};
+  data.destinations.forEach(d=>{
+    const t = d.mainType;
+    totals[t] = (totals[t]||0) + d.val;
+  });
+  document.querySelectorAll(".leg-row").forEach(row=>{
+    const type = row.dataset.type;
+    const el = document.getElementById("lv-"+type);
+    if(!el) return;
+    const v = totals[type]||0;
+    el.textContent = v > 0 ? (v>=1000?"$"+(v/1000).toFixed(2)+"B":"$"+v.toFixed(0)+"M") : "";
+  });
+}
+
+function applyLegendFilter(type){
+  // If called with null (clear), or clicking the already-active type — clear
+  if(type === null || activeLegendType === type){
+    activeLegendType = null;
+  } else {
+    activeLegendType = type;
+  }
+  document.querySelectorAll(".leg-row").forEach(r=>{
+    r.classList.toggle("active", r.dataset.type === activeLegendType);
+  });
+  document.getElementById("leg-reset").style.display = activeLegendType ? "block" : "none";
+
+  // Update country fills
+  MAP_DATA[activeYear].destinations.forEach(d=>{
+    const cid=DEST_IDS[d.name];if(!cid)return;
+    const el=document.getElementById("c"+cid);if(!el)return;
+    const col=TYPE_COLOR[d.mainType]||"#666";
+    const show = !activeLegendType || d.mainType === activeLegendType;
+    el.style.transition="fill 0.25s, stroke 0.25s";
+    el.style.fill = show ? col+"44" : col+"10";
+    el.style.stroke = show ? col+"88" : col+"18";
+  });
+
+  // Update labels
+  document.querySelectorAll("#node-layer g[data-dest]").forEach(g=>{
+    const d = MAP_DATA[activeYear].destinations.find(x=>x.name===g.dataset.dest);
+    if(!d) return;
+    const show = !activeLegendType || d.mainType === activeLegendType;
+    g.style.transition="opacity 0.25s";
+    g.style.opacity = show ? "1" : "0.1";
+  });
+
+  // Update particles
+  document.querySelectorAll("#particle-layer circle").forEach(c=>{
+    const d = MAP_DATA[activeYear].destinations.find(x=>x.name===c.dataset.dest);
+    if(!d) return;
+    const show = !activeLegendType || d.mainType === activeLegendType;
+    c.style.transition="opacity 0.25s";
+    c.setAttribute("fill-opacity", show ? "0.75" : "0.08");
+  });
+}
+
+document.querySelectorAll(".leg-row").forEach(row=>{
+  row.addEventListener("click",()=>applyLegendFilter(row.dataset.type));
+});
+document.getElementById("leg-reset").addEventListener("click",()=>{
+  activeLegendType=null;
+  applyLegendFilter(null);
+});
+
+const PLAY_YEARS=[2017,2018,2019,2020,2021,2022,2023,2024];
+const PLAY_INTERVAL=2200; // ms per year — gives transition 0.35s fade-out + 0.5s fade-in + reading time
+let playTimer=null,playIdx=0;
+
+function stopPlayback(){
+  if(playTimer){clearTimeout(playTimer);playTimer=null;}
+  document.getElementById("play-btn").classList.remove("playing");
+  document.getElementById("play-btn").innerHTML="&#9654;";
+}
+
+function playStep(){
+  setYear(PLAY_YEARS[playIdx], true);
+  playIdx++;
+  if(playIdx<PLAY_YEARS.length){
+    playTimer=setTimeout(playStep,PLAY_INTERVAL);
+  } else {
+    stopPlayback();
+  }
+}
+
+function startPlayback(){
+  stopPlayback();
+  const lastYear = PLAY_YEARS[PLAY_YEARS.length - 1];
+  const startIdx = activeYear === lastYear ? 0 : PLAY_YEARS.indexOf(activeYear);
+  playIdx = startIdx === -1 ? 0 : startIdx;
+  document.getElementById("play-btn").classList.add("playing");
+  document.getElementById("play-btn").innerHTML="&#9646;&#9646;";
+  playStep();
+}
+
+document.getElementById("play-btn").addEventListener("click",()=>{
+  if(playTimer){stopPlayback();}
+  else{startPlayback();}
+});
+
 function buildTimeline(){
   const c=document.getElementById("tl-container");
-  [2021,2022,2023,2024].forEach(yr=>{
+  [2017,2018,2019,2020,2021,2022,2023,2024].forEach(yr=>{
     const data=MAP_DATA[yr],block=document.createElement("div");block.className="tl-yblock";
     block.innerHTML="<div class='tl-yhead'><span class='tl-yn'>"+yr+"</span><span class='tl-ytot'>Total: "+data.total+"</span></div>";
     const rows=document.createElement("div");rows.className="tl-rows";
@@ -807,7 +1268,7 @@ function buildTimeline(){
   });
 }
 function buildCorporate(){
-  const c=document.getElementById("corp-container"),sc={red:"#b83225",blue:"#1a3f7a",amber:"#8a5200","":"#b0b0b0"};
+  const c=document.getElementById("corp-container"),sc={red:"#c0392b",blue:"#3a6fba",amber:"#c07820","":"#6a6860"};
   CORP_DATA.forEach((corp,i)=>{
     const block=document.createElement("div");block.className="corp-entry";
     const fields=["contracts","products","clients","crown","finance"].map(f=>"<div class='corp-field'><div class='corp-flbl'>"+f+"</div><div class='corp-fval'>"+corp[f]+"</div></div>").join("");
@@ -818,7 +1279,7 @@ function buildCorporate(){
   });
 }
 function buildOps(){
-  const c=document.getElementById("ops-container"),sc={confirmed:"#b83225",persuasive:"#8a5200",authorized:"#1a3f7a"};
+  const c=document.getElementById("ops-container"),sc={confirmed:"#c0392b",persuasive:"#c07820",authorized:"#3a6fba"};
   OPS_DATA.forEach(op=>{
     const col=sc[op.status]||"#888",block=document.createElement("div");block.className="ops-entry";
     const fields=[["Equipment",op.equipment],["Supplier(s)",op.supplier],["Value",op.value],["Evidence",op.evidence],["Gov. position",op.gov],["Treaty",op.treaty]].map(([l,v])=>"<div class='ops-field'><div class='ops-flbl'>"+l+"</div><div class='ops-fval'>"+v+"</div></div>").join("");
@@ -856,9 +1317,10 @@ document.querySelectorAll(".tab").forEach(tab=>{
     tab.classList.add("active");document.getElementById("view-"+tab.dataset.view).classList.add("active");
   });
 });
-highlightCountries(2023);buildFlows();buildTimeline();buildCorporate();buildOps();buildSources();
-// Start particles after a short delay to let DOM settle
-setTimeout(buildParticles, 100);
+highlightCountries(2024);buildFlows();buildTimeline();buildCorporate();buildOps();buildSources();updateLegendValues();
+activeYear=2024;
+document.getElementById("hdr-yr").textContent=2024;
+setTimeout(()=>{buildParticles();},100);
 </script>
 </body>
 </html>
