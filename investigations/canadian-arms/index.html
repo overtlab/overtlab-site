@@ -44,13 +44,13 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .country.origin{fill:#2a2c24;stroke:#3a3c30;}
 .country.hovered{stroke:#ffffff !important;stroke-width:0.6 !important;fill:#303828;}
 .arc{fill:none;stroke-linecap:round;transition:stroke-opacity .15s,stroke-width .15s;}
-#year-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:1px;z-index:10;}
-.yr-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;padding:5px 10px;border:1px solid var(--rule);background:rgba(13,15,14,.85);color:var(--ink-3);cursor:pointer;transition:all .12s;text-transform:uppercase;}
-.yr-btn:hover{border-color:var(--ink-3);color:var(--ink);}
-.yr-btn.active{border-color:var(--yellow);background:var(--yellow);color:#0d0f0e;}
-#play-btn{font-family:var(--mono);font-size:11px;padding:5px 11px;border:1px solid var(--rule);background:rgba(13,15,14,.85);color:var(--ink-3);cursor:pointer;transition:all .12s;line-height:1;}
-#play-btn:hover{border-color:var(--yellow);color:var(--yellow);}
-#play-btn.playing{color:var(--yellow);border-color:var(--yellow);}
+#year-bar{flex-shrink:0;display:flex;gap:0;border-bottom:1px solid var(--rule);background:var(--bg-2);}
+.yr-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;padding:7px 13px;border:none;border-right:1px solid var(--rule);background:transparent;color:var(--ink-4);cursor:pointer;transition:all .12s;text-transform:uppercase;}
+.yr-btn:hover{background:var(--rule-2);color:var(--ink);}
+.yr-btn.active{background:var(--yellow);color:#0d0f0e;font-weight:600;}
+#play-btn{font-family:var(--mono);font-size:10px;padding:7px 14px;border:none;border-left:1px solid var(--rule);background:transparent;color:var(--ink-4);cursor:pointer;transition:all .12s;line-height:1;margin-left:auto;}
+#play-btn:hover{color:var(--yellow);}
+#play-btn.playing{color:var(--yellow);}
 #zoom-controls{position:absolute;top:12px;right:16px;z-index:20;display:flex;flex-direction:column;gap:1px;}
 .zoom-btn{font-family:var(--mono);font-size:14px;width:28px;height:28px;border:1px solid var(--rule);background:rgba(13,15,14,.88);color:var(--ink-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;line-height:1;user-select:none;}
 .zoom-btn:hover{background:#242622;color:var(--ink);}
@@ -85,51 +85,65 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
 .sv-inner{flex:1;overflow-y:auto;}
 .sv-panel{width:256px;flex-shrink:0;border-left:1px solid var(--rule);overflow-y:auto;padding:16px;font-size:12px;line-height:1.8;color:var(--ink-2);font-weight:300;background:var(--bg-2);}
 .sv-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--ink-4);text-transform:uppercase;margin-bottom:14px;display:block;}
+.sv-year-bar{padding:8px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--ink-4);}
+.sv-year-bar strong{color:var(--yellow);}
+.year-active{opacity:1;}
+.year-inactive{opacity:0.3;}
+.ops-entry.year-active .ops-hdr,.src-entry.year-active{background:var(--bg-2);}
+.ops-entry.year-active,.src-entry.year-active{border-left-width:3px;}
 .tl-yblock{border-bottom:1px solid var(--rule);}
-.tl-yhead{padding:11px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:14px;}
-.tl-yn{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--ink);}
-.tl-ytot{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--ink-3);}
-.tl-rows{padding:7px 24px 11px;}
+.tl-yblock.tl-active .tl-yhead{background:var(--rule-2);}
+.tl-yblock.tl-active .tl-yn{color:var(--yellow);}
+.tl-yhead{padding:14px 24px 12px;background:var(--bg-2);border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:16px;}
+.tl-yn{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:.06em;color:var(--ink);}
+.tl-ytot{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--yellow);}
+.tl-ycountries{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink-4);margin-left:auto;}
+.tl-rows{padding:10px 24px 14px;}
 .tl-row{display:flex;align-items:center;gap:10px;padding:3px 0;}
-.tl-name{font-family:var(--mono);font-size:9px;letter-spacing:.05em;width:128px;flex-shrink:0;text-align:right;color:var(--ink-2);}
-.tl-track{flex:1;height:11px;background:var(--rule);}
-.tl-fill{height:100%;display:flex;align-items:center;}
-.tl-val{font-family:var(--mono);font-size:7px;color:#fff;padding:0 4px;letter-spacing:.04em;white-space:nowrap;}
+.tl-name{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;width:118px;flex-shrink:0;text-align:right;color:var(--ink-3);}
+.tl-track{flex:1;height:16px;background:var(--rule-2);}
+.tl-fill{height:100%;display:flex;align-items:center;min-width:2px;}
+.tl-val{font-family:var(--mono);font-size:7px;padding:0 6px;letter-spacing:.04em;white-space:nowrap;font-weight:500;}
+.tl-share{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;width:38px;flex-shrink:0;text-align:right;}
 .corp-entry{border-bottom:1px solid var(--rule);}
-.corp-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 24px;cursor:pointer;transition:background .12s;}
+.corp-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 24px;cursor:pointer;transition:background .12s;position:relative;}
+.corp-hdr::after{content:"＋";position:absolute;right:24px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:14px;color:var(--ink-4);transition:transform .2s,color .2s;}
+.corp-hdr.open::after{transform:translateY(-50%) rotate(45deg);color:var(--ink-3);}
 .corp-hdr:hover{background:var(--bg-2);}
-.corp-name{font-size:13.5px;font-weight:400;color:var(--ink);margin-bottom:2px;}
-.corp-hq{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;}
-.corp-tag{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;padding:3px 8px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px;}
-.corp-body{display:none;padding:0 24px 16px;border-top:1px solid var(--rule);}
+.corp-name{font-size:13px;font-weight:400;color:var(--ink);margin-bottom:3px;padding-right:28px;}
+.corp-hq{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--ink-4);text-transform:uppercase;}
+.corp-tag{font-family:var(--mono);font-size:7px;letter-spacing:.1em;padding:3px 8px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.corp-body{display:none;border-top:1px solid var(--rule);}
 .corp-body.open{display:block;}
-.corp-field{display:flex;gap:14px;padding:6px 0;border-bottom:1px solid var(--rule);font-size:12px;line-height:1.65;}
+.corp-field{display:flex;gap:14px;padding:9px 24px;border-bottom:1px solid var(--rule-2);font-size:12px;line-height:1.65;}
 .corp-field:last-of-type{border-bottom:none;}
-.corp-flbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:78px;padding-top:1px;}
+.corp-flbl{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:100px;padding-top:2px;}
 .corp-fval{color:var(--ink-2);font-weight:300;}
-.corp-ops{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);}
-.corp-ops-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:var(--ink-4);text-transform:uppercase;margin-bottom:9px;}
-.corp-op{padding:7px 0 7px 11px;border-left:2px solid var(--rule);margin-bottom:7px;}
-.corp-op-ttl{font-family:var(--mono);font-size:8px;letter-spacing:.1em;font-weight:500;margin-bottom:3px;text-transform:uppercase;}
+.corp-ops{padding:12px 24px 16px;background:var(--bg-2);border-top:1px solid var(--rule);}
+.corp-ops-lbl{font-family:var(--mono);font-size:7px;letter-spacing:.2em;color:var(--ink-4);text-transform:uppercase;margin-bottom:10px;}
+.corp-op{padding:8px 0 8px 12px;border-left:2px solid var(--rule);margin-bottom:8px;}
+.corp-op:last-child{margin-bottom:0;}
+.corp-op-ttl{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;font-weight:500;margin-bottom:4px;text-transform:uppercase;}
 .corp-op-txt{font-size:12px;line-height:1.7;color:var(--ink-2);font-weight:300;}
 .ops-entry{border-bottom:1px solid var(--rule);}
-.ops-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:16px 24px;}
-.ops-title{font-size:13.5px;font-weight:400;color:var(--ink);margin-bottom:3px;}
-.ops-period{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;}
-.ops-badge{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;padding:3px 9px;border:1px solid;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
-.ops-body{padding:0 24px 14px;}
-.ops-field{display:flex;gap:14px;padding:7px 0;border-top:1px solid var(--rule);font-size:12px;line-height:1.7;}
-.ops-flbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:120px;padding-top:1px;}
+.ops-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:18px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);}
+.ops-title{font-size:14px;font-weight:400;color:var(--ink);margin-bottom:4px;letter-spacing:-.01em;}
+.ops-period{font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;color:var(--ink-4);text-transform:uppercase;}
+.ops-badge{font-family:var(--mono);font-size:7px;letter-spacing:.12em;padding:4px 10px;border:1px solid;text-transform:uppercase;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.ops-body{padding:0 24px 4px;}
+.ops-field{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--rule-2);font-size:12px;line-height:1.7;}
+.ops-field:last-child{border-bottom:none;}
+.ops-flbl{font-family:var(--mono);font-size:7px;letter-spacing:.14em;color:var(--ink-4);text-transform:uppercase;flex-shrink:0;width:140px;padding-top:2px;}
 .ops-fval{color:var(--ink-2);font-weight:300;}
 .src-tier{border-bottom:1px solid var(--rule);}
-.src-tier-hdr{padding:10px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;}
-.src-entry{padding:13px 24px;border-bottom:1px solid var(--rule);border-left:3px solid transparent;}
+.src-tier-hdr{padding:10px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;}
+.src-entry{padding:14px 24px;border-bottom:1px solid var(--rule-2);border-left:2px solid transparent;}
 .src-entry:last-child{border-bottom:none;}
-.src-title{font-size:13px;font-weight:400;color:var(--ink);margin-bottom:2px;line-height:1.35;}
-.src-pub{font-family:var(--mono);font-size:7.5px;letter-spacing:.13em;color:var(--ink-4);margin-bottom:5px;text-transform:uppercase;}
-.src-desc{font-size:12px;line-height:1.7;color:var(--ink-2);font-weight:300;margin-bottom:7px;}
+.src-title{font-size:13px;font-weight:400;color:var(--ink);margin-bottom:3px;line-height:1.35;}
+.src-pub{font-family:var(--mono);font-size:7px;letter-spacing:.15em;color:var(--ink-4);margin-bottom:6px;text-transform:uppercase;}
+.src-desc{font-size:12px;line-height:1.7;color:var(--ink-2);font-weight:300;margin-bottom:8px;}
 .src-btns{display:flex;gap:7px;flex-wrap:wrap;}
-.src-btn{font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:4px 10px;border:1px solid;background:transparent;cursor:pointer;text-decoration:none;display:inline-block;transition:all .12s;text-transform:uppercase;}
+.src-btn{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;padding:4px 11px;border:1px solid;background:transparent;cursor:pointer;text-decoration:none;display:inline-block;transition:all .12s;text-transform:uppercase;}
 .src-btn.web{border-color:var(--blue);color:var(--blue);}
 .src-btn.web:hover{background:var(--blue);color:#fff;}
 .src-btn.pdf{border-color:var(--red);color:var(--red);}
@@ -154,6 +168,17 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
   <button class="tab" data-view="corporate">03 &#8212; Corporate</button>
   <button class="tab" data-view="operations">04 &#8212; Deployments</button>
   <button class="tab" data-view="sources">05 &#8212; Sources</button>
+</div>
+<div id="year-bar">
+  <button class="yr-btn" data-y="2017">2017</button>
+  <button class="yr-btn" data-y="2018">2018</button>
+  <button class="yr-btn" data-y="2019">2019</button>
+  <button class="yr-btn" data-y="2020">2020</button>
+  <button class="yr-btn" data-y="2021">2021</button>
+  <button class="yr-btn" data-y="2022">2022</button>
+  <button class="yr-btn" data-y="2023">2023</button>
+  <button class="yr-btn active" data-y="2024">2024</button>
+  <button class="yr-btn" id="play-btn">&#9654;</button>
 </div>
 <div id="main">
 <div id="view-map" class="view active">
@@ -349,17 +374,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
       </g>
       <path fill="none" stroke="#1e2420" stroke-width="0.8" d="M249.65,32.374L480,32.374L710.35,32.374L729.849,34.352L744.873,37.935L767.536,47.851L785.754,59.61L802.276,72.287L832.211,99.501L856.99,128.663L875.713,158.885L888.574,189.352L896.058,219.724L898.514,250L896.058,280.276L888.574,310.648L875.713,341.115L856.99,371.337L832.211,400.499L802.276,427.713L785.754,440.39L767.536,452.149L744.873,462.065L729.849,465.648L710.35,467.626L480,467.626L249.65,467.626L230.151,465.648L215.127,462.065L192.464,452.149L174.246,440.39L157.724,427.713L127.789,400.499L103.01,371.337L84.287,341.115L71.426,310.648L63.942,280.276L61.486,250L63.942,219.724L71.426,189.352L84.287,158.885L103.01,128.663L127.789,99.501L157.724,72.287L174.246,59.61L192.464,47.851L215.127,37.935L230.151,34.352L249.65,32.374Z"/>
     </svg>
-    <div id="year-bar">
-      <button id="play-btn" title="Play timeline">&#9654;</button>
-      <button class="yr-btn" data-y="2017">2017</button>
-      <button class="yr-btn" data-y="2018">2018</button>
-      <button class="yr-btn" data-y="2019">2019</button>
-      <button class="yr-btn" data-y="2020">2020</button>
-      <button class="yr-btn" data-y="2021">2021</button>
-      <button class="yr-btn" data-y="2022">2022</button>
-      <button class="yr-btn" data-y="2023">2023</button>
-      <button class="yr-btn active" data-y="2024">2024</button>
-    </div>
+
     <div id="zoom-controls">
       <button class="zoom-btn" id="zoom-in">+</button>
       <button class="zoom-btn" id="zoom-out">&#8722;</button>
@@ -398,7 +413,10 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
   </div>
 </div>
 <div id="view-corporate" class="view scroll-view">
-  <div class="sv-inner"><div id="corp-container"></div></div>
+  <div class="sv-inner">
+    <div class="sv-year-bar">Viewing year context: <strong class="sv-year-ctx">2024</strong> &mdash; Corporate entities are structural; deployments below are cross-referenced per year.</div>
+    <div id="corp-container"></div>
+  </div>
   <div class="sv-panel">
     <span class="sv-lbl">// Transparency</span>
     Global Affairs Canada does not publish company names in RCAM reports.<br><br>
@@ -407,7 +425,10 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
   </div>
 </div>
 <div id="view-operations" class="view scroll-view">
-  <div class="sv-inner"><div id="ops-container"></div></div>
+  <div class="sv-inner">
+    <div class="sv-year-bar">Viewing year context: <strong class="sv-year-ctx">2024</strong> &mdash; Deployments active or documented as of selected year are highlighted.</div>
+    <div id="ops-container"></div>
+  </div>
   <div class="sv-panel">
     <span class="sv-lbl">// Evidence status</span>
     <span style="color:var(--red)">Confirmed</span><br>Video, photo, or official documentation.<br><br>
@@ -417,7 +438,10 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);display:fl
   </div>
 </div>
 <div id="view-sources" class="view scroll-view">
-  <div class="sv-inner"><div id="src-container"></div></div>
+  <div class="sv-inner">
+    <div class="sv-year-bar">Viewing year context: <strong class="sv-year-ctx">2024</strong> &mdash; Primary sources for the selected year are highlighted.</div>
+    <div id="src-container"></div>
+  </div>
   <div class="sv-panel">
     <span class="sv-lbl">// Source tiers</span>
     <strong style="font-weight:400;">Tier 1 &#8212; Primary</strong><br>Official government reports, parliamentary filings.<br><br>
@@ -782,31 +806,31 @@ const CORP_DATA=[
  ]},
 ];
 const OPS_DATA=[
- {title:"Saudi Arabia — Yemen Conflict",period:"March 2015 – Present",status:"persuasive",badge:"Persuasive",equipment:"LAV-25, LAV III, Bison APC; PGW Timberwolf & LRT-3; Streit Spartan APCs",supplier:"GDLS-C, PGW, Streit Group",value:"$1B+ CAD in LAV deliveries 2015-2018",evidence:"61+ Canadian LAVs destroyed/captured (Lost Armour). Houthi forces photographed with PGW rifles. UN HRC named Canada as conflict-fuelling supplier.",gov:"GAC 2020: No substantial risk. Disputed by Amnesty International and Project Ploughshares.",treaty:"Canada in breach of ATT Article 7 per Amnesty International. Canada acceded to ATT 2019."},
- {title:"Israel — Gaza Operations",period:"2008-09; Oct 2023 – Present",status:"persuasive",badge:"Persuasive",equipment:"CAE simulators; electronics; GPS components; explosives; bullets confirmed via Israeli Tax Authority",supplier:"CAE Inc.; multiple unnamed companies",value:"$30.6M (2023, record); $79M+ tracked Oct 2023-July 2025",evidence:"CAE simulators trained IAF pilots on helicopters used in Gaza. Arms Embargo Now tracked hundreds of shipments via Israeli customs.",gov:"GAC paused new permits Jan 8 2024. Post-Oct-7 exports described as non-lethal. Judicial review filed March 2024.",treaty:"Widely assessed to breach ATT Article 7. Existing permits not formally revoked."},
- {title:"Ukraine — Russia-Ukraine War",period:"February 2022 – Present",status:"authorized",badge:"Authorized",equipment:"ACVs, LRT-3, C7/C8 rifles, Leopard 2 tanks (8), Mk-83 bombs, LAU-7 launchers",supplier:"GDLS-C, PGW Defence, Colt Canada, Canadian Armed Forces stocks",value:"$416.7M RCAM 2023; $172.7M 2024; total >$2B CAD",evidence:"Fully documented by GAC, DND, and parliamentary committee.",gov:"Canada officially supports transfers as collective defence obligation.",treaty:"No concerns raised. Ukraine is recognized victim of armed aggression."},
- {title:"Bahrain — Domestic Crackdown",period:"March 2011",status:"confirmed",badge:"Confirmed",equipment:"Canadian-made LAVs (GDLS-C) deployed by Saudi SANG",supplier:"GDLS-C — vehicles from earlier Saudi contracts",value:"Indirect use.",evidence:"Canadian government acknowledged LAVs deployed to Bahrain. At least 35 civilians killed.",gov:"Canada stated it did not believe vehicles were used against protesters.",treaty:"Pre-dates ATT accession. First documented overseas use of Canadian LAVs against civilians."},
+ {title:"Saudi Arabia — Yemen Conflict",period:"March 2015 – Present",status:"persuasive",badge:"Persuasive",activeYears:[2017,2018,2019,2020,2021,2022,2023,2024],equipment:"LAV-25, LAV III, Bison APC; PGW Timberwolf & LRT-3; Streit Spartan APCs",supplier:"GDLS-C, PGW, Streit Group",value:"$1B+ CAD in LAV deliveries 2015-2018",evidence:"61+ Canadian LAVs destroyed/captured (Lost Armour). Houthi forces photographed with PGW rifles. UN HRC named Canada as conflict-fuelling supplier.",gov:"GAC 2020: No substantial risk. Disputed by Amnesty International and Project Ploughshares.",treaty:"Canada in breach of ATT Article 7 per Amnesty International. Canada acceded to ATT 2019."},
+ {title:"Israel — Gaza Operations",period:"2008-09; Oct 2023 – Present",status:"persuasive",badge:"Persuasive",activeYears:[2023,2024],equipment:"CAE simulators; electronics; GPS components; explosives; bullets confirmed via Israeli Tax Authority",supplier:"CAE Inc.; multiple unnamed companies",value:"$30.6M (2023, record); $79M+ tracked Oct 2023-July 2025",evidence:"CAE simulators trained IAF pilots on helicopters used in Gaza. Arms Embargo Now tracked hundreds of shipments via Israeli customs.",gov:"GAC paused new permits Jan 8 2024. Post-Oct-7 exports described as non-lethal. Judicial review filed March 2024.",treaty:"Widely assessed to breach ATT Article 7. Existing permits not formally revoked."},
+ {title:"Ukraine — Russia-Ukraine War",period:"February 2022 – Present",status:"authorized",badge:"Authorized",activeYears:[2022,2023,2024],equipment:"ACVs, LRT-3, C7/C8 rifles, Leopard 2 tanks (8), Mk-83 bombs, LAU-7 launchers",supplier:"GDLS-C, PGW Defence, Colt Canada, Canadian Armed Forces stocks",value:"$416.7M RCAM 2023; $172.7M 2024; total >$2B CAD",evidence:"Fully documented by GAC, DND, and parliamentary committee.",gov:"Canada officially supports transfers as collective defence obligation.",treaty:"No concerns raised. Ukraine is recognized victim of armed aggression."},
+ {title:"Bahrain — Domestic Crackdown",period:"March 2011",status:"confirmed",badge:"Confirmed",activeYears:[2017,2018,2019,2020,2021,2022,2023,2024],equipment:"Canadian-made LAVs (GDLS-C) deployed by Saudi SANG",supplier:"GDLS-C — vehicles from earlier Saudi contracts",value:"Indirect use.",evidence:"Canadian government acknowledged LAVs deployed to Bahrain. At least 35 civilians killed.",gov:"Canada stated it did not believe vehicles were used against protesters.",treaty:"Pre-dates ATT accession. First documented overseas use of Canadian LAVs against civilians."},
 ];
 const SOURCES=[
  {group:"Tier 1 — Government / Official",color:"#2a9060",entries:[
-  {title:"Report on Exports of Military Goods from Canada — 2024",pub:"Global Affairs Canada, June 2025",desc:"Total non-US $2.504B CAD. Saudi Arabia 51.7%. Israel permit pause documented.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2024-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2024-marchandises-militaires-en.pdf"},
-  {title:"Report on Exports of Military Goods from Canada — 2023",pub:"Global Affairs Canada, May 2024",desc:"Saudi Arabia $904.6M (42.2%). Ukraine $416.7M. Israel record $30.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2023-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2023-marchandises-militaires-en-v2.pdf"},
-  {title:"Report on Exports of Military Goods from Canada — 2022",pub:"Global Affairs Canada, May 2023",desc:"Total $2.204B CAD. Saudi Arabia $1.151B (54%). Germany $221.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2022-marchandises-militaires.aspx?lang=eng",pdf:null},
-  {title:"Report on Exports of Military Goods from Canada — 2021",pub:"Global Affairs Canada, 2022",desc:"Total $3.1B CAD. Saudi Arabia dominant. Japan $280.4M second-largest non-US destination.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2021-marchandises-militaires.aspx?lang=eng",pdf:null},
-  {title:"Report on Exports of Military Goods from Canada — 2020",pub:"Global Affairs Canada, 2021",desc:"Total $1.966B CAD. Saudi Arabia $1.31B (66.6%). Permit freeze on Saudi Arabia lifted April 2020.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2020-marchandises-militaires.aspx?lang=eng",pdf:null},
-  {title:"Report on Exports of Military Goods from Canada — 2019",pub:"Global Affairs Canada, May 2020",desc:"Record total $3.77B. Saudi Arabia $2.864B (76%). Belgium $151.7M for Saudi training LAVs. Turkey suspended Oct 2019.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2019-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military_goods-2019-marchandises_militaires-eng.pdf"},
+  {year:2024,title:"Report on Exports of Military Goods from Canada — 2024",pub:"Global Affairs Canada, June 2025",desc:"Total non-US $2.504B CAD. Saudi Arabia 51.7%. Israel permit pause documented.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2024-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2024-marchandises-militaires-en.pdf"},
+  {year:2023,title:"Report on Exports of Military Goods from Canada — 2023",pub:"Global Affairs Canada, May 2024",desc:"Saudi Arabia $904.6M (42.2%). Ukraine $416.7M. Israel record $30.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2023-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military-goods-2023-marchandises-militaires-en-v2.pdf"},
+  {year:2022,title:"Report on Exports of Military Goods from Canada — 2022",pub:"Global Affairs Canada, May 2023",desc:"Total $2.204B CAD. Saudi Arabia $1.151B (54%). Germany $221.6M.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2022-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {year:2021,title:"Report on Exports of Military Goods from Canada — 2021",pub:"Global Affairs Canada, 2022",desc:"Total $3.1B CAD. Saudi Arabia dominant. Japan $280.4M second-largest non-US destination.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2021-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {year:2020,title:"Report on Exports of Military Goods from Canada — 2020",pub:"Global Affairs Canada, 2021",desc:"Total $1.966B CAD. Saudi Arabia $1.31B (66.6%). Permit freeze on Saudi Arabia lifted April 2020.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2020-marchandises-militaires.aspx?lang=eng",pdf:null},
+  {year:2019,title:"Report on Exports of Military Goods from Canada — 2019",pub:"Global Affairs Canada, May 2020",desc:"Record total $3.77B. Saudi Arabia $2.864B (76%). Belgium $151.7M for Saudi training LAVs. Turkey suspended Oct 2019.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2019-marchandises-militaires.aspx?lang=eng",pdf:"https://www.international.gc.ca/transparency-transparence/assets/pdfs/controls-controles/reports-rapports/military_goods-2019-marchandises_militaires-eng.pdf"},
   {title:"Report on Exports of Military Goods from Canada — 2018",pub:"Global Affairs Canada, June 2019",desc:"Total $2.069B. Saudi Arabia $1.282B (61.96%). Khashoggi murder triggers permit review Oct 2018.",web:"https://www.international.gc.ca/trade-commerce/assets/pdfs/controls-controles/reports-rapports/military_goods-2018-marchandises_militaires-eng.pdf",pdf:null},
   {title:"Report on Exports of Military Goods from Canada — 2017",pub:"Global Affairs Canada, June 2018",desc:"Total $1.031B. Saudi Arabia $497.5M (48.25%). LAV 700 deliveries begin under 2014 contract.",web:"https://www.international.gc.ca/transparency-transparence/controls-controles/military-goods-2017-marchandises-militaires.aspx?lang=eng",pdf:null},
  ]},
  {group:"Tier 2 — Research Institutions",color:"#3a6fba",entries:[
-  {title:"Canada's Soaring Arms Exports: What the 2024 Numbers Reveal",pub:"Project Ploughshares, Sept 2025",desc:"Canada's highest non-Saudi exports ever at $1.21B.",web:"https://ploughshares.ca/canadas-soaring-arms-exports-what-the-2024-numbers-reveal/",pdf:null},
-  {title:"Canada's Weapons Exports in 2023",pub:"Project Ploughshares, May 2025",desc:"49% of exports to Freedom House Not Free states.",web:"https://ploughshares.ca/canadas-weapons-exports-in-2023/",pdf:null},
-  {title:"Exposing Canadian Military Exports to Israel",pub:"Arms Embargo Now, July 2025",desc:"47+ confirmed shipments Canada to Israel post-Oct 7 2023.",web:"https://armsembargonow.ca",pdf:"https://armsembargonow.ca/wp-content/uploads/2025/07/Exposing-Canadian-Military-Exports-to-Israel_07292025_compressed-.pdf"},
+  {year:2024,title:"Canada's Soaring Arms Exports: What the 2024 Numbers Reveal",pub:"Project Ploughshares, Sept 2025",desc:"Canada's highest non-Saudi exports ever at $1.21B.",web:"https://ploughshares.ca/canadas-soaring-arms-exports-what-the-2024-numbers-reveal/",pdf:null},
+  {year:2023,title:"Canada's Weapons Exports in 2023",pub:"Project Ploughshares, May 2025",desc:"49% of exports to Freedom House Not Free states.",web:"https://ploughshares.ca/canadas-weapons-exports-in-2023/",pdf:null},
+  {year:2023,title:"Exposing Canadian Military Exports to Israel",pub:"Arms Embargo Now, July 2025",desc:"47+ confirmed shipments Canada to Israel post-Oct 7 2023.",web:"https://armsembargonow.ca",pdf:"https://armsembargonow.ca/wp-content/uploads/2025/07/Exposing-Canadian-Military-Exports-to-Israel_07292025_compressed-.pdf"},
  ]},
  {group:"Tier 3 — Investigative Journalism",color:"#c07820",entries:[
-  {title:"Canada Funneled Arms to Saudis via Opaque U.S. Program",pub:"The Breach, 2024",desc:"Urgent permits July 2015, four months after war began.",web:"https://breachmedia.ca/canada-funneled-saudi-arabia-lavs-opaque-american-program/",pdf:null},
-  {title:"Saudis Appear to be Using Canadian-Made Combat Vehicles Against Yemeni Rebels",pub:"Globe and Mail, 2016",desc:"First documentation of Canadian LAVs near Yemen border.",web:"https://www.theglobeandmail.com/news/politics/saudi-arms-used-against-yemeni-rebels-seem-to-match-canadian-lavs/article28846678/",pdf:null},
-  {title:"Canadian Small Arms & Light Weapons in Ukraine",pub:"The Armourers Bench, 2023",desc:"C7/C8 rifles, CADEX CDX, PGW LRT-3 in Ukrainian service.",web:"https://armourersbench.com/2023/01/22/canadian-small-arms-light-weapons-in-ukraine/",pdf:null},
+  {year:2024,title:"Canada Funneled Arms to Saudis via Opaque U.S. Program",pub:"The Breach, 2024",desc:"Urgent permits July 2015, four months after war began.",web:"https://breachmedia.ca/canada-funneled-saudi-arabia-lavs-opaque-american-program/",pdf:null},
+  {year:2017,title:"Saudis Appear to be Using Canadian-Made Combat Vehicles Against Yemeni Rebels",pub:"Globe and Mail, 2016",desc:"First documentation of Canadian LAVs near Yemen border.",web:"https://www.theglobeandmail.com/news/politics/saudi-arms-used-against-yemeni-rebels-seem-to-match-canadian-lavs/article28846678/",pdf:null},
+  {year:2023,title:"Canadian Small Arms & Light Weapons in Ukraine",pub:"The Armourers Bench, 2023",desc:"C7/C8 rifles, CADEX CDX, PGW LRT-3 in Ukrainian service.",web:"https://armourersbench.com/2023/01/22/canadian-small-arms-light-weapons-in-ukraine/",pdf:null},
  ]},
 ];
 
@@ -1129,10 +1153,21 @@ function setYear(yr, animate){
   document.getElementById("total-val").textContent=d.total;
   document.getElementById("total-ctx").textContent=d.countries+" countries \xb7 "+yr;
 
+  // Update timeline highlight + scroll
+  document.querySelectorAll(".tl-yblock").forEach(block=>{
+    const isActive=parseInt(block.dataset.year)===yr;
+    block.classList.toggle("tl-active",isActive);
+    if(isActive){
+      block.scrollIntoView({block:"nearest",behavior:"smooth"});
+    }
+  });
+
+  // Update year context badge on non-timeline tabs
+  document.querySelectorAll(".sv-year-ctx").forEach(el=>{el.textContent=yr;});
+  updateYearHighlights(yr);
+
   if(animate){
-    const al=document.getElementById("arc-layer"),nl=document.getElementById("node-layer"),pl=document.getElementById("particle-layer");
     const tv=document.getElementById("total-val"),ts=document.getElementById("total-ctx");
-    // Only fade the totals counter, not the map
     tv.style.opacity="0"; ts.style.opacity="0";
     buildFlows(false);
     buildParticles();
@@ -1253,55 +1288,142 @@ document.getElementById("play-btn").addEventListener("click",()=>{
 
 function buildTimeline(){
   const c=document.getElementById("tl-container");
-  [2017,2018,2019,2020,2021,2022,2023,2024].forEach(yr=>{
-    const data=MAP_DATA[yr],block=document.createElement("div");block.className="tl-yblock";
-    block.innerHTML="<div class='tl-yhead'><span class='tl-yn'>"+yr+"</span><span class='tl-ytot'>Total: "+data.total+"</span></div>";
+  [2024,2023,2022,2021,2020,2019,2018,2017].forEach(yr=>{
+    const data=MAP_DATA[yr];
+    const maxVal=Math.max(...data.destinations.map(d=>d.val));
+    const block=document.createElement("div");block.className="tl-yblock";block.dataset.year=yr;
+    block.innerHTML=`<div class='tl-yhead'>
+      <span class='tl-yn'>${yr}</span>
+      <span class='tl-ytot'>${data.total}</span>
+      <span class='tl-ycountries'>${data.countries} countries</span>
+    </div>`;
     const rows=document.createElement("div");rows.className="tl-rows";
-    [...data.destinations].sort((a,b)=>b.share-a.share).forEach(dest=>{
-      const col=TLC[destClass(dest.name)],pct=Math.max(0.3,dest.share*100);
+    [...data.destinations].sort((a,b)=>b.val-a.val).forEach(dest=>{
+      const col=TLC[destClass(dest.name)];
+      const pct=Math.max(0.5,(dest.val/maxVal)*100);
       const vs=dest.val>=1000?"$"+(dest.val/1000).toFixed(2)+"B":"$"+dest.val.toFixed(0)+"M";
+      const sharePct=(dest.share*100).toFixed(1)+"%";
       const row=document.createElement("div");row.className="tl-row";
-      row.innerHTML="<div class='tl-name'>"+dest.name+"</div><div class='tl-track'><div class='tl-fill' style='width:"+pct+"%;background:"+col+"cc'><span class='tl-val'>"+vs+"</span></div></div>";
+      row.innerHTML=`
+        <div class='tl-name'>${dest.name}</div>
+        <div class='tl-track'>
+          <div class='tl-fill' style='width:${pct}%;background:${col}22;border-left:2px solid ${col}'>
+            <span class='tl-val' style='color:${col}'>${vs}</span>
+          </div>
+        </div>
+        <div class='tl-share' style='color:${col}'>${sharePct}</div>`;
       rows.appendChild(row);
     });
     block.appendChild(rows);c.appendChild(block);
   });
 }
+
 function buildCorporate(){
-  const c=document.getElementById("corp-container"),sc={red:"#c0392b",blue:"#3a6fba",amber:"#c07820","":"#6a6860"};
+  const c=document.getElementById("corp-container");
+  const sc={red:"#c0392b",blue:"#3a6fba",amber:"#c07820","":"#6a6860"};
   CORP_DATA.forEach((corp,i)=>{
     const block=document.createElement("div");block.className="corp-entry";
-    const fields=["contracts","products","clients","crown","finance"].map(f=>"<div class='corp-field'><div class='corp-flbl'>"+f+"</div><div class='corp-fval'>"+corp[f]+"</div></div>").join("");
-    const ops=corp.ops.map(op=>"<div class='corp-op'><div class='corp-op-ttl' style='color:"+(sc[op.cls]||"#888")+"'>"+op.title+"</div><div class='corp-op-txt'>"+op.txt+"</div></div>").join("");
-    block.innerHTML="<div class='corp-hdr'><div><div class='corp-name'>"+corp.name+"</div><div class='corp-hq'>"+corp.hq+"</div></div><div class='corp-tag' style='color:"+corp.tc+";border-color:"+corp.tc+"'>"+corp.type+"</div></div><div class='corp-body' id='cb"+i+"'>"+fields+"<div class='corp-ops'><div class='corp-ops-lbl'>// Deployments</div>"+ops+"</div></div>";
-    block.querySelector(".corp-hdr").addEventListener("click",()=>document.getElementById("cb"+i).classList.toggle("open"));
+    const fields=[
+      ["Contracts",corp.contracts],
+      ["Products",corp.products],
+      ["Clients",corp.clients],
+      ["Crown / Gov link",corp.crown],
+      ["Finance",corp.finance]
+    ].map(([l,v])=>`<div class='corp-field'><div class='corp-flbl'>${l}</div><div class='corp-fval'>${v}</div></div>`).join("");
+    const ops=corp.ops.map(op=>`
+      <div class='corp-op' style='border-left-color:${sc[op.cls]||"#4a4840"}'>
+        <div class='corp-op-ttl' style='color:${sc[op.cls]||"#8a8880"}'>${op.title}</div>
+        <div class='corp-op-txt'>${op.txt}</div>
+      </div>`).join("");
+    block.innerHTML=`
+      <div class='corp-hdr'>
+        <div>
+          <div class='corp-name'>${corp.name}</div>
+          <div class='corp-hq'>${corp.hq}</div>
+        </div>
+        <div class='corp-tag' style='color:${corp.tc};border-color:${corp.tc}'>${corp.type}</div>
+      </div>
+      <div class='corp-body' id='cb${i}'>
+        ${fields}
+        <div class='corp-ops'>
+          <div class='corp-ops-lbl'>// Known Deployments</div>
+          ${ops}
+        </div>
+      </div>`;
+    block.querySelector(".corp-hdr").addEventListener("click",()=>{
+      const body=document.getElementById("cb"+i);
+      body.classList.toggle("open");
+      block.querySelector(".corp-hdr").classList.toggle("open");
+    });
     c.appendChild(block);
   });
 }
+
 function buildOps(){
-  const c=document.getElementById("ops-container"),sc={confirmed:"#c0392b",persuasive:"#c07820",authorized:"#3a6fba"};
+  const c=document.getElementById("ops-container");
+  const sc={confirmed:"#c0392b",persuasive:"#c07820",authorized:"#3a6fba"};
   OPS_DATA.forEach(op=>{
-    const col=sc[op.status]||"#888",block=document.createElement("div");block.className="ops-entry";
-    const fields=[["Equipment",op.equipment],["Supplier(s)",op.supplier],["Value",op.value],["Evidence",op.evidence],["Gov. position",op.gov],["Treaty",op.treaty]].map(([l,v])=>"<div class='ops-field'><div class='ops-flbl'>"+l+"</div><div class='ops-fval'>"+v+"</div></div>").join("");
-    block.innerHTML="<div class='ops-hdr'><div><div class='ops-title'>"+op.title+"</div><div class='ops-period'>"+op.period+"</div></div><div class='ops-badge' style='color:"+col+";border-color:"+col+"'>"+op.badge+"</div></div><div class='ops-body'>"+fields+"</div>";
+    const col=sc[op.status]||"#8a8880";
+    const block=document.createElement("div");block.className="ops-entry";
+    block.dataset.years=JSON.stringify(op.activeYears);
+    const fields=[
+      ["Equipment",op.equipment],
+      ["Supplier(s)",op.supplier],
+      ["Value",op.value],
+      ["Evidence base",op.evidence],
+      ["Government position",op.gov],
+      ["Treaty status",op.treaty]
+    ].map(([l,v])=>`<div class='ops-field'><div class='ops-flbl'>${l}</div><div class='ops-fval'>${v}</div></div>`).join("");
+    block.innerHTML=`
+      <div class='ops-hdr'>
+        <div>
+          <div class='ops-title'>${op.title}</div>
+          <div class='ops-period'>${op.period}</div>
+        </div>
+        <div class='ops-badge' style='color:${col};border-color:${col}'>${op.badge}</div>
+      </div>
+      <div class='ops-body'>${fields}</div>`;
     c.appendChild(block);
   });
 }
+
 function buildSources(){
   const c=document.getElementById("src-container");
   SOURCES.forEach(grp=>{
     const block=document.createElement("div");block.className="src-tier";
-    block.innerHTML="<div class='src-tier-hdr' style='color:"+grp.color+"'>"+grp.group+"</div>";
+    block.innerHTML=`<div class='src-tier-hdr' style='color:${grp.color}'>${grp.group}</div>`;
     grp.entries.forEach(src=>{
       const e=document.createElement("div");e.className="src-entry";e.style.borderLeftColor=grp.color;
+      if(src.year) e.dataset.year=src.year;
       let btns="";
-      if(src.web)btns+="<a class='src-btn web' href='"+src.web+"' target='_blank'>&#8599; View source</a>";
-      if(src.pdf)btns+="<a class='src-btn pdf' href='"+src.pdf+"' target='_blank'>&#8595; PDF</a>";
-      e.innerHTML="<div class='src-title'>"+src.title+"</div><div class='src-pub'>"+src.pub+"</div><div class='src-desc'>"+src.desc+"</div><div class='src-btns'>"+btns+"</div>";
+      if(src.web)btns+=`<a class='src-btn web' href='${src.web}' target='_blank'>&#8599; View source</a>`;
+      if(src.pdf)btns+=`<a class='src-btn pdf' href='${src.pdf}' target='_blank'>&#8595; Open PDF</a>`;
+      e.innerHTML=`
+        <div class='src-title'>${src.title}</div>
+        <div class='src-pub'>${src.pub}</div>
+        <div class='src-desc'>${src.desc}</div>
+        <div class='src-btns'>${btns}</div>`;
       block.appendChild(e);
     });
     c.appendChild(block);
   });
+}
+
+function updateYearHighlights(yr){
+  // Ops: highlight active, dim inactive
+  document.querySelectorAll(".ops-entry").forEach(el=>{
+    const years=JSON.parse(el.dataset.years||"[]");
+    el.classList.toggle("year-inactive", years.length>0 && !years.includes(yr));
+    el.classList.toggle("year-active", years.includes(yr));
+  });
+  // Sources: highlight matching year, dim others
+  document.querySelectorAll(".src-entry").forEach(el=>{
+    const y=parseInt(el.dataset.year);
+    if(!el.dataset.year){el.classList.remove("year-inactive","year-active");return;}
+    el.classList.toggle("year-active", y===yr);
+    el.classList.toggle("year-inactive", y!==yr);
+  });
+  // Corporate: always shown, no year-dimming needed (structural data)
 }
 document.getElementById("export-btn").addEventListener("click",()=>{
   const d=MAP_DATA[activeYear];
@@ -1317,7 +1439,7 @@ document.querySelectorAll(".tab").forEach(tab=>{
     tab.classList.add("active");document.getElementById("view-"+tab.dataset.view).classList.add("active");
   });
 });
-highlightCountries(2024);buildFlows();buildTimeline();buildCorporate();buildOps();buildSources();updateLegendValues();
+highlightCountries(2024);buildFlows();buildTimeline();buildCorporate();buildOps();buildSources();updateLegendValues();updateYearHighlights(2024);
 activeYear=2024;
 document.getElementById("hdr-yr").textContent=2024;
 setTimeout(()=>{buildParticles();},100);
