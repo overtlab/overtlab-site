@@ -45,7 +45,7 @@ nav {
 .nav-links a { font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); text-decoration:none; transition:color .15s; }
 .nav-links a:hover { color:var(--ink); }
 .nav-lang { border-left:1px solid var(--rule); padding-left:32px; }
-.investigations { padding-top:56px; border-bottom:1px solid var(--rule); }
+.investigations { padding-top:100px; border-bottom:1px solid var(--rule); }
 .inv-header { padding:48px 48px 0; display:flex; align-items:baseline; justify-content:space-between; gap:24px; }
 .inv-header-label { font-family:var(--mono); font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); }
 .inv-header-count { font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:var(--ink-4); }
@@ -116,27 +116,61 @@ footer { padding:28px 48px; display:flex; justify-content:space-between; align-i
 .nav-hamburger.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
 .nav-hamburger.open span:nth-child(2) { opacity:0; }
 .nav-hamburger.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
-.nav-drawer { display:none; position:fixed; top:56px; left:0; right:0; background:rgba(255,255,255,0.98); backdrop-filter:blur(12px); border-bottom:1px solid var(--rule); z-index:99; padding:16px 0; }
+/* ── INVESTIGATION BAR ── */
+#inv-bar { position:fixed; top:56px; left:0; right:0; z-index:99; height:44px; background:var(--bg); border-bottom:1px solid var(--rule); display:flex; align-items:stretch; padding:0 48px; gap:0; }
+.inv-bar-trigger { font-family:var(--mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-4); display:flex; align-items:center; gap:10px; padding-right:28px; border-right:1px solid var(--rule); cursor:default; flex-shrink:0; }
+.inv-bar-trigger-arrow { font-size:7px; color:var(--ink-4); transition:transform .2s; }
+.inv-bar-cats { display:flex; align-items:stretch; gap:0; flex:1; overflow:hidden; }
+.inv-cat { position:relative; display:flex; align-items:center; padding:0 20px; font-family:var(--mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); cursor:default; transition:color .12s, background .12s; white-space:nowrap; user-select:none; border-right:1px solid var(--rule); }
+.inv-cat:last-child { border-right:none; }
+.inv-cat:hover { color:#ffffff; background:#141614; }
+.inv-cat.has-active { color:#ffffff; background:#141614; }
+.inv-cat-count { font-size:7px; color:var(--ink-4); margin-left:6px; letter-spacing:.08em; }
+.inv-cat:hover .inv-cat-count, .inv-cat.has-active .inv-cat-count { color:rgba(255,255,255,0.4); }
+.inv-cat::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .18s ease; }
+.inv-cat:hover::after, .inv-cat.has-active::after { transform:scaleX(1); }
+
+/* ── FLYOUT ── */
+.inv-flyout { position:fixed; top:100px; left:0; right:0; background:#141614; border-bottom:1px solid rgba(255,255,255,0.08); z-index:98; display:none; grid-template-columns:260px 1fr; }
+.inv-flyout.open { display:grid; }
+.flyout-list { border-right:1px solid rgba(255,255,255,0.08); padding:8px 0; }
+.flyout-item { display:flex; align-items:baseline; gap:16px; padding:14px 28px; text-decoration:none; color:inherit; transition:background .1s; cursor:pointer; border-left:2px solid transparent; }
+.flyout-item:hover, .flyout-item.active { background:rgba(255,255,255,0.05); border-left-color:var(--yellow); }
+.flyout-item-num { font-family:var(--mono); font-size:8px; letter-spacing:.14em; color:rgba(255,255,255,0.2); flex-shrink:0; }
+.flyout-item-name { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:rgba(255,255,255,0.5); line-height:1.5; }
+.flyout-item:hover .flyout-item-name, .flyout-item.active .flyout-item-name { color:rgba(255,255,255,0.9); }
+.flyout-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; margin-bottom:1px; display:inline-block; }
+.flyout-detail { padding:0; display:grid; grid-template-columns:1fr 280px; }
+.flyout-detail-inner { padding:28px 36px; display:flex; flex-direction:column; gap:12px; }
+.flyout-detail-empty { font-family:var(--mono); font-size:9px; letter-spacing:.18em; color:rgba(255,255,255,0.2); text-transform:uppercase; padding:28px 36px; }
+.flyout-d-img { border-left:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#0a0c0a; }
+.flyout-d-img img { width:100%; height:100%; object-fit:cover; object-position:top left; display:block; opacity:0.75; }
+.flyout-d-img-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#0a0c0a; }
+.flyout-d-img-placeholder span { font-family:var(--mono); font-size:8px; letter-spacing:.18em; color:rgba(255,255,255,0.15); text-transform:uppercase; }
+.flyout-d-status { font-family:var(--mono); font-size:8px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.4); display:flex; align-items:center; gap:8px; }
+.flyout-d-title { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:-.02em; line-height:1.2; color:rgba(255,255,255,0.92); }
+.flyout-d-desc { font-family:var(--sans); font-size:13px; line-height:1.75; color:rgba(255,255,255,0.45); font-weight:300; max-width:560px; }
+.flyout-d-tags { display:flex; gap:6px; flex-wrap:wrap; }
+.flyout-d-tag { font-family:var(--mono); font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,0.35); padding:2px 7px; border:1px solid rgba(255,255,255,0.12); }
+.flyout-d-cta { display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.85); text-decoration:none; border:1px solid rgba(255,255,255,0.25); padding:9px 18px; margin-top:4px; align-self:flex-start; transition:background .15s, color .15s, border-color .15s; }
+.flyout-d-cta:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.5); }
+.flyout-d-pending { font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:rgba(255,255,255,0.2); text-transform:uppercase; padding-top:8px; }
+
+/* ── DARK DRAWER ── */
+.nav-drawer { display:none; position:fixed; top:56px; left:0; right:0; background:#141614; border-bottom:1px solid rgba(255,255,255,0.08); z-index:99; padding:16px 0; }
 .nav-drawer.open { display:block; }
-.nav-drawer a { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-2); text-decoration:none; padding:14px 24px; border-bottom:1px solid var(--rule); transition:background .12s; }
+.nav-drawer a { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none; padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.06); transition:background .12s, color .12s; }
 .nav-drawer a:last-child { border-bottom:none; }
-.nav-drawer a:hover { background:var(--bg-2); color:var(--ink); }
-@media(max-width:1100px){
-  nav { padding:0 32px; }
-  .inv-header { padding:36px 32px 0; }
-  .inv-row { padding:32px 32px; gap:0 28px; }
-  .premise { padding:64px 32px; gap:48px; }
-  .methodology, .contribute { padding:64px 32px; gap:48px; }
-  footer { padding:24px 32px; }
-}
-@media(max-width:1100px) and (min-width:769px){
-  .inv-row { grid-template-columns:48px 1fr 180px auto 28px; }
-  .inv-thumb { width:180px; }
-}
+.nav-drawer a:hover { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.9); }
+
+@media(max-width:1100px){ nav { padding:0 32px; } #inv-bar { padding:0 32px; } .inv-header { padding:36px 32px 0; } .inv-row { padding:32px 32px; gap:0 28px; } .premise { padding:64px 32px; gap:48px; } .methodology, .contribute { padding:64px 32px; gap:48px; } footer { padding:24px 32px; } }
+@media(max-width:1100px) and (min-width:769px){ .inv-row { grid-template-columns:48px 1fr 180px auto 28px; } .inv-thumb { width:180px; } .flyout-detail { grid-template-columns:1fr 200px; } }
 @media(max-width:768px){
   nav { padding:0 20px; }
   .nav-links { display:none; }
   .nav-hamburger { display:flex; }
+  #inv-bar { display:none; }
+  .inv-flyout { display:none !important; }
   .investigations { padding-top:72px; }
   .inv-header { padding:28px 20px 0; }
   .inv-row { grid-template-columns:36px 1fr; gap:0 16px; padding:28px 20px; }
@@ -157,15 +191,7 @@ footer { padding:28px 48px; display:flex; justify-content:space-between; align-i
   footer { padding:20px; flex-direction:column; align-items:flex-start; gap:8px; }
   .footer-r { display:none; }
 }
-@media(min-width:1600px){
-  nav { padding:0 72px; }
-  .inv-header { padding:56px 72px 0; }
-  .inv-row { padding:48px 72px; gap:0 56px; grid-template-columns:64px 1fr 300px auto 40px; }
-  .inv-thumb { width:300px; }
-  .premise { padding:96px 72px; gap:96px; }
-  .methodology, .contribute { padding:96px 72px; gap:96px; }
-  footer { padding:32px 72px; }
-}
+@media(min-width:1600px){ nav { padding:0 72px; } #inv-bar { padding:0 72px; } .inv-header { padding:56px 72px 0; } .inv-row { padding:48px 72px; gap:0 56px; grid-template-columns:64px 1fr 300px auto 40px; } .inv-thumb { width:300px; } .premise { padding:96px 72px; gap:96px; } .methodology, .contribute { padding:96px 72px; gap:96px; } footer { padding:32px 72px; } .flyout-detail { grid-template-columns:1fr 360px; } }
 </style>
 </head>
 <body>
@@ -190,6 +216,23 @@ footer { padding:28px 48px; display:flex; justify-content:space-between; align-i
   <a href="#methodology" class="drawer-link">Méthodologie</a>
   <a href="#contribute" class="drawer-link">Contribuer</a>
   <a href="/" class="drawer-link">EN</a>
+</div>
+
+<!-- INVESTIGATION BAR -->
+<div id="inv-bar">
+  <div class="inv-bar-trigger">
+    Enquêtes
+    <span class="inv-bar-trigger-arrow">&#9660;</span>
+  </div>
+  <div class="inv-bar-cats" id="inv-bar-cats"></div>
+</div>
+
+<!-- FLYOUT PANEL -->
+<div id="inv-flyout" class="inv-flyout">
+  <div class="flyout-list" id="flyout-list"></div>
+  <div class="flyout-detail" id="flyout-detail">
+    <div class="flyout-detail-empty">Survolez une enquête</div>
+  </div>
 </div>
 
 <section class="investigations" id="investigations">
@@ -362,8 +405,143 @@ footer { padding:28px 48px; display:flex; justify-content:space-between; align-i
   <div class="footer-r">Toutes les données pertinentes sont publiques &middot; Le pouvoir contemporain opère ouvertement</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+// ── HAMBURGER ──────────────────────────────
 const hamburger = document.getElementById('hamburger');
 const drawer = document.getElementById('nav-drawer');
 const drawerLinks = drawer.querySelectorAll('.drawer-link');
-hamburger.addEventListener
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  drawer.classList.toggle('open');
+});
+drawerLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    drawer.classList.remove('open');
+  });
+});
+
+// ── INVESTIGATION BAR ──────────────────────
+const INV_DATA = {
+  categories: [
+    {
+      id: 'arms-trade',
+      label: 'Commerce des armes',
+      investigations: [
+        {
+          num: '001',
+          name: 'Exportations militaires canadiennes — Carte des flux mondiaux',
+          status: 'live',
+          statusLabel: 'En ligne · Mis à jour 2024',
+          desc: 'Une cartographie structurelle des exportations militaires canadiennes 2021–2024. Quatre milliards de dollars en flux annuels. Cinq exportateurs corporatifs. Cinq zones de conflit.',
+          tags: ['Commerce des armes', 'Réseau corporatif', 'Déploiements connus'],
+          href: '/investigations/canadian-arms/',
+          thumb: '/investigations/canadian-arms/thumb.jpg',
+          meta: '2021–2024 · 20 pays · AMC · RCAM'
+        }
+      ]
+    },
+    {
+      id: 'extractive',
+      label: 'Industrie extractive',
+      investigations: [
+        {
+          num: '002',
+          name: 'Permis miniers canadiens à l\'étranger',
+          status: 'pending',
+          statusLabel: 'En développement',
+          desc: 'Une cartographie structurelle des permis miniers canadiens, filiales et incidents documentés en Afrique subsaharienne et en Amérique latine.',
+          tags: ['Industrie extractive', 'Réseau corporatif', 'Dépôts de permis'],
+          href: null,
+          meta: 'À déterminer · Afrique · AmLat · RNCan · TSX'
+        }
+      ]
+    },
+    { id: 'infrastructure', label: 'Infrastructure', investigations: [] },
+    { id: 'finance', label: 'Finance', investigations: [] }
+  ]
+};
+
+const catsEl   = document.getElementById('inv-bar-cats');
+const flyout   = document.getElementById('inv-flyout');
+const listEl   = document.getElementById('flyout-list');
+const detailEl = document.getElementById('flyout-detail');
+let activeCategory = null;
+
+INV_DATA.categories.forEach(cat => {
+  const el = document.createElement('div');
+  el.className = 'inv-cat';
+  el.dataset.id = cat.id;
+  const count = cat.investigations.length;
+  el.innerHTML = `${cat.label}<span class="inv-cat-count">${count > 0 ? count : '—'}</span>`;
+  catsEl.appendChild(el);
+  el.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.inv-cat').forEach(c => c.classList.remove('has-active'));
+    el.classList.add('has-active');
+    activeCategory = cat;
+    openFlyout(cat);
+  });
+});
+
+function openFlyout(cat) {
+  flyout.classList.add('open');
+  listEl.innerHTML = '';
+  if (cat.investigations.length === 0) {
+    listEl.innerHTML = `<div style="padding:20px 28px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,0.2);text-transform:uppercase;">Aucune enquête</div>`;
+    detailEl.innerHTML = `<div class="flyout-detail-empty">—</div>`;
+    return;
+  }
+  cat.investigations.forEach((inv, i) => {
+    const item = document.createElement('div');
+    item.className = 'flyout-item' + (i === 0 ? ' active' : '');
+    const dotColor = inv.status === 'live' ? 'var(--yellow)' : 'rgba(255,255,255,0.2)';
+    item.innerHTML = `<span class="flyout-item-num">${inv.num}</span><span class="flyout-dot" style="background:${dotColor}"></span><span class="flyout-item-name">${inv.name}</span>`;
+    item.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.flyout-item').forEach(x => x.classList.remove('active'));
+      item.classList.add('active');
+      renderDetail(inv);
+    });
+    listEl.appendChild(item);
+  });
+  renderDetail(cat.investigations[0]);
+}
+
+function renderDetail(inv) {
+  const dotColor = inv.status === 'live' ? 'var(--yellow)' : 'rgba(255,255,255,0.2)';
+  const animStyle = inv.status === 'live' ? 'animation:pulse 2.8s ease-in-out infinite' : '';
+  const tags = inv.tags.map(t => `<span class="flyout-d-tag">${t}</span>`).join('');
+  const cta = inv.href
+    ? `<a class="flyout-d-cta" href="${inv.href}">Ouvrir l'enquête &#8599;</a>`
+    : `<div class="flyout-d-pending">En développement — Pas encore disponible</div>`;
+  const imgCol = inv.thumb
+    ? `<div class="flyout-d-img"><img src="${inv.thumb}" alt="${inv.name}" loading="lazy"></div>`
+    : `<div class="flyout-d-img"><div class="flyout-d-img-placeholder"><span>Aucun aperçu</span></div></div>`;
+  detailEl.innerHTML = `
+    <div class="flyout-detail-inner">
+      <div class="flyout-d-status"><span style="width:5px;height:5px;border-radius:50%;background:${dotColor};${animStyle};display:inline-block;flex-shrink:0;"></span>${inv.statusLabel}</div>
+      <div class="flyout-d-title">${inv.name}</div>
+      <div class="flyout-d-desc">${inv.desc}</div>
+      <div class="flyout-d-tags">${tags}</div>
+      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:rgba(255,255,255,0.25)">${inv.meta}</div>
+      ${cta}
+    </div>
+    ${imgCol}`;
+}
+
+const invBar = document.getElementById('inv-bar');
+let closeTimer;
+function scheduleClose() {
+  closeTimer = setTimeout(() => {
+    flyout.classList.remove('open');
+    document.querySelectorAll('.inv-cat').forEach(c => c.classList.remove('has-active'));
+    activeCategory = null;
+  }, 120);
+}
+function cancelClose() { clearTimeout(closeTimer); }
+invBar.addEventListener('mouseleave', scheduleClose);
+invBar.addEventListener('mouseenter', cancelClose);
+flyout.addEventListener('mouseleave', scheduleClose);
+flyout.addEventListener('mouseenter', cancelClose);
+</script>
+</body>
+</html>
