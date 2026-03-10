@@ -474,10 +474,8 @@ function applyVB() {
   // Scale labels inversely so they don't grow huge when zoomed in
   const zoom = SVG_W / vb.w;
   const labelSize = Math.max(3, 7.5 / zoom);
-  const labelOffset = Math.max(5, (3 + 10) / zoom);
   document.querySelectorAll('#node-layer text').forEach(t => {
     t.setAttribute('font-size', labelSize);
-    t.setAttribute('y', labelOffset);
   });
 }
 function zoomBy(factor, cx, cy) {
@@ -575,6 +573,36 @@ document.getElementById('zoom-in') .addEventListener('click', () => zoomBy(1.5))
 document.getElementById('zoom-out').addEventListener('click', () => zoomBy(1 / 1.5));
 document.getElementById('zoom-reset').addEventListener('click', resetZoom);
 // ─────────────────────────────────────────────────────────
+// Manual overrides for countries whose bbox is skewed by overseas territories
+const CENTROID_OVERRIDE = {
+  "France":      {x:484.8, y:125.5},  // mainland only — French Guiana/DOM-TOM pull bbox into Atlantic
+  "United Kingdom": {x:473.5, y:102.0}, // mainland GB — excludes Falklands, overseas territories
+  "Netherlands": {x:491.0, y:108.5},  // European Netherlands — excludes Caribbean islands
+  "Australia":   {x:782.4, y:317.4},  // already fine but explicit
+};
+
+// Centroid cache — populated after SVG is in DOM
+const _centroidCache = {};
+function getCountryCentroid(name){
+  if(CENTROID_OVERRIDE[name]) return CENTROID_OVERRIDE[name];
+  if(_centroidCache[name]) return _centroidCache[name];
+  const id=DEST_IDS[name];
+  if(id){
+    const el=document.getElementById("c"+id);
+    if(el){
+      try{
+        const bb=el.getBBox();
+        if(bb.width>0&&bb.height>0){
+          _centroidCache[name]={x:bb.x+bb.width/2, y:bb.y+bb.height/2};
+          return _centroidCache[name];
+        }
+      }catch(e){}
+    }
+  }
+  return COORDS[name]||null;
+}
+
+// Fallback coords for arc source/dest only (Canada + any country without an SVG path)
 const COORDS = {"Saudi Arabia":{"x":581.8,"y":185.3},"Ukraine":{"x":545.6,"y":118.1},"Germany":{"x":501.2,"y":112.4},"United Kingdom":{"x":476,"y":105.2},"Qatar":{"x":595.5,"y":181.8},"Israel":{"x":557.1,"y":165},"Australia":{"x":782.4,"y":317.4},"Poland":{"x":520.3,"y":110.3},"France":{"x":484.8,"y":125.5},"UAE":{"x":602.2,"y":185.3},"Algeria":{"x":486.7,"y":174.5},"Netherlands":{"x":490.6,"y":109.3},"Turkey":{"x":555.8,"y":144.7},"South Korea":{"x":758.1,"y":151.5},"Chad":{"x":523,"y":208.3},"Canada":{"x":297.2,"y":90.2}};
 const DEST_IDS = {"Saudi Arabia":"682","Ukraine":"804","Germany":"276","United Kingdom":"826","Qatar":"634","Israel":"376","Australia":"036","Poland":"616","France":"250","UAE":"784","Algeria":"012","Netherlands":"528","Turkey":"792","South Korea":"410","Chad":"148","Canada":"124"};
 const TYPE_COLOR = {"Ground Vehicles":"#2a9060","Small Arms":"#c0392b","Aircraft":"#3a6fba","Technology":"#c07820","Explosives":"#8a2a90","Training":"#2a8a9a","Mixed":"#7a8a92"};
@@ -959,17 +987,19 @@ function buildFlows(fadeIn){
     const cid=DEST_IDS[d.name];
     const countryEl=cid?document.getElementById("c"+cid):null;
     if(countryEl){
-      countryEl.style.fill=col+"44"; // dim tinted fill
+      countryEl.style.fill=col+"44";
       countryEl.style.stroke=col+"88";
     }
 
-    // Label only in node layer (no circles)
+    // Label centered on country bbox
+    const lc=getCountryCentroid(d.name)||dc;
     const g=document.createElementNS(NS,"g");
-    g.setAttribute("transform","translate("+dc.x+","+dc.y+")");
+    g.setAttribute("transform","translate("+lc.x+","+lc.y+")");
     g.setAttribute("pointer-events","none");
     g.dataset.dest=d.name;
     const t=document.createElementNS(NS,"text");
-    t.setAttribute("y","0");t.setAttribute("text-anchor","middle");
+    t.setAttribute("x","0");t.setAttribute("y","0");
+    t.setAttribute("text-anchor","middle");
     t.setAttribute("dominant-baseline","middle");
     t.setAttribute("font-family","Courier New,Courier,monospace");
     t.setAttribute("font-size","7.5");t.setAttribute("fill","#c8c4bc");t.setAttribute("pointer-events","none");
@@ -1439,6 +1469,8 @@ document.querySelectorAll(".tab").forEach(tab=>{
     tab.classList.add("active");document.getElementById("view-"+tab.dataset.view).classList.add("active");
   });
 });
+// Pre-warm centroid cache now that SVG is in DOM
+Object.keys(DEST_IDS).forEach(name=>getCountryCentroid(name));
 highlightCountries(2024);buildFlows();buildTimeline();buildCorporate();buildOps();buildSources();updateLegendValues();updateYearHighlights(2024);
 activeYear=2024;
 document.getElementById("hdr-yr").textContent=2024;
