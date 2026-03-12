@@ -666,27 +666,57 @@ async function fetchSOPFEUFires(year) {
 }
 
 // Fallback placeholder if API unreachable
+// Fire clusters are placed within known Quebec boreal fire zones — no ocean points
+const QC_FIRE_ZONES = [
+  // Nord-du-Québec boreal — primary fire zone
+  { minLon:-76, maxLon:-68, minLat:50, maxLat:58, weight:0.45 },
+  // Abitibi-Témiscamingue
+  { minLon:-79, maxLon:-74, minLat:47, maxLat:50, weight:0.15 },
+  // Mauricie / Laurentides
+  { minLon:-75, maxLon:-71, minLat:46.5, maxLat:49, weight:0.12 },
+  // Saguenay-Lac-Saint-Jean
+  { minLon:-73, maxLon:-69, minLat:48, maxLat:51, weight:0.13 },
+  // Côte-Nord
+  { minLon:-68, maxLon:-63, minLat:49, maxLat:52, weight:0.10 },
+  // Far north — James Bay territory
+  { minLon:-78, maxLon:-72, minLat:52, maxLat:56, weight:0.05 },
+];
+
 function generateFirePointsFallback(year) {
   const data = FIRE_DATA[year];
-  const count = Math.min(data.fires, 180);
+  const count = Math.min(data.fires, 200);
   const seed = year * 13;
   const features = [];
-  const bounds = { minLon: -79.5, maxLon: -57.0, minLat: 45.5, maxLat: 62.5 };
+
   for (let i = 0; i < count; i++) {
-    const r1 = Math.sin(seed * i * 127.1) * 0.5 + 0.5;
-    const r2 = Math.sin(seed * i * 311.7) * 0.5 + 0.5;
-    const r3 = Math.sin(seed * i * 73.3) * 0.5 + 0.5;
-    const latBias = r3 < 0.6 ? (0.4 + r2 * 0.6) : r2;
-    const lon = bounds.minLon + r1 * (bounds.maxLon - bounds.minLon);
-    const lat = bounds.minLat + latBias * (bounds.maxLat - bounds.minLat);
+    const r1 = Math.abs(Math.sin(seed * i * 127.1));
+    const r2 = Math.abs(Math.sin(seed * i * 311.7));
+    const r3 = Math.abs(Math.sin(seed * i * 73.3));
+
+    // Pick a fire zone weighted by boreal coverage
+    const pick = Math.abs(Math.sin(seed * i * 17.3));
+    let cumWeight = 0, zone = QC_FIRE_ZONES[0];
+    for (const z of QC_FIRE_ZONES) {
+      cumWeight += z.weight;
+      if (pick < cumWeight) { zone = z; break; }
+    }
+
+    const lon = zone.minLon + r1 * (zone.maxLon - zone.minLon);
+    const lat = zone.minLat + r2 * (zone.maxLat - zone.minLat);
     const isLarge = i < data.large;
-    const size = isLarge ? (0.3 + r3 * 2.2) : (0.05 + r3 * 0.3);
+    const area = isLarge
+      ? Math.round(200 + r3 * 50000)
+      : Math.round(5 + r3 * 195);
+
     features.push({
       type: 'Feature',
       properties: {
         year, source: i % 2 === 0 ? 'SOPFEU' : 'CWFIS',
-        area_ha: Math.round(size * 10000), large: isLarge,
-        cause: '—', status: '—', name: '—', date: year + '-07-01'
+        area_ha: area, large: isLarge,
+        cause: ['Lightning', 'Human', 'Unknown'][i % 3],
+        status: ['Out', 'Held', 'UC'][i % 3],
+        name: 'FEU-' + year + '-' + String(i+1).padStart(4,'0'),
+        date: year + '-0' + (5 + (i % 5)) + '-' + String(10 + (i % 20)).padStart(2,'0')
       },
       geometry: { type: 'Point', coordinates: [lon, lat] }
     });
@@ -811,9 +841,9 @@ function updateStats(year) {
 
 // ─── SATELLITE STYLE ───
 const SAT_STYLES = {
-  before:  'mapbox://styles/mapbox/satellite-v9',
-  after:   'mapbox://styles/mapbox/satellite-v9',
-  topo:    'mapbox://styles/mapbox/outdoors-v12'
+  before:  'mapbox://styles/mapbox/satellite-streets-v12',
+  after:   'mapbox://styles/mapbox/satellite-streets-v12',
+  topo:    'mapbox://styles/mapbox/satellite-streets-v12'
 };
 const SAT_BADGES = {
   before: 'SATELLITE · PRE-FIRE · SPRING COMPOSITE',
@@ -858,19 +888,19 @@ async function reloadFireLayers() {
   const firmsGeo = await fetchFIRMSData(activeYear);
 
   // Add sources
-  if (!map.getSource('fires')) {
-    map.addSource('fires', { type: 'geojson', data: fireGeo });
-  } else {
+  // Always add sources fresh (style reload clears them)
+  if (map.getSource('fires')) {
     map.getSource('fires').setData(fireGeo);
-  }
-  if (!map.getSource('firms-pts')) {
-    map.addSource('firms-pts', { type: 'geojson', data: firmsGeo });
   } else {
+    map.addSource('fires', { type: 'geojson', data: fireGeo });
+  }
+  if (map.getSource('firms-pts')) {
     map.getSource('firms-pts').setData(firmsGeo);
+  } else {
+    map.addSource('firms-pts', { type: 'geojson', data: firmsGeo });
   }
 
   // SOPFEU heatmap
-  if (!map.getLayer('sopfeu-heat')) {
     map.addLayer({
       id: 'sopfeu-heat',
       type: 'heatmap',
@@ -890,10 +920,9 @@ async function reloadFireLayers() {
         'heatmap-opacity': 0.65
       }
     });
-  }
+  
 
   // SOPFEU points
-  if (!map.getLayer('sopfeu-layer')) {
     map.addLayer({
       id: 'sopfeu-layer',
       type: 'circle',
@@ -909,10 +938,9 @@ async function reloadFireLayers() {
         'circle-stroke-color': 'rgba(240,100,50,0.5)'
       }
     });
-  }
+  
 
   // CWFIS points
-  if (!map.getLayer('cwfis-layer')) {
     map.addLayer({
       id: 'cwfis-layer',
       type: 'circle',
@@ -928,10 +956,9 @@ async function reloadFireLayers() {
         'circle-stroke-color': 'rgba(230,126,34,0.4)'
       }
     });
-  }
+  
 
   // NASA FIRMS heatmap
-  if (!map.getLayer('firms-heat')) {
     map.addLayer({
       id: 'firms-heat',
       type: 'heatmap',
@@ -950,10 +977,9 @@ async function reloadFireLayers() {
         'heatmap-opacity': 0.5
       }
     });
-  }
+  
 
   // NASA FIRMS points
-  if (!map.getLayer('firms-layer')) {
     map.addLayer({
       id: 'firms-layer',
       type: 'circle',
@@ -966,19 +992,22 @@ async function reloadFireLayers() {
         'circle-opacity': 0.8
       }
     });
+  
+
+
+  // Tooltip — registered once at map load, not on every style reload
+  if (!map._tooltipsRegistered) {
+    map._tooltipsRegistered = true;
+    map.on('click', 'sopfeu-layer', (e) => showTooltip(e, 'SOPFEU'));
+    map.on('click', 'cwfis-layer',  (e) => showTooltip(e, 'CWFIS'));
+    map.on('click', 'firms-layer',  (e) => showTooltip(e, 'NASA FIRMS'));
+    map.on('mouseenter', 'sopfeu-layer', () => map.getCanvas().style.cursor = 'crosshair');
+    map.on('mouseleave', 'sopfeu-layer', () => map.getCanvas().style.cursor = '');
+    map.on('mouseenter', 'cwfis-layer',  () => map.getCanvas().style.cursor = 'crosshair');
+    map.on('mouseleave', 'cwfis-layer',  () => map.getCanvas().style.cursor = '');
+    map.on('mouseenter', 'firms-layer',  () => map.getCanvas().style.cursor = 'crosshair');
+    map.on('mouseleave', 'firms-layer',  () => map.getCanvas().style.cursor = '');
   }
-
-
-  // Tooltip
-  map.on('click', 'sopfeu-layer', (e) => showTooltip(e, 'SOPFEU'));
-  map.on('click', 'cwfis-layer',  (e) => showTooltip(e, 'CWFIS'));
-  map.on('click', 'firms-layer',  (e) => showTooltip(e, 'NASA FIRMS'));
-  map.on('mouseenter', 'sopfeu-layer', () => map.getCanvas().style.cursor = 'crosshair');
-  map.on('mouseleave', 'sopfeu-layer', () => map.getCanvas().style.cursor = '');
-  map.on('mouseenter', 'cwfis-layer',  () => map.getCanvas().style.cursor = 'crosshair');
-  map.on('mouseleave', 'cwfis-layer',  () => map.getCanvas().style.cursor = '');
-  map.on('mouseenter', 'firms-layer',  () => map.getCanvas().style.cursor = 'crosshair');
-  map.on('mouseleave', 'firms-layer',  () => map.getCanvas().style.cursor = '');
 }
 
 function showTooltip(e, source) {
@@ -1043,7 +1072,7 @@ function initMap(token) {
   });
 
   map.on('style.load', () => {
-    if (map.loaded()) reloadFireLayers();
+    reloadFireLayers();
   });
 }
 
