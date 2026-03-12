@@ -447,58 +447,7 @@ body {
   text-transform: uppercase;
 }
 
-/* ── NO TOKEN NOTICE ── */
-#no-token {
-  position: absolute;
-  inset: 0;
-  background: rgba(15,26,32,.96);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
-  gap: 14px;
-  text-align: center;
-  padding: 40px;
-}
-.nt-title {
-  font-size: 11px;
-  letter-spacing: .2em;
-  color: var(--fire);
-  text-transform: uppercase;
-}
-.nt-body {
-  font-size: 9px;
-  letter-spacing: .1em;
-  color: #6a8a9a;
-  line-height: 2;
-  max-width: 320px;
-}
-.nt-input {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: .08em;
-  background: #1e2e36;
-  border: 1px solid #2a3a42;
-  color: var(--paper);
-  padding: 10px 14px;
-  width: 320px;
-  outline: none;
-}
-.nt-input:focus { border-color: var(--sat); }
-.nt-btn {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: .16em;
-  padding: 10px 24px;
-  border: 1px solid var(--fire);
-  background: transparent;
-  color: var(--fire);
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all .15s;
-}
-.nt-btn:hover { background: var(--fire); color: var(--ink); }
+
 </style>
 </head>
 <body>
@@ -637,16 +586,7 @@ body {
       <div class="loading-text">Initializing spatial record</div>
     </div>
 
-    <!-- NO TOKEN -->
-    <div id="no-token">
-      <div class="nt-title">Mapbox Token Required</div>
-      <div class="nt-body">
-        This tool requires a Mapbox public access token.<br>
-        Get one free at mapbox.com — restrict it to your domain in production.
-      </div>
-      <input class="nt-input" id="token-input" type="text" placeholder="pk.eyJ1IjoiY...">
-      <button class="nt-btn" onclick="initWithToken()">Initialize Map</button>
-    </div>
+
   </div>
 </div>
 
@@ -997,7 +937,6 @@ document.getElementById('year-slider').addEventListener('input', function() {
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiamlqYm94IiwiYSI6ImNtbW5zMjlkNDA2MjkyeW9ldmdkY2liNWEifQ.-4dx1jo0Pds76yzQXxaf_Q';
 window.addEventListener('DOMContentLoaded', () => {
   updateStats(2023);
-  document.getElementById('no-token').style.display = 'none';
   setTimeout(() => initMap(MAPBOX_TOKEN), 400);
 });
 </script>
