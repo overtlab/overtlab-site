@@ -842,7 +842,6 @@ function toggleLayer(name) {
   if (name === 'sopfeu' && map.getLayer('sopfeu-layer')) {
     map.setLayoutProperty('sopfeu-layer', 'visibility', vis);
     map.setLayoutProperty('sopfeu-heat', 'visibility', vis);
-    if (map.getLayer('sopfeu-wms-layer')) map.setLayoutProperty('sopfeu-wms-layer', 'visibility', vis);
   }
   if (name === 'cwfis' && map.getLayer('cwfis-layer')) {
     map.setLayoutProperty('cwfis-layer', 'visibility', vis);
@@ -969,28 +968,6 @@ async function reloadFireLayers() {
     });
   }
 
-
-  // ─── QUEBEC GOVT WMS — historical fire perimeters 1976–present ───
-  // Source: Ministère des Ressources naturelles et des Forêts
-  if (!map.getSource('sopfeu-wms')) {
-    map.addSource('sopfeu-wms', {
-      type: 'raster',
-      tiles: [
-        'https://geoegl.msp.gouv.qc.ca/ws/igo_gouvouvert.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=msp_feux_en_cours&CRS=EPSG%3A3857&STYLES=&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}'
-      ],
-      tileSize: 256,
-      attribution: 'Ministère des Ressources naturelles et des Forêts — Données Québec'
-    });
-  }
-  if (!map.getLayer('sopfeu-wms-layer')) {
-    map.addLayer({
-      id: 'sopfeu-wms-layer',
-      type: 'raster',
-      source: 'sopfeu-wms',
-      layout: { visibility: layers.sopfeu ? 'visible' : 'none' },
-      paint: { 'raster-opacity': 0.7 }
-    }, 'sopfeu-heat'); // insert below point layers
-  }
 
   // Tooltip
   map.on('click', 'sopfeu-layer', (e) => showTooltip(e, 'SOPFEU'));
