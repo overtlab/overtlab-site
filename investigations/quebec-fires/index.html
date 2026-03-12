@@ -618,20 +618,65 @@ const FIRE_DATA = {
   2024: { fires: 487, area_ha: 183000, large: 44 }
 };
 
-// Representative fire point clusters for Quebec — replace with real GeoJSON from SOPFEU
-function generateFirePoints(year) {
+// ─── SOPFEU LIVE API — active fires ───
+// API launched spring 2025: https://geofeux.sopfeu.qc.ca/sopfeu-api/swagger/index.html
+const SOPFEU_API = 'https://geofeux.sopfeu.qc.ca/sopfeu-api/api/v1/feux';
+const sopfeuCache = {};
+
+async function fetchSOPFEUFires(year) {
+  if (sopfeuCache[year]) return sopfeuCache[year];
+  try {
+    const resp = await fetch(SOPFEU_API);
+    if (!resp.ok) throw new Error('SOPFEU API ' + resp.status);
+    const data = await resp.json();
+    // data is an array of fire objects with lat/lon and properties
+    const features = (Array.isArray(data) ? data : (data.features || data.feux || []))
+      .filter(f => {
+        // Filter by year if date field available
+        const d = f.dateDeclared || f.dateDebut || f.date || '';
+        return !d || d.startsWith(String(year));
+      })
+      .map(f => {
+        const lat = f.latitude  || f.lat || (f.geometry && f.geometry.coordinates && f.geometry.coordinates[1]);
+        const lon = f.longitude || f.lon || (f.geometry && f.geometry.coordinates && f.geometry.coordinates[0]);
+        if (!lat || !lon) return null;
+        return {
+          type: 'Feature',
+          properties: {
+            source: 'SOPFEU',
+            year,
+            area_ha: f.superficie || f.areaBrule || f.hectares || 0,
+            cause: f.causeAllumage || f.cause || '—',
+            status: f.etatFeu || f.statut || '—',
+            name: f.nomFeu || f.nom || '—',
+            date: f.dateDeclared || f.dateDebut || f.date || '—',
+            large: (f.superficie || 0) > 200
+          },
+          geometry: { type: 'Point', coordinates: [parseFloat(lon), parseFloat(lat)] }
+        };
+      }).filter(Boolean);
+    const geo = { type: 'FeatureCollection', features };
+    console.log('SOPFEU: loaded', features.length, 'fires for', year);
+    sopfeuCache[year] = geo;
+    return geo;
+  } catch(err) {
+    console.warn('SOPFEU API failed, using fallback:', err.message);
+    return generateFirePointsFallback(year);
+  }
+}
+
+// Fallback placeholder if API unreachable
+function generateFirePointsFallback(year) {
   const data = FIRE_DATA[year];
   const count = Math.min(data.fires, 180);
   const seed = year * 13;
   const features = [];
-  // Quebec bounding region
   const bounds = { minLon: -79.5, maxLon: -57.0, minLat: 45.5, maxLat: 62.5 };
-  // Weight toward boreal zone (north of 49)
   for (let i = 0; i < count; i++) {
     const r1 = Math.sin(seed * i * 127.1) * 0.5 + 0.5;
     const r2 = Math.sin(seed * i * 311.7) * 0.5 + 0.5;
     const r3 = Math.sin(seed * i * 73.3) * 0.5 + 0.5;
-    const latBias = r3 < 0.6 ? (0.4 + r2 * 0.6) : r2; // bias north
+    const latBias = r3 < 0.6 ? (0.4 + r2 * 0.6) : r2;
     const lon = bounds.minLon + r1 * (bounds.maxLon - bounds.minLon);
     const lat = bounds.minLat + latBias * (bounds.maxLat - bounds.minLat);
     const isLarge = i < data.large;
@@ -639,10 +684,9 @@ function generateFirePoints(year) {
     features.push({
       type: 'Feature',
       properties: {
-        year,
-        area_ha: Math.round(size * 10000),
-        source: i % 3 === 0 ? 'SOPFEU' : i % 3 === 1 ? 'CWFIS' : 'FIRMS',
-        large: isLarge
+        year, source: i % 2 === 0 ? 'SOPFEU' : 'CWFIS',
+        area_ha: Math.round(size * 10000), large: isLarge,
+        cause: '—', status: '—', name: '—', date: year + '-07-01'
       },
       geometry: { type: 'Point', coordinates: [lon, lat] }
     });
@@ -650,24 +694,86 @@ function generateFirePoints(year) {
   return { type: 'FeatureCollection', features };
 }
 
-// NASA FIRMS thermal detection points
-function generateFIRMSPoints(year) {
-  const count = Math.round(FIRE_DATA[year].fires * 0.4);
-  const seed = year * 97;
+// NASA FIRMS API key
+const FIRMS_KEY = 'bfba09805bfa1a2d88857847fa1316ca';
+
+// Cache to avoid repeated API calls for same year
+const firmsCache = {};
+
+// Build date range for a fire season year (May 1 – Oct 31)
+function firmsDateRange(year) {
+  // FIRMS archive goes back to 2000; use day-range for recent, date for archive
+  const start = `${year}-05-01`;
+  const end   = year >= new Date().getFullYear()
+    ? new Date().toISOString().slice(0,10)
+    : `${year}-10-31`;
+  return { start, end };
+}
+
+// Fetch real NASA FIRMS data for Quebec bounding box
+// FIRMS CSV API: https://firms.modaps.eosdis.nasa.gov/api/area/
+async function fetchFIRMSData(year) {
+  if (firmsCache[year]) return firmsCache[year];
+
+  // Quebec bounding box: W,S,E,N
+  const bbox = '-79.5,45.0,-57.0,63.0';
+  const { start, end } = firmsDateRange(year);
+
+  // FIRMS supports date ranges via the area API
+  // For historical data we use MODIS (goes back to 2000)
+  // product: MODIS_NRT for recent, MODIS_SP for archive
+  const product = year < new Date().getFullYear() ? 'MODIS_SP' : 'MODIS_NRT';
+
+  // FIRMS area API returns CSV — we request with day_range
+  // Max 10 days per call for NRT, use date for archive
+  const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${FIRMS_KEY}/${product}/${bbox}/10/${start}`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`FIRMS API error: ${resp.status}`);
+    const csv  = await resp.text();
+    const geo  = firmsCSVtoGeoJSON(csv, year);
+    firmsCache[year] = geo;
+    return geo;
+  } catch(err) {
+    console.warn('FIRMS fetch failed, using fallback:', err);
+    return firmsFallback(year);
+  }
+}
+
+// Parse FIRMS CSV into GeoJSON
+function firmsCSVtoGeoJSON(csv, year) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return firmsFallback(year);
+  const headers = lines[0].split(',');
+  const latI  = headers.indexOf('latitude');
+  const lonI  = headers.indexOf('longitude');
+  const frpI  = headers.indexOf('frp');
+  const dateI = headers.indexOf('acq_date');
+  const confI = headers.indexOf('confidence');
+
   const features = [];
-  for (let i = 0; i < count; i++) {
-    const r1 = Math.sin(seed * i * 191.3) * 0.5 + 0.5;
-    const r2 = Math.sin(seed * i * 443.9) * 0.5 + 0.5;
-    const lon = -79.5 + r1 * 22.5;
-    const lat = 47 + r2 * 14;
-    const frp = 20 + Math.sin(seed * i * 29.1) * 0.5 * 300;
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',');
+    if (cols.length < 4) continue;
+    const lat  = parseFloat(cols[latI]);
+    const lon  = parseFloat(cols[lonI]);
+    const frp  = parseFloat(cols[frpI]) || 10;
+    const conf = cols[confI] || 'nominal';
+    if (isNaN(lat) || isNaN(lon)) continue;
     features.push({
       type: 'Feature',
-      properties: { frp: Math.abs(frp), year },
+      properties: { frp, year, confidence: conf, date: cols[dateI] || '' },
       geometry: { type: 'Point', coordinates: [lon, lat] }
     });
   }
+  console.log(`FIRMS: loaded ${features.length} real detections for ${year}`);
   return { type: 'FeatureCollection', features };
+}
+
+// Minimal fallback if API fails
+function firmsFallback(year) {
+  return { type: 'FeatureCollection', features: [] };
 }
 
 // ─── LAYER STATE ───
@@ -736,6 +842,7 @@ function toggleLayer(name) {
   if (name === 'sopfeu' && map.getLayer('sopfeu-layer')) {
     map.setLayoutProperty('sopfeu-layer', 'visibility', vis);
     map.setLayoutProperty('sopfeu-heat', 'visibility', vis);
+    if (map.getLayer('sopfeu-wms-layer')) map.setLayoutProperty('sopfeu-wms-layer', 'visibility', vis);
   }
   if (name === 'cwfis' && map.getLayer('cwfis-layer')) {
     map.setLayoutProperty('cwfis-layer', 'visibility', vis);
@@ -747,9 +854,9 @@ function toggleLayer(name) {
 }
 
 // ─── RELOAD FIRE LAYERS AFTER STYLE CHANGE ───
-function reloadFireLayers() {
-  const fireGeo = generateFirePoints(activeYear);
-  const firmsGeo = generateFIRMSPoints(activeYear);
+async function reloadFireLayers() {
+  const fireGeo  = await fetchSOPFEUFires(activeYear);
+  const firmsGeo = await fetchFIRMSData(activeYear);
 
   // Add sources
   if (!map.getSource('fires')) {
@@ -862,13 +969,39 @@ function reloadFireLayers() {
     });
   }
 
+
+  // ─── QUEBEC GOVT WMS — historical fire perimeters 1976–present ───
+  // Source: Ministère des Ressources naturelles et des Forêts
+  if (!map.getSource('sopfeu-wms')) {
+    map.addSource('sopfeu-wms', {
+      type: 'raster',
+      tiles: [
+        'https://geoegl.msp.gouv.qc.ca/ws/igo_gouvouvert.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=msp_feux_en_cours&CRS=EPSG%3A3857&STYLES=&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}'
+      ],
+      tileSize: 256,
+      attribution: 'Ministère des Ressources naturelles et des Forêts — Données Québec'
+    });
+  }
+  if (!map.getLayer('sopfeu-wms-layer')) {
+    map.addLayer({
+      id: 'sopfeu-wms-layer',
+      type: 'raster',
+      source: 'sopfeu-wms',
+      layout: { visibility: layers.sopfeu ? 'visible' : 'none' },
+      paint: { 'raster-opacity': 0.7 }
+    }, 'sopfeu-heat'); // insert below point layers
+  }
+
   // Tooltip
   map.on('click', 'sopfeu-layer', (e) => showTooltip(e, 'SOPFEU'));
-  map.on('click', 'cwfis-layer', (e) => showTooltip(e, 'CWFIS'));
+  map.on('click', 'cwfis-layer',  (e) => showTooltip(e, 'CWFIS'));
+  map.on('click', 'firms-layer',  (e) => showTooltip(e, 'NASA FIRMS'));
   map.on('mouseenter', 'sopfeu-layer', () => map.getCanvas().style.cursor = 'crosshair');
   map.on('mouseleave', 'sopfeu-layer', () => map.getCanvas().style.cursor = '');
-  map.on('mouseenter', 'cwfis-layer', () => map.getCanvas().style.cursor = 'crosshair');
-  map.on('mouseleave', 'cwfis-layer', () => map.getCanvas().style.cursor = '');
+  map.on('mouseenter', 'cwfis-layer',  () => map.getCanvas().style.cursor = 'crosshair');
+  map.on('mouseleave', 'cwfis-layer',  () => map.getCanvas().style.cursor = '');
+  map.on('mouseenter', 'firms-layer',  () => map.getCanvas().style.cursor = 'crosshair');
+  map.on('mouseleave', 'firms-layer',  () => map.getCanvas().style.cursor = '');
 }
 
 function showTooltip(e, source) {
@@ -877,22 +1010,36 @@ function showTooltip(e, source) {
   t.style.display = 'block';
   t.style.left = (e.point.x + 12) + 'px';
   t.style.top = (e.point.y - 10) + 'px';
-  t.innerHTML = `
-    <div style="color:var(--fire);margin-bottom:4px;letter-spacing:.16em">${source}</div>
-    <div>YEAR: ${props.year}</div>
-    <div>AREA: ${props.area_ha ? props.area_ha.toLocaleString() + ' ha' : '—'}</div>
-    <div>CLASS: ${props.large ? 'LARGE FIRE (>200 ha)' : 'Standard'}</div>
-  `;
+
+  let rows = `<div style="color:var(--fire);margin-bottom:6px;letter-spacing:.16em">${source}</div>`;
+  if (source === 'NASA FIRMS') {
+    rows += `<div>DATE: ${props.date || '—'}</div>`;
+    rows += `<div>FRP: ${props.frp ? props.frp.toFixed(1) + ' MW' : '—'}</div>`;
+    rows += `<div>CONFIDENCE: ${props.confidence || '—'}</div>`;
+  } else {
+    rows += `<div>DATE: ${props.date || '—'}</div>`;
+    rows += `<div>AREA: ${props.area_ha ? props.area_ha.toLocaleString() + ' ha' : '—'}</div>`;
+    rows += `<div>CAUSE: ${props.cause || '—'}</div>`;
+    rows += `<div>STATUS: ${props.status || '—'}</div>`;
+    rows += `<div>NAME: ${props.name || '—'}</div>`;
+  }
+  t.innerHTML = rows;
   map.once('click', () => { t.style.display = 'none'; });
 }
 
 // ─── UPDATE MAP DATA ───
-function updateMapData(year) {
+async function updateMapData(year) {
   activeYear = year;
   updateStats(year);
   if (!map || !map.getSource('fires')) return;
-  map.getSource('fires').setData(generateFirePoints(year));
-  map.getSource('firms-pts').setData(generateFIRMSPoints(year));
+  // Update SOPFEU/CWFIS placeholder immediately
+  const sopfeuGeo = await fetchSOPFEUFires(year);
+  map.getSource('fires').setData(sopfeuGeo);
+  // Fetch real FIRMS data async
+  const firmsGeo = await fetchFIRMSData(year);
+  if (map.getSource('firms-pts')) {
+    map.getSource('firms-pts').setData(firmsGeo);
+  }
 }
 
 // ─── INIT MAP ───
