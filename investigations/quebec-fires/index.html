@@ -87,7 +87,14 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 
 
 
-#tooltip { position: absolute; background: rgba(15,26,32,.97); border: 1px solid #2a3a42; padding: 10px 14px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .1em; color: var(--paper); z-index: 200; pointer-events: none; display: none; max-width: 220px; line-height: 1.8; }
+#tooltip { position: absolute; background: rgba(10,18,22,.97); border: 1px solid #2a3a42; padding: 12px 16px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .08em; color: var(--paper); z-index: 200; pointer-events: none; display: none; max-width: 260px; line-height: 1; }
+.tt-header { color: var(--fire); letter-spacing: .18em; font-size: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e2e36; }
+.tt-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
+.tt-key { color: #4a6a7a; font-size: 7.5px; letter-spacing: .14em; flex-shrink: 0; }
+.tt-val { color: var(--paper); font-size: 8px; letter-spacing: .06em; text-align: right; }
+.tt-val.loading { color: #4a6a7a; font-style: italic; }
+.tt-divider { height: 1px; background: #1e2e36; margin: 8px 0; }
+.tt-source { color: #3a5a6a; font-size: 7px; letter-spacing: .12em; margin-top: 8px; padding-top: 6px; border-top: 1px solid #1a2a32; }
 
 #loading { position: absolute; inset: 0; background: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; gap: 16px; transition: opacity .4s; }
 .loading-logo { font-family: var(--mono); font-size: 13px; letter-spacing: .2em; color: #4a6a7a; }
@@ -95,6 +102,53 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .loading-bar { position: absolute; height: 100%; background: var(--fire); animation: load 2s ease forwards; }
 @keyframes load { from{width:0} to{width:100%} }
 .loading-text { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; color: #3a5a6a; text-transform: uppercase; }
+
+/* SOURCES PANEL */
+#sources-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .18em;
+  color: #4a6a7a;
+  background: rgba(10,18,22,.88);
+  border: 1px solid #2a3a42;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  z-index: 20;
+  transition: all .15s;
+}
+#sources-btn:hover { color: var(--paper); border-color: #4a6a7a; }
+#sources-panel {
+  position: absolute;
+  bottom: 46px;
+  left: 16px;
+  width: 320px;
+  background: rgba(10,18,22,.97);
+  border: 1px solid #2a3a42;
+  padding: 18px 20px;
+  z-index: 20;
+  display: none;
+  backdrop-filter: blur(8px);
+}
+#sources-panel.open { display: block; }
+.sp-title { font-size: 8px; letter-spacing: .22em; color: #4a6a7a; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1e2e36; }
+.sp-source { margin-bottom: 14px; }
+.sp-source:last-child { margin-bottom: 0; }
+.sp-name { font-size: 9px; letter-spacing: .14em; color: var(--paper); margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+.sp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.sp-desc { font-size: 7.5px; letter-spacing: .08em; color: #4a6a7a; line-height: 1.7; margin-left: 14px; }
+.sp-url { font-size: 7px; letter-spacing: .08em; color: #3a5a6a; margin-left: 14px; margin-top: 3px; }
+.sp-note { font-size: 7.5px; letter-spacing: .08em; color: #3a5a6a; line-height: 1.7; margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e2e36; }
+
+/* TIME CONTROLS */
+.time-row { margin-bottom: 2px; }
+.time-label { font-size: 7px; letter-spacing: .22em; color: #4a6a7a; text-transform: uppercase; margin-bottom: 4px; }
+.time-divider { height: 1px; background: #1e2e36; margin: 14px 0; }
+#month-display { font-size: 28px; font-weight: 600; letter-spacing: -.01em; color: var(--paper); line-height: 1; margin-bottom: 2px; }
+#month-sub { font-size: 8px; letter-spacing: .14em; color: #4a6a7a; margin-bottom: 14px; }
 
 /* PLAY CONTROLS */
 .play-controls { display: flex; gap: 6px; margin-top: 12px; }
@@ -174,21 +228,30 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 <div id="body">
   <div id="left-panel">
     <div class="panel-section">
-      <div class="section-label">Year</div>
-      <div id="year-display">2023</div>
-      <div id="year-sub">Fire season record</div>
+      <div class="section-label">Time</div>
+
+      <div class="time-row">
+        <div class="time-label">YEAR</div>
+        <div id="year-display">2023</div>
+        <div id="year-sub">Fire season record</div>
+      </div>
       <input type="range" id="year-slider" min="2010" max="2024" value="2023" step="1">
       <div class="year-range"><span>2010</span><span>2024</span></div>
+
+      <div class="time-divider"></div>
+
+      <div class="time-row">
+        <div class="time-label">MONTH</div>
+        <div id="month-display">ALL</div>
+        <div id="month-sub">Fire season · May – Oct</div>
+      </div>
+      <input type="range" id="month-slider" min="0" max="12" value="0" step="1">
+      <div class="year-range"><span>All</span><span>Dec</span></div>
+
       <div class="play-controls">
         <button class="play-btn" id="play-years" onclick="togglePlayYears()"><span class="play-icon">&#9654;</span>YEARS</button>
         <button class="play-btn" id="play-season" onclick="togglePlaySeason()"><span class="play-icon">&#9654;</span>SEASON</button>
       </div>
-    </div>
-    <div class="panel-section" id="month-section" style="display:none">
-      <div class="section-label">Month</div>
-      <div id="month-display">—</div>
-      <input type="range" id="month-slider" min="1" max="12" value="1" step="1">
-      <div class="year-range"><span>Jan</span><span>Dec</span></div>
     </div>
 
     <div class="panel-section">
@@ -228,6 +291,36 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
     </div>
 
     <div id="tooltip"></div>
+
+    <!-- SOURCES PANEL -->
+    <button id="sources-btn" onclick="toggleSources()">&#9432; SOURCES &amp; METHODOLOGY</button>
+    <div id="sources-panel">
+      <div class="sp-title">Data Sources &amp; Methodology</div>
+      <div class="sp-source">
+        <div class="sp-name"><div class="sp-dot" style="background:var(--sopfeu)"></div>NFDB — Canadian National Fire Database</div>
+        <div class="sp-desc">Fire point data for Québec 2010–2024. 7,931 fire records including ignition date, cause, and burned area. Compiled by Natural Resources Canada from SOPFEU agency data.</div>
+        <div class="sp-url">cwfis.cfs.nrcan.gc.ca/datamart</div>
+      </div>
+      <div class="sp-source">
+        <div class="sp-name"><div class="sp-dot" style="background:var(--cwfis)"></div>CWFIS — Canadian Wildland Fire Information System</div>
+        <div class="sp-desc">National fire monitoring system operated by the Canadian Forest Service. Aggregates provincial and territorial fire data into a standardized national record.</div>
+        <div class="sp-url">cwfis.cfs.nrcan.gc.ca</div>
+      </div>
+      <div class="sp-source">
+        <div class="sp-name"><div class="sp-dot" style="background:var(--sopfeu)"></div>SOPFEU — Société de protection des forêts contre le feu</div>
+        <div class="sp-desc">Québec's provincial wildfire agency. Primary data contributor for all Québec fire records in the NFDB. Operational since 1960.</div>
+        <div class="sp-url">sopfeu.qc.ca</div>
+      </div>
+      <div class="sp-source">
+        <div class="sp-name"><div class="sp-dot" style="background:var(--firms)"></div>NASA FIRMS — Fire Information for Resource Management System</div>
+        <div class="sp-desc">Near real-time active fire detections from MODIS and VIIRS satellite sensors. Thermal anomaly data at 375m–1km resolution. Used for live fire season monitoring.</div>
+        <div class="sp-url">firms.modaps.eosdis.nasa.gov</div>
+      </div>
+      <div class="sp-note">
+        All data is publicly available. Fire locations are accurate to approximately 1km as reported by agency field crews. Burned area figures represent final recorded size after fire containment. Season animation shows ignition events May–October — the active fire season for boreal Québec. No data has been altered or inferred.
+      </div>
+    </div>
+
     <div id="loading">
       <div class="loading-logo">OVERT LAB</div>
       <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
@@ -368,28 +461,95 @@ async function reloadFireLayers(){
   map.addLayer({id:'firms-layer',type:'circle',source:'firms-pts',minzoom:6,layout:{visibility:layers.firms?'visible':'none'},paint:{'circle-radius':3,'circle-color':'#f39c12','circle-opacity':0.8}});
   if(!map._tooltipsRegistered){
     map._tooltipsRegistered=true;
-    map.on('click','sopfeu-layer',e=>showTooltip(e,'SOPFEU'));
-    map.on('click','cwfis-layer',e=>showTooltip(e,'CWFIS'));
-    map.on('click','firms-layer',e=>showTooltip(e,'NASA FIRMS'));
+    map.on('mouseenter','sopfeu-layer',e=>showTooltip(e,'SOPFEU'));
+    map.on('mouseenter','cwfis-layer',e=>showTooltip(e,'CWFIS'));
+    map.on('mouseenter','firms-layer',e=>showTooltip(e,'NASA FIRMS'));
+    map.on('mouseleave','sopfeu-layer',()=>{ document.getElementById('tooltip').style.display='none'; });
+    map.on('mouseleave','cwfis-layer',()=>{ document.getElementById('tooltip').style.display='none'; });
+    map.on('mouseleave','firms-layer',()=>{ document.getElementById('tooltip').style.display='none'; });
     ['sopfeu-layer','cwfis-layer','firms-layer'].forEach(id=>{map.on('mouseenter',id,()=>map.getCanvas().style.cursor='crosshair');map.on('mouseleave',id,()=>map.getCanvas().style.cursor='');});
   }
 }
 
-function showTooltip(e,source){
-  const p=e.features[0].properties,t=document.getElementById('tooltip');
-  t.style.display='block';t.style.left=(e.point.x+12)+'px';t.style.top=(e.point.y-10)+'px';
-  let rows=`<div style="color:var(--fire);margin-bottom:6px;letter-spacing:.16em">${source}</div>`;
-  if(source==='NASA FIRMS'){rows+=`<div>DATE: ${p.date||'—'}</div><div>FRP: ${p.frp?parseFloat(p.frp).toFixed(1)+' MW':'—'}</div><div>CONFIDENCE: ${p.confidence||'—'}</div>`;}
-  else{rows+=`<div>DATE: ${p.date||'—'}</div><div>AREA: ${p.area_ha?parseInt(p.area_ha).toLocaleString()+' ha':'—'}</div><div>CAUSE: ${p.cause||'—'}</div><div>CLASS: ${p.large?'Large fire (≥200 ha)':'Standard'}</div><div>ID: ${p.id||p.name||'—'}</div><div style="color:#4a6a7a;margin-top:4px;font-size:7px">SOURCE: ${p.src||'NFDB · NRCan'}</div>`;}
-  t.innerHTML=rows;
-  map.once('click',()=>{t.style.display='none';});
+async function showTooltip(e, source) {
+  const p = e.features[0].properties;
+  const coords = e.features[0].geometry.coordinates;
+  const lon = coords[0].toFixed(4);
+  const lat = coords[1].toFixed(4);
+  const t = document.getElementById('tooltip');
+
+  // Position tooltip
+  t.style.display = 'block';
+  const px = e.point.x, py = e.point.y;
+  t.style.left = (px + 16) + 'px';
+  t.style.top  = (py - 10) + 'px';
+
+  if (source === 'NASA FIRMS') {
+    t.innerHTML = `
+      <div class="tt-header">NASA FIRMS — THERMAL DETECTION</div>
+      <div class="tt-row"><span class="tt-key">DATE</span><span class="tt-val">${p.date||'—'}</span></div>
+      <div class="tt-row"><span class="tt-key">FRP</span><span class="tt-val">${p.frp?parseFloat(p.frp).toFixed(1)+' MW':'—'}</span></div>
+      <div class="tt-row"><span class="tt-key">CONFIDENCE</span><span class="tt-val">${p.confidence||'—'}</span></div>
+      <div class="tt-row"><span class="tt-key">COORDS</span><span class="tt-val">${lat}°N  ${Math.abs(lon)}°W</span></div>
+      <div class="tt-source">NASA FIRMS · MODIS/VIIRS satellite</div>`;
+  } else {
+    const cause = p.cause === 'L' || p.cause === 'Lightning' ? 'Lightning' : p.cause === 'H' || p.cause === 'Human' ? 'Human' : p.cause || '—';
+    const area = p.area_ha ? parseInt(p.area_ha).toLocaleString() + ' ha' : '—';
+    const fireClass = p.large ? 'Large (≥200 ha)' : 'Standard';
+    const fireId = p.id || p.name || '—';
+
+    // Show tooltip immediately with coords, then fill location async
+    t.innerHTML = `
+      <div class="tt-header">FIRE RECORD · ${p.date||p.year||'—'}</div>
+      <div class="tt-row"><span class="tt-key">LOCATION</span><span class="tt-val loading" id="tt-location">Locating…</span></div>
+      <div class="tt-row"><span class="tt-key">COORDS</span><span class="tt-val">${lat}°N  ${Math.abs(lon)}°W</span></div>
+      <div class="tt-divider"></div>
+      <div class="tt-row"><span class="tt-key">AREA</span><span class="tt-val">${area}</span></div>
+      <div class="tt-row"><span class="tt-key">CAUSE</span><span class="tt-val">${cause}</span></div>
+      <div class="tt-row"><span class="tt-key">CLASS</span><span class="tt-val">${fireClass}</span></div>
+      <div class="tt-row"><span class="tt-key">FIRE ID</span><span class="tt-val">${fireId}</span></div>
+      <div class="tt-source">NFDB · Natural Resources Canada · SOPFEU</div>`;
+
+    // Reverse geocode async
+    try {
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?types=region,district,place&language=fr&access_token=${MAPBOX_TOKEN}`;
+      const resp = await fetch(url);
+      const geo = await resp.json();
+      const locEl = document.getElementById('tt-location');
+      if (locEl && geo.features && geo.features.length > 0) {
+        // Get most specific place name
+        const place = geo.features[0].place_name.split(',').slice(0, 2).join(',').trim();
+        locEl.textContent = place;
+        locEl.classList.remove('loading');
+      } else if (locEl) {
+        locEl.textContent = 'Boreal Québec';
+        locEl.classList.remove('loading');
+      }
+    } catch(err) {
+      const locEl = document.getElementById('tt-location');
+      if (locEl) { locEl.textContent = `${lat}°N ${Math.abs(lon)}°W`; locEl.classList.remove('loading'); }
+    }
+  }
+
+  map.once('click', () => { t.style.display = 'none'; });
 }
 
 async function updateMapData(year){
   activeYear=year;updateStats(year);
+  // Reset month to 'all' when year changes
+  activeMonth=null;
+  document.getElementById('month-slider').value=5;
+  document.getElementById('month-display').textContent='ALL';
   if(!map||!map.getSource('fires'))return;
   map.getSource('fires').setData(await fetchSOPFEUFires(year));
   if(map.getSource('firms-pts'))map.getSource('firms-pts').setData(await fetchFIRMSData(year));
+}
+
+function toggleSources() {
+  const panel = document.getElementById('sources-panel');
+  const btn = document.getElementById('sources-btn');
+  panel.classList.toggle('open');
+  btn.textContent = panel.classList.contains('open') ? '✕ CLOSE' : '⊕ SOURCES & METHODOLOGY';
 }
 
 const MAPBOX_TOKEN='pk.eyJ1IjoiamlqYm94IiwiYSI6ImNtbW5zMjlkNDA2MjkyeW9ldmdkY2liNWEifQ.-4dx1jo0Pds76yzQXxaf_Q';
@@ -450,14 +610,15 @@ function togglePlaySeason() {
     document.getElementById('play-years').classList.remove('playing');
     document.getElementById('play-years').innerHTML = '<span class="play-icon">&#9654;</span>YEARS';
   }
-  document.getElementById('month-section').style.display = 'block';
+
   document.getElementById('play-season').classList.add('playing');
   document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9646;&#9646;</span>SEASON';
-  let month = 1;
+  // Fire season: May (5) through October (10)
+  let month = 5;
   updateMonthFilter(month);
   playSeasonInterval = setInterval(() => {
     month++;
-    if (month > 12) {
+    if (month > 10) {
       stopPlaySeason();
       return;
     }
@@ -472,9 +633,11 @@ function stopPlaySeason() {
   }
   document.getElementById('play-season').classList.remove('playing');
   document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9654;</span>SEASON';
-  document.getElementById('month-section').style.display = 'none';
+
   // Restore all fires for the year
   activeMonth = null;
+  document.getElementById('month-slider').value = 0;
+  document.getElementById('month-display').textContent = 'ALL';
   if (map && map.getSource('fires') && nfdbCache[activeYear]) {
     map.getSource('fires').setData(nfdbCache[activeYear]);
   }
@@ -483,20 +646,42 @@ function stopPlaySeason() {
 function updateMonthFilter(month) {
   activeMonth = month;
   document.getElementById('month-slider').value = month;
-  document.getElementById('month-display').textContent = MONTH_NAMES[month-1] + ' ' + activeYear;
+
+  // Always update display labels first — before any data checks
+  if (month === 0) {
+    document.getElementById('month-display').textContent = 'ALL';
+    document.getElementById('month-sub').textContent = 'Full year · all ignitions';
+  } else {
+    const inSeason = month >= 5 && month <= 10;
+    document.getElementById('month-display').textContent = MONTH_NAMES[month-1];
+    document.getElementById('month-sub').textContent = inSeason
+      ? 'Ignitions · ' + MONTH_NAMES[month-1] + ' ' + activeYear
+      : 'Outside fire season';
+  }
+
+  // Then update map data if ready
   if (!map || !map.getSource('fires')) return;
   const all = nfdbCache[activeYear];
   if (!all) return;
-  // Show fires up to and including this month (cumulative)
-  const features = all.features.filter(f => {
-    const m = f.properties.month;
-    return m && parseInt(m) <= month;
-  });
-  map.getSource('fires').setData({ type: 'FeatureCollection', features });
+  if (month === 0) {
+    map.getSource('fires').setData(all);
+  } else {
+    const inSeason = month >= 5 && month <= 10;
+    const features = inSeason
+      ? all.features.filter(f => parseInt(f.properties.month) === month)
+      : [];
+    map.getSource('fires').setData({ type: 'FeatureCollection', features });
+  }
 }
 
 document.getElementById('month-slider').addEventListener('input', function() {
-  if (playSeasonInterval) { clearInterval(playSeasonInterval); playSeasonInterval = null; document.getElementById('play-season').classList.remove('playing'); document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9654;</span>SEASON'; }
+  // Stop season animation if running
+  if (playSeasonInterval) {
+    clearInterval(playSeasonInterval);
+    playSeasonInterval = null;
+    document.getElementById('play-season').classList.remove('playing');
+    document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9654;</span>SEASON';
+  }
   updateMonthFilter(parseInt(this.value));
 });
 
