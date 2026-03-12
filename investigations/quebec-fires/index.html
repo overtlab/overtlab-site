@@ -85,8 +85,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .leg-row:last-child { margin-bottom: 0; }
 .leg-swatch { width: 20px; height: 3px; border-radius: 1px; flex-shrink: 0; }
 
-#sat-badge { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); background: rgba(15,26,32,.92); border: 1px solid #2a3a42; padding: 7px 16px; font-family: var(--mono); font-size: 9px; letter-spacing: .14em; color: #6a9ab2; z-index: 10; display: none; backdrop-filter: blur(6px); white-space: nowrap; }
-#sat-badge.visible { display: block; }
+
 
 #tooltip { position: absolute; background: rgba(15,26,32,.97); border: 1px solid #2a3a42; padding: 10px 14px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .1em; color: var(--paper); z-index: 200; pointer-events: none; display: none; max-width: 220px; line-height: 1.8; }
 
@@ -96,6 +95,72 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .loading-bar { position: absolute; height: 100%; background: var(--fire); animation: load 2s ease forwards; }
 @keyframes load { from{width:0} to{width:100%} }
 .loading-text { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; color: #3a5a6a; text-transform: uppercase; }
+
+/* PLAY CONTROLS */
+.play-controls { display: flex; gap: 6px; margin-top: 12px; }
+.play-btn {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .18em;
+  padding: 8px 4px;
+  border: 1px solid #2a3a42;
+  background: transparent;
+  color: #4a6a7a;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all .15s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.play-btn:hover { border-color: #6a8a9a; color: #8aaabc; background: rgba(255,255,255,.03); }
+.play-btn.playing {
+  border-color: var(--fire);
+  color: var(--fire);
+  background: rgba(192,57,43,.08);
+  box-shadow: 0 0 8px rgba(192,57,43,.15);
+}
+.play-icon { font-size: 9px; line-height: 1; }
+
+/* MONTH SECTION */
+#month-display {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+#month-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: #2a3a42;
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+  margin-top: 12px;
+}
+#month-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--fire);
+  cursor: pointer;
+  border: 2px solid var(--ink);
+  box-shadow: 0 0 8px rgba(192,57,43,.6);
+}
+#month-slider::-moz-range-thumb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--fire);
+  cursor: pointer;
+  border: 2px solid var(--ink);
+}
 </style>
 </head>
 <body>
@@ -114,15 +179,18 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
       <div id="year-sub">Fire season record</div>
       <input type="range" id="year-slider" min="2010" max="2024" value="2023" step="1">
       <div class="year-range"><span>2010</span><span>2024</span></div>
-    </div>
-    <div class="panel-section">
-      <div class="section-label">Satellite Layer</div>
-      <div class="ba-btns">
-        <button class="ba-btn active" id="btn-before" onclick="setSatellite('before')">Pre-fire<br><span style="font-size:7px;color:#4a6a7a">Spring</span></button>
-        <button class="ba-btn" id="btn-after" onclick="setSatellite('after')">Post-fire<br><span style="font-size:7px;color:#4a6a7a">Fall</span></button>
-        <button class="ba-btn" id="btn-topo" onclick="setSatellite('topo')">Terrain<br><span style="font-size:7px;color:#4a6a7a">Base</span></button>
+      <div class="play-controls">
+        <button class="play-btn" id="play-years" onclick="togglePlayYears()"><span class="play-icon">&#9654;</span>YEARS</button>
+        <button class="play-btn" id="play-season" onclick="togglePlaySeason()"><span class="play-icon">&#9654;</span>SEASON</button>
       </div>
     </div>
+    <div class="panel-section" id="month-section" style="display:none">
+      <div class="section-label">Month</div>
+      <div id="month-display">—</div>
+      <input type="range" id="month-slider" min="1" max="12" value="1" step="1">
+      <div class="year-range"><span>Jan</span><span>Dec</span></div>
+    </div>
+
     <div class="panel-section">
       <div class="section-label">Fire Data Sources</div>
       <div class="layer-row" onclick="toggleLayer('sopfeu')">
@@ -158,7 +226,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
       <div class="leg-row"><div class="leg-swatch" style="background:var(--cwfis)"></div>CWFIS — National</div>
       <div class="leg-row"><div class="leg-swatch" style="background:var(--firms);height:6px;border-radius:3px;width:8px"></div>NASA FIRMS — Thermal</div>
     </div>
-    <div id="sat-badge">SATELLITE · PRE-FIRE · SPRING COMPOSITE</div>
+
     <div id="tooltip"></div>
     <div id="loading">
       <div class="loading-logo">OVERT LAB</div>
@@ -257,7 +325,7 @@ function firmsCSVtoGeoJSON(csv,year){
 }
 
 const layers={sopfeu:true,cwfis:true,firms:true};
-let satelliteMode='before',activeYear=2023,map=null;
+let activeYear=2023,map=null;
 
 function updateStats(year){
   const d=FIRE_DATA[year];
@@ -273,15 +341,9 @@ function updateStats(year){
   }).join('');
 }
 
-const SAT_STYLES={before:'mapbox://styles/mapbox/satellite-streets-v12',after:'mapbox://styles/mapbox/satellite-streets-v12',topo:'mapbox://styles/mapbox/satellite-streets-v12'};
-const SAT_BADGES={before:'SATELLITE · PRE-FIRE · SPRING COMPOSITE',after:'SATELLITE · POST-FIRE · FALL COMPOSITE',topo:'TERRAIN · TOPOGRAPHIC BASE'};
+const MAP_STYLE='mapbox://styles/mapbox/satellite-streets-v12';
 
-function setSatellite(mode){
-  satelliteMode=mode;
-  ['before','after','topo'].forEach(m=>document.getElementById('btn-'+m).classList.toggle('active',m===mode));
-  document.getElementById('sat-badge').textContent=SAT_BADGES[mode];
-  if(map){map.setStyle(SAT_STYLES[mode]);map.once('style.load',()=>reloadFireLayers());}
-}
+
 
 function toggleLayer(name){
   layers[name]=!layers[name];
@@ -334,15 +396,109 @@ const MAPBOX_TOKEN='pk.eyJ1IjoiamlqYm94IiwiYSI6ImNtbW5zMjlkNDA2MjkyeW9ldmdkY2liN
 
 function initMap(token){
   mapboxgl.accessToken=token;
-  map=new mapboxgl.Map({container:'map',style:SAT_STYLES.before,center:[-72.5,53.5],zoom:5,projection:'mercator',attributionControl:false});
+  map=new mapboxgl.Map({container:'map',style:MAP_STYLE,center:[-72.5,53.5],zoom:5,projection:'mercator',attributionControl:false});
   map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
   map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
   map.on('load',()=>{
     const l=document.getElementById('loading');l.style.opacity='0';setTimeout(()=>l.style.display='none',400);
-    reloadFireLayers();updateStats(activeYear);document.getElementById('sat-badge').classList.add('visible');
+    reloadFireLayers();updateStats(activeYear);
   });
   map.on('style.load',()=>reloadFireLayers());
 }
+
+// ─── ANIMATION ───
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let playYearsInterval = null;
+let playSeasonInterval = null;
+let activeMonth = null; // null = show all months
+
+function togglePlayYears() {
+  if (playYearsInterval) {
+    clearInterval(playYearsInterval);
+    playYearsInterval = null;
+    document.getElementById('play-years').classList.remove('playing');
+    document.getElementById('play-years').innerHTML = '<span class="play-icon">&#9654;</span>YEARS';
+    return;
+  }
+  // Stop season if running
+  stopPlaySeason();
+  document.getElementById('play-years').classList.add('playing');
+  document.getElementById('play-years').innerHTML = '<span class="play-icon">&#9646;&#9646;</span>YEARS';
+  let year = activeYear >= 2024 ? 2010 : activeYear + 1;
+  playYearsInterval = setInterval(() => {
+    document.getElementById('year-slider').value = year;
+    updateMapData(year);
+    if (year >= 2024) {
+      clearInterval(playYearsInterval);
+      playYearsInterval = null;
+      document.getElementById('play-years').classList.remove('playing');
+      document.getElementById('play-years').innerHTML = '<span class="play-icon">&#9654;</span>YEARS';
+    }
+    year++;
+  }, 900);
+}
+
+function togglePlaySeason() {
+  if (playSeasonInterval) {
+    stopPlaySeason();
+    return;
+  }
+  // Stop years if running
+  if (playYearsInterval) {
+    clearInterval(playYearsInterval);
+    playYearsInterval = null;
+    document.getElementById('play-years').classList.remove('playing');
+    document.getElementById('play-years').innerHTML = '<span class="play-icon">&#9654;</span>YEARS';
+  }
+  document.getElementById('month-section').style.display = 'block';
+  document.getElementById('play-season').classList.add('playing');
+  document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9646;&#9646;</span>SEASON';
+  let month = 1;
+  updateMonthFilter(month);
+  playSeasonInterval = setInterval(() => {
+    month++;
+    if (month > 12) {
+      stopPlaySeason();
+      return;
+    }
+    updateMonthFilter(month);
+  }, 700);
+}
+
+function stopPlaySeason() {
+  if (playSeasonInterval) {
+    clearInterval(playSeasonInterval);
+    playSeasonInterval = null;
+  }
+  document.getElementById('play-season').classList.remove('playing');
+  document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9654;</span>SEASON';
+  document.getElementById('month-section').style.display = 'none';
+  // Restore all fires for the year
+  activeMonth = null;
+  if (map && map.getSource('fires') && nfdbCache[activeYear]) {
+    map.getSource('fires').setData(nfdbCache[activeYear]);
+  }
+}
+
+function updateMonthFilter(month) {
+  activeMonth = month;
+  document.getElementById('month-slider').value = month;
+  document.getElementById('month-display').textContent = MONTH_NAMES[month-1] + ' ' + activeYear;
+  if (!map || !map.getSource('fires')) return;
+  const all = nfdbCache[activeYear];
+  if (!all) return;
+  // Show fires up to and including this month (cumulative)
+  const features = all.features.filter(f => {
+    const m = f.properties.month;
+    return m && parseInt(m) <= month;
+  });
+  map.getSource('fires').setData({ type: 'FeatureCollection', features });
+}
+
+document.getElementById('month-slider').addEventListener('input', function() {
+  if (playSeasonInterval) { clearInterval(playSeasonInterval); playSeasonInterval = null; document.getElementById('play-season').classList.remove('playing'); document.getElementById('play-season').innerHTML = '<span class="play-icon">&#9654;</span>SEASON'; }
+  updateMonthFilter(parseInt(this.value));
+});
 
 document.getElementById('year-slider').addEventListener('input',function(){updateMapData(parseInt(this.value));});
 window.addEventListener('DOMContentLoaded',()=>{updateStats(2023);setTimeout(()=>initMap(MAPBOX_TOKEN),400);});
