@@ -600,69 +600,56 @@ body {
 
 <script>
 // ─── FIRE DATA (representative figures — replace with live API calls to SOPFEU/CWFIS/FIRMS) ───
+// Real data — Canadian National Fire Database (NFDB) · Quebec 2010–2024
+// Source: Natural Resources Canada · cwfis.cfs.nrcan.gc.ca
 const FIRE_DATA = {
-  2010: { fires: 419, area_ha: 112000, large: 28 },
-  2011: { fires: 387, area_ha: 87400,  large: 22 },
-  2012: { fires: 512, area_ha: 198000, large: 41 },
-  2013: { fires: 356, area_ha: 76200,  large: 18 },
-  2014: { fires: 441, area_ha: 143000, large: 33 },
-  2015: { fires: 398, area_ha: 95600,  large: 24 },
-  2016: { fires: 467, area_ha: 167000, large: 38 },
-  2017: { fires: 382, area_ha: 82100,  large: 19 },
-  2018: { fires: 521, area_ha: 221000, large: 47 },
-  2019: { fires: 443, area_ha: 156000, large: 35 },
-  2020: { fires: 389, area_ha: 91200,  large: 21 },
-  2021: { fires: 501, area_ha: 189000, large: 43 },
-  2022: { fires: 478, area_ha: 172000, large: 39 },
-  2023: { fires: 1052, area_ha: 5600000, large: 212 },
-  2024: { fires: 487, area_ha: 183000, large: 44 }
+  2010: { fires: 737, area_ha: 314883, large: 33 },
+  2011: { fires: 329, area_ha: 12397, large: 12 },
+  2012: { fires: 795, area_ha: 64043, large: 21 },
+  2013: { fires: 515, area_ha: 1872842, large: 51 },
+  2014: { fires: 292, area_ha: 63720, large: 12 },
+  2015: { fires: 384, area_ha: 5379, large: 6 },
+  2016: { fires: 602, area_ha: 33370, large: 31 },
+  2017: { fires: 317, area_ha: 38391, large: 15 },
+  2018: { fires: 592, area_ha: 86260, large: 25 },
+  2019: { fires: 357, area_ha: 9604, large: 6 },
+  2020: { fires: 707, area_ha: 59986, large: 9 },
+  2021: { fires: 624, area_ha: 49483, large: 13 },
+  2022: { fires: 449, area_ha: 29638, large: 9 },
+  2023: { fires: 713, area_ha: 4288263, large: 187 },
+  2024: { fires: 518, area_ha: 265199, large: 60 },
 };
 
-// ─── SOPFEU LIVE API — active fires ───
-// API launched spring 2025: https://geofeux.sopfeu.qc.ca/sopfeu-api/swagger/index.html
-const SOPFEU_API = 'https://geofeux.sopfeu.qc.ca/sopfeu-api/api/v1/feux';
-const sopfeuCache = {};
+// ─── NFDB/SOPFEU — real fire data from Canadian National Fire Database ───
+// Source: Natural Resources Canada CWFIS · Quebec 2010–2024 · 7,931 fires
+const NFDB_URL = '/data/sopfeu-fires.geojson';
+let nfdbAllFeatures = null;
+const nfdbCache = {};
+
+async function loadNFDB() {
+  if (nfdbAllFeatures) return nfdbAllFeatures;
+  try {
+    const resp = await fetch(NFDB_URL);
+    if (!resp.ok) throw new Error('NFDB fetch ' + resp.status);
+    const geo = await resp.json();
+    nfdbAllFeatures = geo.features;
+    console.log('NFDB: loaded', nfdbAllFeatures.length, 'Quebec fires 2010–2024');
+    return nfdbAllFeatures;
+  } catch(err) {
+    console.warn('NFDB load failed:', err.message);
+    return null;
+  }
+}
 
 async function fetchSOPFEUFires(year) {
-  if (sopfeuCache[year]) return sopfeuCache[year];
-  try {
-    const resp = await fetch(SOPFEU_API);
-    if (!resp.ok) throw new Error('SOPFEU API ' + resp.status);
-    const data = await resp.json();
-    // data is an array of fire objects with lat/lon and properties
-    const features = (Array.isArray(data) ? data : (data.features || data.feux || []))
-      .filter(f => {
-        // Filter by year if date field available
-        const d = f.dateDeclared || f.dateDebut || f.date || '';
-        return !d || d.startsWith(String(year));
-      })
-      .map(f => {
-        const lat = f.latitude  || f.lat || (f.geometry && f.geometry.coordinates && f.geometry.coordinates[1]);
-        const lon = f.longitude || f.lon || (f.geometry && f.geometry.coordinates && f.geometry.coordinates[0]);
-        if (!lat || !lon) return null;
-        return {
-          type: 'Feature',
-          properties: {
-            source: 'SOPFEU',
-            year,
-            area_ha: f.superficie || f.areaBrule || f.hectares || 0,
-            cause: f.causeAllumage || f.cause || '—',
-            status: f.etatFeu || f.statut || '—',
-            name: f.nomFeu || f.nom || '—',
-            date: f.dateDeclared || f.dateDebut || f.date || '—',
-            large: (f.superficie || 0) > 200
-          },
-          geometry: { type: 'Point', coordinates: [parseFloat(lon), parseFloat(lat)] }
-        };
-      }).filter(Boolean);
-    const geo = { type: 'FeatureCollection', features };
-    console.log('SOPFEU: loaded', features.length, 'fires for', year);
-    sopfeuCache[year] = geo;
-    return geo;
-  } catch(err) {
-    console.warn('SOPFEU API failed, using fallback:', err.message);
-    return generateFirePointsFallback(year);
-  }
+  if (nfdbCache[year]) return nfdbCache[year];
+  const all = await loadNFDB();
+  if (!all) return generateFirePointsFallback(year);
+  const features = all.filter(f => f.properties.year === year);
+  console.log('NFDB: ' + features.length + ' fires for ' + year);
+  const geo = { type: 'FeatureCollection', features };
+  nfdbCache[year] = geo;
+  return geo;
 }
 
 // Fallback placeholder if API unreachable
@@ -816,7 +803,7 @@ let map = null;
 function updateStats(year) {
   const d = FIRE_DATA[year];
   document.getElementById('year-display').textContent = year;
-  document.getElementById('year-sub').textContent = year === 2023 ? 'Record season — worst in history' : 'Fire season record';
+  document.getElementById('year-sub').textContent = year === 2023 ? 'Record season — 4.3M ha burned' : year === 2013 ? 'Second largest — 1.9M ha' : 'Fire season record';
   document.getElementById('stat-fires').textContent = d.fires.toLocaleString();
   document.getElementById('stat-area').textContent = (d.area_ha >= 1000000
     ? (d.area_ha / 1000000).toFixed(1) + 'M ha'
@@ -908,7 +895,7 @@ async function reloadFireLayers() {
       filter: ['==', ['get','source'], 'SOPFEU'],
       layout: { visibility: layers.sopfeu ? 'visible' : 'none' },
       paint: {
-        'heatmap-weight': ['interpolate',['linear'],['get','area_ha'],0,0,50000,1],
+        'heatmap-weight': ['interpolate',['linear'],['get','area'],0,0,50000,1],
         'heatmap-intensity': ['interpolate',['linear'],['zoom'],3,.5,10,2],
         'heatmap-color': ['interpolate',['linear'],['heatmap-density'],
           0,'rgba(192,57,43,0)',
@@ -1024,10 +1011,11 @@ function showTooltip(e, source) {
     rows += `<div>CONFIDENCE: ${props.confidence || '—'}</div>`;
   } else {
     rows += `<div>DATE: ${props.date || '—'}</div>`;
-    rows += `<div>AREA: ${props.area_ha ? props.area_ha.toLocaleString() + ' ha' : '—'}</div>`;
+    rows += `<div>AREA: ${props.area ? props.area.toLocaleString() + ' ha' : '—'}</div>`;
     rows += `<div>CAUSE: ${props.cause || '—'}</div>`;
-    rows += `<div>STATUS: ${props.status || '—'}</div>`;
-    rows += `<div>NAME: ${props.name || '—'}</div>`;
+    rows += `<div>CLASS: ${props.large ? 'Large fire (≥200 ha)' : 'Standard'}</div>`;
+    rows += `<div>ID: ${props.id || props.name || '—'}</div>`;
+    rows += `<div style="color:#4a6a7a;margin-top:4px;font-size:7px">SOURCE: ${props.src || 'NFDB · NRCan'}</div>`;
   }
   t.innerHTML = rows;
   map.once('click', () => { t.style.display = 'none'; });
