@@ -900,16 +900,22 @@ const INV_DATA = {
     {
       id: 'extractive',
       label: 'Extractive Industry',
+      investigations: []
+    },
+    {
+      id: 'environment',
+      label: 'Environment',
       investigations: [
         {
           num: '002',
-          name: 'Canadian Mining Permits Abroad',
-          status: 'pending',
-          statusLabel: 'In Development',
-          desc: 'A structural map of Canadian mining permits, subsidiaries, and documented incidents across Sub-Saharan Africa and Latin America.',
-          tags: ['Extractive Industry', 'Corporate Network', 'Permit Filings'],
-          href: null,
-          meta: 'TBD · Africa · LatAm · NRCan · TSX'
+          name: 'Québec Forest Fire Record — 2010 to Present',
+          status: 'live',
+          statusLabel: 'Live · 2010–2024',
+          desc: 'A spatial record of forest fires across Québec mapped from three independent public sources: SOPFEU, CWFIS, and NASA FIRMS. Satellite before/after imagery layered with fire perimeters across 14 years of public data.',
+          tags: ['Environment', 'Spatial Record', 'SOPFEU · CWFIS · FIRMS'],
+          href: '/investigations/quebec-fires/',
+          thumb: '/investigations/quebec-fires/thumb.jpg',
+          meta: '2010–2024 · Québec · SOPFEU · CWFIS · NASA FIRMS'
         }
       ]
     },
