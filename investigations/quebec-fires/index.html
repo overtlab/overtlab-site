@@ -985,14 +985,7 @@ function initMap(token) {
 
 // ─── TOKEN FLOW ───
 function initWithToken() {
-  const token = document.getElementById('token-input').value.trim();
-  if (!token.startsWith('pk.')) {
-    alert('Token must start with pk.');
-    return;
-  }
-  document.getElementById('no-token').style.display = 'none';
-  localStorage.setItem('mb_token_overt', token);
-  initMap(token);
+  initMap(MAPBOX_TOKEN);
 }
 
 // ─── SLIDER ───
@@ -1001,17 +994,11 @@ document.getElementById('year-slider').addEventListener('input', function() {
 });
 
 // ─── BOOT ───
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiamlqYm94IiwiYSI6ImNtbW5xbzFzZzA1ejEyb3E2cDJ0NGF5Z2cifQ.6dFeV4cbk48SxxBnrdlqdg';
 window.addEventListener('DOMContentLoaded', () => {
   updateStats(2023);
-  setTimeout(() => {
-    const saved = localStorage.getItem('mb_token_overt');
-    if (saved) {
-      document.getElementById('no-token').style.display = 'none';
-      initMap(saved);
-    } else {
-      document.getElementById('loading').style.display = 'none';
-    }
-  }, 2200);
+  document.getElementById('no-token').style.display = 'none';
+  setTimeout(() => initMap(MAPBOX_TOKEN), 400);
 });
 </script>
 </body>
