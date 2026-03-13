@@ -20,10 +20,23 @@ html, body { width: 100%; height: 100%; overflow: hidden; background: var(--ink)
 body { font-family: var(--mono); color: var(--paper); display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
 #header { height: 48px; background: var(--ink); border-bottom: 1px solid #2a3a42; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; z-index: 100; }
-.h-logo { font-size: 11px; letter-spacing: .18em; font-weight: 500; color: var(--paper); text-transform: uppercase; text-decoration: none; }
-.h-logo span { color: #4a6a7a; }
-.h-title { font-size: 10px; letter-spacing: .14em; color: #6a8a9a; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
-.h-status { font-size: 9px; letter-spacing: .12em; color: #4a6a7a; display: flex; align-items: center; gap: 14px; }
+.h-logo {
+  display:inline-flex; align-items:center; text-decoration:none;
+}
+.h-logo-box {
+  background:#f5c800; padding:6px 10px 5px;
+  display:inline-flex; align-items:center; gap:0;
+}
+.h-logo-box .logo-overt {
+  font-family:var(--mono); font-size:12px; font-weight:700;
+  letter-spacing:.06em; color:#0d0f0e; text-transform:uppercase; line-height:1;
+}
+.h-logo-box .logo-lab {
+  font-family:var(--mono); font-size:12px; font-weight:400;
+  letter-spacing:.06em; color:#0d0f0e; text-transform:uppercase; line-height:1;
+}
+.h-title { font-size: 10px; letter-spacing: .14em; color: #9ab8c8; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); }
+.h-status { font-size: 9px; letter-spacing: .12em; color: #6a8a9a; display: flex; align-items: center; gap: 14px; }
 .h-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--fire); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -88,13 +101,13 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 
 
 #tooltip { position: absolute; background: rgba(10,18,22,.97); border: 1px solid #2a3a42; padding: 12px 16px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .08em; color: var(--paper); z-index: 200; pointer-events: none; display: none; max-width: 260px; line-height: 1; }
-.tt-header { color: var(--fire); letter-spacing: .18em; font-size: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e2e36; }
+.tt-header { color: #e05a40; letter-spacing: .16em; font-size: 9px; font-weight:600; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e2e36; }
 .tt-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
-.tt-key { color: #4a6a7a; font-size: 7.5px; letter-spacing: .14em; flex-shrink: 0; }
-.tt-val { color: var(--paper); font-size: 8px; letter-spacing: .06em; text-align: right; }
+.tt-key { color: #7aaabb; font-size: 8px; letter-spacing: .12em; flex-shrink: 0; }
+.tt-val { color: #f0ede8; font-size: 9px; letter-spacing: .04em; text-align: right; font-weight:500; }
 .tt-val.loading { color: #4a6a7a; font-style: italic; }
 .tt-divider { height: 1px; background: #1e2e36; margin: 8px 0; }
-.tt-source { color: #3a5a6a; font-size: 7px; letter-spacing: .12em; margin-top: 8px; padding-top: 6px; border-top: 1px solid #1a2a32; }
+.tt-source { color: #5a8a9a; font-size: 8px; letter-spacing: .1em; margin-top: 8px; padding-top: 6px; border-top: 1px solid #1a2a32; }
 
 #loading { position: absolute; inset: 0; background: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; gap: 16px; transition: opacity .4s; }
 .loading-logo { font-family: var(--mono); font-size: 13px; letter-spacing: .2em; color: #4a6a7a; }
@@ -145,7 +158,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 
 /* TIME CONTROLS */
 .time-row { margin-bottom: 2px; }
-.time-label { font-size: 7px; letter-spacing: .22em; color: #4a6a7a; text-transform: uppercase; margin-bottom: 4px; }
+.time-label { font-size: 8px; letter-spacing: .18em; color: #6a9aaa; text-transform: uppercase; margin-bottom: 4px; }
 .time-divider { height: 1px; background: #1e2e36; margin: 14px 0; }
 #month-display { font-size: 28px; font-weight: 600; letter-spacing: -.01em; color: var(--paper); line-height: 1; margin-bottom: 2px; }
 #month-sub { font-size: 8px; letter-spacing: .14em; color: #4a6a7a; margin-bottom: 14px; }
@@ -220,7 +233,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 <body>
 
 <div id="header">
-  <a href="/" class="h-logo">Overt<span>Lab</span></a>
+  <a href="/" class="h-logo"><div class="h-logo-box"><span class="logo-overt">Overt</span><span class="logo-lab">Lab</span></div></a>
   <div class="h-title">QUÉBEC FOREST FIRE RECORD — 2010 TO PRESENT</div>
   <div class="h-status"><div class="h-dot"></div><span>SOPFEU · CWFIS · NASA FIRMS</span></div>
 </div>
@@ -454,9 +467,38 @@ async function reloadFireLayers(){
   if(map.getSource('fires')){map.getSource('fires').setData(fireGeo);}else{map.addSource('fires',{type:'geojson',data:fireGeo});}
   if(map.getSource('firms-pts')){map.getSource('firms-pts').setData(firmsGeo);}else{map.addSource('firms-pts',{type:'geojson',data:firmsGeo});}
   ['sopfeu-heat','sopfeu-layer','cwfis-layer','firms-heat','firms-layer'].forEach(id=>{if(map.getLayer(id))map.removeLayer(id);});
-  map.addLayer({id:'sopfeu-heat',type:'heatmap',source:'fires',layout:{visibility:layers.sopfeu?'visible':'none'},paint:{'heatmap-weight':['interpolate',['linear'],['get','area_ha'],0,0,50000,1],'heatmap-intensity':['interpolate',['linear'],['zoom'],3,.5,10,2],'heatmap-color':['interpolate',['linear'],['heatmap-density'],0,'rgba(192,57,43,0)',0.2,'rgba(192,57,43,0.3)',0.6,'rgba(230,120,20,0.7)',1,'rgba(241,196,15,0.9)'],'heatmap-radius':['interpolate',['linear'],['zoom'],3,15,10,40],'heatmap-opacity':0.65}});
-  map.addLayer({id:'sopfeu-layer',type:'circle',source:'fires',minzoom:3,layout:{visibility:layers.sopfeu?'visible':'none'},paint:{'circle-radius':['interpolate',['linear'],['get','area_ha'],100,3,10000,8,100000,16],'circle-color':'#c0392b','circle-opacity':0.75,'circle-stroke-width':1,'circle-stroke-color':'rgba(240,100,50,0.5)'}});
-  map.addLayer({id:'cwfis-layer',type:'circle',source:'fires',minzoom:3,layout:{visibility:layers.cwfis?'visible':'none'},paint:{'circle-radius':['interpolate',['linear'],['get','area_ha'],100,3,10000,7,100000,14],'circle-color':'#e67e22','circle-opacity':0.65,'circle-stroke-width':1,'circle-stroke-color':'rgba(230,126,34,0.4)'}});
+  map.addLayer({id:'sopfeu-heat',type:'heatmap',source:'fires',layout:{visibility:layers.sopfeu?'visible':'none'},paint:{
+  'heatmap-weight':['interpolate',['linear'],['get','area'],0,0.1,1000,0.5,100000,1],
+  'heatmap-intensity':['interpolate',['linear'],['zoom'],3,.8,10,3],
+  'heatmap-color':['interpolate',['linear'],['heatmap-density'],
+    0,'rgba(0,0,0,0)',
+    0.1,'rgba(180,40,10,0.4)',
+    0.3,'rgba(210,80,10,0.65)',
+    0.6,'rgba(240,140,20,0.8)',
+    0.85,'rgba(245,180,30,0.9)',
+    1,'rgba(255,220,80,1)'
+  ],
+  'heatmap-radius':['interpolate',['linear'],['zoom'],3,18,8,35],
+  'heatmap-opacity':['interpolate',['linear'],['zoom'],3,0.85,6,0.5]
+}});
+  map.addLayer({id:'sopfeu-layer',type:'circle',source:'fires',minzoom:3,layout:{visibility:layers.sopfeu?'visible':'none'},paint:{
+  'circle-radius':['interpolate',['linear'],['zoom'],3,['interpolate',['linear'],['get','area'],0,2,1000,5,100000,10],10,['interpolate',['linear'],['get','area'],0,4,1000,10,100000,22]],
+  'circle-color':['interpolate',['linear'],['get','area'],0,'#e05a20',1000,'#e87820',50000,'#f5a020',200000,'#f5c800'],
+  'circle-opacity':0.9,
+  'circle-blur':0.3,
+  'circle-stroke-width':['interpolate',['linear'],['zoom'],3,0.5,8,1.5],
+  'circle-stroke-color':['interpolate',['linear'],['get','area'],0,'rgba(255,120,60,0.6)',100000,'rgba(255,200,0,0.5)'],
+  'circle-stroke-opacity':0.8
+}});
+  map.addLayer({id:'cwfis-layer',type:'circle',source:'fires',minzoom:3,layout:{visibility:layers.cwfis?'visible':'none'},paint:{
+  'circle-radius':['interpolate',['linear'],['zoom'],3,['interpolate',['linear'],['get','area'],0,1.5,1000,4,100000,8],10,['interpolate',['linear'],['get','area'],0,3,1000,8,100000,18]],
+  'circle-color':['interpolate',['linear'],['get','area'],0,'#e07020',50000,'#f0a030',200000,'#f5c800'],
+  'circle-opacity':0.8,
+  'circle-blur':0.4,
+  'circle-stroke-width':0.8,
+  'circle-stroke-color':'rgba(255,160,60,0.5)',
+  'circle-stroke-opacity':0.7
+}});
   map.addLayer({id:'firms-heat',type:'heatmap',source:'firms-pts',layout:{visibility:layers.firms?'visible':'none'},paint:{'heatmap-weight':['interpolate',['linear'],['get','frp'],0,0,300,1],'heatmap-intensity':['interpolate',['linear'],['zoom'],3,.3,10,1.5],'heatmap-color':['interpolate',['linear'],['heatmap-density'],0,'rgba(243,156,18,0)',0.3,'rgba(243,156,18,0.3)',0.7,'rgba(243,156,18,0.6)',1,'rgba(255,220,50,0.8)'],'heatmap-radius':['interpolate',['linear'],['zoom'],3,12,10,30],'heatmap-opacity':0.5}});
   map.addLayer({id:'firms-layer',type:'circle',source:'firms-pts',minzoom:6,layout:{visibility:layers.firms?'visible':'none'},paint:{'circle-radius':3,'circle-color':'#f39c12','circle-opacity':0.8}});
   if(!map._tooltipsRegistered){
@@ -494,7 +536,7 @@ async function showTooltip(e, source) {
       <div class="tt-source">NASA FIRMS · MODIS/VIIRS satellite</div>`;
   } else {
     const cause = p.cause === 'L' || p.cause === 'Lightning' ? 'Lightning' : p.cause === 'H' || p.cause === 'Human' ? 'Human' : p.cause || '—';
-    const area = p.area_ha ? parseInt(p.area_ha).toLocaleString() + ' ha' : '—';
+    const area = p.area != null && p.area > 0 ? parseFloat(p.area).toLocaleString(undefined,{maximumFractionDigits:1}) + ' ha' : '—';
     const fireClass = p.large ? 'Large (≥200 ha)' : 'Standard';
     const fireId = p.id || p.name || '—';
 

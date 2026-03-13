@@ -48,18 +48,21 @@ nav {
 }
 .nav-logo { display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
 .nav-logo-box {
-  background:var(--ink); padding:7px 11px 6px;
-  display:inline-flex; align-items:center;
+  background:#f5c800; padding:7px 11px 6px;
+  display:inline-flex; align-items:center; gap:0;
 }
-.nav-logo-box span {
+.nav-logo-box .logo-overt {
   font-family:var(--mono); font-size:13px; font-weight:700;
-  letter-spacing:.08em; color:var(--yellow); text-transform:uppercase; line-height:1;
+  letter-spacing:.06em; color:#0d0f0e; text-transform:uppercase; line-height:1;
 }
-.nav-logo-box span em { font-style:normal; color:#ffffff; }
+.nav-logo-box .logo-lab {
+  font-family:var(--mono); font-size:13px; font-weight:400;
+  letter-spacing:.06em; color:#0d0f0e; text-transform:uppercase; line-height:1;
+}
 .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
 .nav-links a {
-  font-family:var(--mono); font-size:9.5px; letter-spacing:.16em;
-  text-transform:uppercase; color:var(--ink-3); text-decoration:none; transition:color .15s;
+  font-family:var(--mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-2); text-decoration:none; transition:color .15s;
 }
 .nav-links a:hover { color:var(--ink); }
 .nav-lang { border-left:1px solid var(--rule); padding-left:32px; }
@@ -150,34 +153,34 @@ nav {
   animation:pulse 2.8s ease-in-out infinite;
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
-.inv-status-text { color:var(--ink-2); }
+.inv-status-text { color:var(--ink); font-weight:500; }
 
 .inv-title {
-  font-family:var(--sans); font-size:clamp(20px,2.4vw,28px); font-weight:700;
+  font-family:var(--sans); font-size:clamp(22px,2.4vw,30px); font-weight:700;
   line-height:1.15; letter-spacing:-.02em;
-  color:var(--ink-2); margin-bottom:14px;
+  color:var(--ink); margin-bottom:14px;
   transition:color .15s;
 }
 
 .inv-desc {
-  font-family:var(--sans); font-size:14px; line-height:1.8;
-  color:var(--ink-3); margin-bottom:20px; font-weight:300;
+  font-family:var(--sans); font-size:15px; line-height:1.85;
+  color:var(--ink-2); margin-bottom:20px; font-weight:300;
   max-width:640px;
 }
 
 .inv-tags { display:flex; gap:8px; flex-wrap:wrap; }
 .inv-tag {
-  font-family:var(--mono); font-size:8px; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--ink-3);
-  padding:3px 8px; border:1px solid var(--rule);
+  font-family:var(--mono); font-size:8.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-2);
+  padding:4px 9px; border:1px solid #c8c6c0;
 }
 
 .inv-aside {
-  text-align:right; font-family:var(--mono); font-size:9px;
-  letter-spacing:.1em; line-height:2.4; color:var(--ink-3);
+  text-align:right; font-family:var(--mono); font-size:9.5px;
+  letter-spacing:.09em; line-height:2.2; color:var(--ink-2);
   padding-top:4px; white-space:nowrap;
 }
-.inv-aside strong { color:var(--ink); display:block; font-weight:500; }
+.inv-aside strong { color:var(--ink); display:block; font-weight:600; }
 
 .inv-arrow {
   font-family:var(--mono); font-size:16px; color:var(--ink-4);
@@ -663,7 +666,7 @@ footer {
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="/">
-    <div class="nav-logo-box"><span>Overt<em>Lab</em></span></div>
+    <div class="nav-logo-box"><span class="logo-overt">Overt</span><span class="logo-lab">Lab</span></div>
   </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
@@ -728,7 +731,7 @@ footer {
         </div>
       </div>
       <div class="inv-thumb" id="arms-thumb" style="background:#0d1c28;overflow:hidden;position:relative;cursor:pointer;">
-        <svg id="th-world-svg" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
+        <svg id="th-world-svg" viewBox="260 55 560 300" preserveAspectRatio="xMidYMid meet">
         <style>
           #th-world-svg .country { fill:#1e2418; stroke:#2a3020; stroke-width:0.4; }
           #th-world-svg .country.dest { fill:#252e20; stroke:#3a4030; }
