@@ -235,6 +235,48 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
   cursor: pointer;
   border: 2px solid var(--ink);
 }
+
+/* ── SMOKE TIMELINE ── */
+#smoke-timeline {
+  display: none;
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 280px - 48px);
+  background: rgba(10,18,22,0.96);
+  border: 1px solid #2a3a42;
+  padding: 14px 18px 12px;
+  z-index: 30;
+  backdrop-filter: blur(8px);
+}
+#smoke-timeline.visible { display: block; }
+.tl-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.tl-title { font-family: var(--mono); font-size: 8px; letter-spacing: .22em; color: #7aabb8; text-transform: uppercase; }
+.tl-date { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--paper); letter-spacing: .06em; }
+.tl-controls { display: flex; align-items: center; gap: 8px; }
+#tl-play { font-family: var(--mono); font-size: 8px; letter-spacing: .14em; color: #7aabb8; background: none; border: 1px solid #2a3a42; padding: 4px 10px; cursor: pointer; text-transform: uppercase; transition: all .15s; }
+#tl-play:hover { color: var(--paper); border-color: #4a6a7a; }
+#tl-play.playing { color: var(--smoke-accent); border-color: var(--smoke-accent); }
+#tl-speed { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; color: #4a6a7a; background: none; border: 1px solid #2a3a42; padding: 4px 8px; cursor: pointer; }
+.tl-slider-wrap { position: relative; margin-bottom: 8px; }
+#tl-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: #2a3a42; outline: none; cursor: pointer; }
+#tl-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--smoke-accent); cursor: pointer; border: 2px solid var(--ink); box-shadow: 0 0 8px rgba(200,144,64,.7); }
+#tl-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--smoke-accent); border: 2px solid var(--ink); }
+.tl-month-marks { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.tl-month-mark { font-family: var(--mono); font-size: 7px; letter-spacing: .1em; color: #3a5a6a; text-transform: uppercase; }
+.tl-month-mark.active { color: var(--smoke-accent); }
+
+/* PM2.5 sparkline */
+.tl-aq-wrap { border-top: 1px solid #1e2e36; padding-top: 8px; }
+.tl-aq-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+.tl-aq-label { font-family: var(--mono); font-size: 7px; letter-spacing: .18em; color: #7aabb8; text-transform: uppercase; }
+.tl-aq-val { font-family: var(--mono); font-size: 10px; font-weight: 600; color: #e8b060; letter-spacing: .04em; }
+.tl-aq-station { font-family: var(--mono); font-size: 7px; letter-spacing: .1em; color: #4a6a7a; }
+#tl-sparkline { width: 100%; height: 36px; display: block; }
+.tl-aq-scale { display: flex; justify-content: space-between; margin-top: 2px; }
+.tl-aq-scale span { font-family: var(--mono); font-size: 6.5px; letter-spacing: .08em; color: #3a5a6a; }
+.tl-aq-note { font-family: var(--mono); font-size: 7px; letter-spacing: .08em; color: #3a5a6a; margin-top: 6px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -333,6 +375,42 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
     </div>
 
     <div id="tooltip"></div>
+
+    <!-- SMOKE TIMELINE -->
+    <div id="smoke-timeline">
+      <div class="tl-header">
+        <div>
+          <div class="tl-title">HMS Smoke · Daily Animation · 2023</div>
+          <div class="tl-date" id="tl-date-display">—</div>
+        </div>
+        <div class="tl-controls">
+          <select id="tl-speed" onchange="setTimelineSpeed(this.value)">
+            <option value="600">0.5×</option>
+            <option value="350" selected>1×</option>
+            <option value="180">2×</option>
+            <option value="80">4×</option>
+          </select>
+          <button id="tl-play" onclick="toggleTimelinePlay()">▶ PLAY</button>
+        </div>
+      </div>
+      <div class="tl-slider-wrap">
+        <input type="range" id="tl-slider" min="0" value="0" step="1">
+      </div>
+      <div class="tl-month-marks" id="tl-month-marks"></div>
+      <div class="tl-aq-wrap">
+        <div class="tl-aq-header">
+          <div>
+            <div class="tl-aq-label">PM2.5 — Montréal · µg/m³</div>
+            <div class="tl-aq-station">Estimated · Open-Meteo API · pending real data</div>
+          </div>
+          <div class="tl-aq-val" id="tl-aq-val">—</div>
+        </div>
+        <canvas id="tl-sparkline" height="36"></canvas>
+        <div class="tl-aq-scale"><span>0</span><span>25 (WHO limit)</span><span>100+</span></div>
+        <div class="tl-aq-note">⚠ PM2.5 values are synthetic placeholders. Real data loads via Open-Meteo when available.</div>
+      </div>
+    </div>
+
 
     <!-- SOURCES PANEL -->
     <button id="sources-btn" onclick="toggleSources()">&#9432; SOURCES &amp; METHODOLOGY</button>
@@ -495,7 +573,7 @@ function toggleLayer(name){
     document.getElementById('smoke-detail').style.display=layers.smoke?'block':'none';
     document.getElementById('smoke-legend-map').style.display=layers.smoke?'block':'none';
     document.getElementById('smoke-src-item').style.display=layers.smoke?'flex':'none';
-    if(layers.smoke)loadSmokeLayer();else hideSmokeLayer();
+    if(layers.smoke)loadSmokeLayer();else{hideSmokeLayer();document.getElementById('smoke-timeline').classList.remove('visible');}
     return;
   }
   layers[name]=!layers[name];
@@ -522,12 +600,12 @@ async function loadSmokeLayer(){
     try{
       if(!map.getSource('hms-smoke'))map.addSource('hms-smoke',{type:'geojson',data:HMS_URL});
       if(!map.getLayer('smoke-fill'))map.addLayer({id:'smoke-fill',type:'fill',source:'hms-smoke',
-        paint:{'fill-color':['match',['get','density'],'light','rgba(210,185,130,0.18)','medium','rgba(185,130,60,0.32)','heavy','rgba(150,75,20,0.52)','rgba(210,185,130,0.18)']},
+        paint:{'fill-color':['match',['get','density'],'light','rgba(210,185,130,0.18)','medium','rgba(185,130,60,0.32)','heavy','rgba(150,75,20,0.52)','rgba(210,185,130,0.18)'],'fill-opacity':0},
         layout:{visibility:'visible'}},'sopfeu-heat');
       if(!map.getLayer('smoke-stroke'))map.addLayer({id:'smoke-stroke',type:'line',source:'hms-smoke',
-        paint:{'line-color':['match',['get','density'],'light','rgba(210,185,130,0.4)','medium','rgba(185,130,60,0.6)','heavy','rgba(150,75,20,0.8)','rgba(210,185,130,0.4)'],'line-width':0.5},
+        paint:{'line-color':['match',['get','density'],'light','rgba(210,185,130,0.4)','medium','rgba(185,130,60,0.6)','heavy','rgba(150,75,20,0.8)','rgba(210,185,130,0.4)'],'line-width':0.5,'line-opacity':0},
         layout:{visibility:'visible'}},'sopfeu-heat');
-      smokeLoaded=true;smokeLoading=false;updateSmokeFilter();
+      smokeLoaded=true;smokeLoading=false;updateSmokeFilter();setTimeout(initTimeline,500);
     }catch(e){smokeLoading=false;if(st)st.textContent='Place hms_smoke_quebec_2023.geojson in /data/';}
   }else if(smokeLoaded){
     if(map.getLayer('smoke-fill'))map.setLayoutProperty('smoke-fill','visibility','visible');
@@ -536,22 +614,50 @@ async function loadSmokeLayer(){
   }
 }
 
+let _smokeTransition=null;
+
 function updateSmokeFilter(){
   if(!map||!smokeLoaded||!layers.smoke)return;
   const st=document.getElementById('smoke-status');
   if(activeYear!==2023){hideSmokeLayer();if(st)st.textContent='Smoke data: 2023 only.';return;}
-  if(map.getLayer('smoke-fill'))map.setLayoutProperty('smoke-fill','visibility','visible');
-  if(map.getLayer('smoke-stroke'))map.setLayoutProperty('smoke-stroke','visibility','visible');
+
+  // Always clamp to fire season May-Oct
   let filter;
   if(activeMonth&&activeMonth>=5&&activeMonth<=10){
     filter=['==',['get','month'],activeMonth];
     if(st)st.textContent=MONTH_NAMES[activeMonth-1]+' 2023 · smoke plumes';
-  }else{
-    filter=['boolean',true];
-    if(st)st.textContent='May–Oct 2023 · all smoke days';
+  } else if(activeMonth&&(activeMonth<5||activeMonth>10)){
+    // Outside fire season — hide smoke entirely
+    hideSmokeLayer();
+    if(st)st.textContent='Outside fire season — no smoke data';
+    return;
+  } else {
+    // ALL view — show cumulative season May-Oct
+    filter=['all',['>=',['get','month'],5],['<=',['get','month'],10]];
+    if(st)st.textContent='May–Oct 2023 · full season coverage';
   }
-  map.setFilter('smoke-fill',filter);
-  map.setFilter('smoke-stroke',filter);
+
+  // Animated fade: start transparent, transition to full opacity
+  if(map.getLayer('smoke-fill')){
+    map.setLayoutProperty('smoke-fill','visibility','visible');
+    map.setLayoutProperty('smoke-stroke','visibility','visible');
+    map.setPaintProperty('smoke-fill','fill-opacity',0);
+    map.setPaintProperty('smoke-stroke','line-opacity',0);
+    map.setFilter('smoke-fill',filter);
+    map.setFilter('smoke-stroke',filter);
+
+    // Clear any running transition
+    if(_smokeTransition)clearInterval(_smokeTransition);
+    let op=0;
+    _smokeTransition=setInterval(()=>{
+      op=Math.min(op+0.08,1);
+      if(map.getLayer('smoke-fill')){
+        map.setPaintProperty('smoke-fill','fill-opacity',op);
+        map.setPaintProperty('smoke-stroke','line-opacity',op*0.8);
+      }
+      if(op>=1){clearInterval(_smokeTransition);_smokeTransition=null;}
+    },16);
+  }
 }
 
 async function reloadFireLayers(){
@@ -825,6 +931,224 @@ document.getElementById('month-slider').addEventListener('input', function() {
 document.getElementById('year-slider').addEventListener('input',function(){updateMapData(parseInt(this.value));});
 window.addEventListener('DOMContentLoaded',()=>{updateStats(2023);setTimeout(()=>initMap(MAPBOX_TOKEN),400);});
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"cc514ca9cc8845319738b9e70f9ff09c","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"cc514ca9cc8845319738b9e70f9ff09c","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous">
+// ── SMOKE TIMELINE ──────────────────────────────────────────────────────────
+
+// All unique dates in the smoke GeoJSON, sorted
+let timelineDates = [];
+let tlIndex = 0;
+let tlInterval = null;
+let tlSpeed = 350;
+let tlPlaying = false;
+
+// Synthetic PM2.5 data for Montréal 2023 fire season
+// Based on known 2023 events: catastrophic June spike, July/Aug elevated
+// Will be replaced by Open-Meteo API data
+const PM25_MTL_2023 = (()=>{
+  const data = {};
+  const days = [];
+  // Generate dates May 1 – Oct 31 2023
+  for(let m=5;m<=10;m++){
+    const dim = [0,31,28,31,30,31,30,31,31,30,31,30,31][m];
+    for(let d=1;d<=dim;d++){
+      const ds = `2023${String(m).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+      days.push({ds,m,d});
+    }
+  }
+  days.forEach(({ds,m,d})=>{
+    let v = 4 + Math.random()*3; // baseline ~5 µg/m³
+    // June 1-10: catastrophic ignitions, plume reaches MTL June 6-8
+    if(m===6&&d>=5&&d<=10) v = 60 + Math.random()*80;
+    else if(m===6&&d>=11&&d<=20) v = 20 + Math.random()*30;
+    else if(m===6&&d>=21&&d<=30) v = 15 + Math.random()*25;
+    // July elevated
+    else if(m===7&&d<=15) v = 12 + Math.random()*20;
+    else if(m===7&&d>15) v = 8 + Math.random()*12;
+    // August some spikes
+    else if(m===8&&d>=10&&d<=20) v = 15 + Math.random()*20;
+    // Sept/Oct low
+    else if(m>=9) v = 3 + Math.random()*6;
+    data[ds] = Math.round(v*10)/10;
+  });
+  return data;
+})();
+
+function initTimeline(){
+  if(!layers.smoke) return;
+  // Collect unique sorted dates from smoke source
+  if(!map||!map.getSource('hms-smoke')) return;
+  const features = map.querySourceFeatures('hms-smoke');
+  const dateSet = new Set();
+  features.forEach(f => { if(f.properties.date) dateSet.add(f.properties.date); });
+  // If no features yet (tiles not loaded), build from known sample dates
+  if(dateSet.size === 0){
+    // Build full May-Oct date list — real data will fill in
+    for(let m=5;m<=10;m++){
+      const dim=[0,31,28,31,30,31,30,31,31,30,31,30,31][m];
+      for(let d=1;d<=dim;d++){
+        dateSet.add(`2023${String(m).padStart(2,'0')}${String(d).padStart(2,'0')}`);
+      }
+    }
+  }
+  timelineDates = Array.from(dateSet).sort();
+  const slider = document.getElementById('tl-slider');
+  slider.max = timelineDates.length - 1;
+  slider.value = 0;
+  tlIndex = 0;
+  buildMonthMarks();
+  drawSparkline();
+  updateTimelineFrame(0);
+  document.getElementById('smoke-timeline').classList.add('visible');
+  slider.addEventListener('input', function(){ updateTimelineFrame(parseInt(this.value)); });
+}
+
+function buildMonthMarks(){
+  const months = ['MAY','JUN','JUL','AUG','SEP','OCT'];
+  const container = document.getElementById('tl-month-marks');
+  container.innerHTML = months.map(m => `<span class="tl-month-mark">${m}</span>`).join('');
+}
+
+function updateTimelineFrame(idx){
+  tlIndex = idx;
+  document.getElementById('tl-slider').value = idx;
+  const date = timelineDates[idx];
+  if(!date) return;
+
+  // Format date display
+  const y = date.slice(0,4), mo = date.slice(4,6), d = date.slice(6,8);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('tl-date-display').textContent =
+    `${parseInt(d)} ${months[parseInt(mo)-1]} ${y}`;
+
+  // Update month marks highlight
+  const monthIdx = parseInt(mo) - 5;
+  document.querySelectorAll('.tl-month-mark').forEach((el,i)=>{
+    el.classList.toggle('active', i===monthIdx);
+  });
+
+  // Filter smoke to this date
+  if(map && map.getLayer('smoke-fill')){
+    const filter = ['==',['get','date'],date];
+    map.setFilter('smoke-fill', filter);
+    map.setFilter('smoke-stroke', filter);
+    // Fade in
+    if(_smokeTransition) clearInterval(_smokeTransition);
+    map.setPaintProperty('smoke-fill','fill-opacity',0);
+    map.setPaintProperty('smoke-stroke','line-opacity',0);
+    let op = 0;
+    _smokeTransition = setInterval(()=>{
+      op = Math.min(op+0.15, 1);
+      if(map.getLayer('smoke-fill')){
+        map.setPaintProperty('smoke-fill','fill-opacity',op);
+        map.setPaintProperty('smoke-stroke','line-opacity',op*0.8);
+      }
+      if(op>=1){ clearInterval(_smokeTransition); _smokeTransition=null; }
+    }, 16);
+  }
+
+  // Update PM2.5
+  const pm = PM25_MTL_2023[date];
+  const aqEl = document.getElementById('tl-aq-val');
+  if(pm!==undefined){
+    aqEl.textContent = pm.toFixed(1) + ' µg/m³';
+    aqEl.style.color = pm > 25 ? (pm > 55 ? '#e05a40' : '#e8b060') : '#7aabb8';
+  } else {
+    aqEl.textContent = '—';
+    aqEl.style.color = '#4a6a7a';
+  }
+
+  // Update sparkline cursor
+  drawSparkline(date);
+}
+
+function drawSparkline(currentDate){
+  const canvas = document.getElementById('tl-sparkline');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || canvas.parentElement.clientWidth || 400;
+  canvas.width = W;
+  canvas.height = 36;
+  ctx.clearRect(0,0,W,36);
+
+  const dates = Object.keys(PM25_MTL_2023).sort();
+  const vals = dates.map(d => PM25_MTL_2023[d]);
+  const maxV = 100;
+
+  // WHO 25 line
+  const whoY = 36 - (25/maxV)*32 - 2;
+  ctx.strokeStyle = 'rgba(122,171,184,0.25)';
+  ctx.setLineDash([3,4]);
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0,whoY); ctx.lineTo(W,whoY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Sparkline fill
+  const grad = ctx.createLinearGradient(0,0,0,36);
+  grad.addColorStop(0,'rgba(200,144,64,0.5)');
+  grad.addColorStop(1,'rgba(200,144,64,0.0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(0,36);
+  dates.forEach((d,i)=>{
+    const x = (i/(dates.length-1))*W;
+    const y = 36 - (Math.min(vals[i],maxV)/maxV)*32 - 2;
+    i===0 ? ctx.lineTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.lineTo(W,36); ctx.closePath(); ctx.fill();
+
+  // Sparkline line
+  ctx.strokeStyle = 'rgba(200,144,64,0.9)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  dates.forEach((d,i)=>{
+    const x = (i/(dates.length-1))*W;
+    const y = 36 - (Math.min(vals[i],maxV)/maxV)*32 - 2;
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Current date cursor
+  if(currentDate && PM25_MTL_2023[currentDate]!==undefined){
+    const ci = dates.indexOf(currentDate);
+    if(ci>=0){
+      const cx = (ci/(dates.length-1))*W;
+      const cy = 36 - (Math.min(PM25_MTL_2023[currentDate],maxV)/maxV)*32 - 2;
+      ctx.strokeStyle = '#f0ede8';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2,3]);
+      ctx.beginPath(); ctx.moveTo(cx,0); ctx.lineTo(cx,36); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = PM25_MTL_2023[currentDate]>25?'#e05a40':'#c89040';
+      ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2); ctx.fill();
+    }
+  }
+}
+
+function toggleTimelinePlay(){
+  if(tlPlaying){
+    clearInterval(tlInterval); tlInterval=null; tlPlaying=false;
+    document.getElementById('tl-play').textContent='▶ PLAY';
+    document.getElementById('tl-play').classList.remove('playing');
+  } else {
+    tlPlaying=true;
+    document.getElementById('tl-play').textContent='■ STOP';
+    document.getElementById('tl-play').classList.add('playing');
+    if(tlIndex>=timelineDates.length-1) tlIndex=0;
+    tlInterval = setInterval(()=>{
+      tlIndex++;
+      if(tlIndex>=timelineDates.length){
+        clearInterval(tlInterval); tlInterval=null; tlPlaying=false;
+        document.getElementById('tl-play').textContent='▶ PLAY';
+        document.getElementById('tl-play').classList.remove('playing');
+        return;
+      }
+      updateTimelineFrame(tlIndex);
+    }, tlSpeed);
+  }
+}
+
+function setTimelineSpeed(v){ tlSpeed=parseInt(v); if(tlPlaying){ toggleTimelinePlay(); toggleTimelinePlay(); } }
+
+</script>
 </body>
 </html>
