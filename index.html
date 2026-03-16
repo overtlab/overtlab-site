@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Overt Lab — Investigative Design Studio</title>
-<meta name="description" content="Overt Lab maps structures of public power using publicly available data.">
+<meta name="description" content="Overt Lab assembles publicly available data into visual, spatial, and structural evidence.">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,8 +78,7 @@ nav{
 /* BODY */
 .inv-body{padding:16px 14px 22px;}
 .inv-status{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
-.inv-dot{width:6px;height:6px;border-radius:50%;background:#1a7a1a;flex-shrink:0;}
-.inv-dot.pending{background:var(--ink-3);}
+
 .inv-status-text{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);}
 .inv-title{font-size:14px;font-weight:700;line-height:1.3;letter-spacing:-.01em;color:var(--ink);margin-bottom:8px;}
 .inv-desc{font-size:12px;line-height:1.65;color:var(--ink-2);}
@@ -131,33 +130,33 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
 </div>
 
 <div class="filter-bar">
-  <button class="filter-btn active">All</button>
-  <button class="filter-btn">Arms Trade</button>
-  <button class="filter-btn">Environment</button>
-  <button class="filter-btn">Infrastructure</button>
-  <button class="filter-btn">Finance</button>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="arms-trade">Arms Trade</button>
+  <button class="filter-btn" data-filter="environment">Environment</button>
+  <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+  <button class="filter-btn" data-filter="finance">Finance</button>
 </div>
 
 <section class="investigations" id="investigations">
   <div class="inv-grid">
 
-    <a class="inv-card" id="arms-card" href="investigations/canadian-arms/">
+    <a class="inv-card" id="arms-card" href="investigations/canadian-arms/" data-category="arms-trade">
       <div class="inv-thumb" id="arms-thumb" style="background:#0d1c28;">
         <canvas id="arms-canvas"></canvas>
       </div>
       <div class="inv-meta">
-        <div class="inv-meta-cell"><div class="inv-meta-label">Period</div><div class="inv-meta-val">2021–2024</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Period</div><div class="inv-meta-val">2017–2024</div></div>
         <div class="inv-meta-cell"><div class="inv-meta-label">Destinations</div><div class="inv-meta-val">20 Countries</div></div>
         <div class="inv-meta-cell"><div class="inv-meta-label">Source</div><div class="inv-meta-val">Global Affairs Canada</div></div>
       </div>
       <div class="inv-body">
-        <div class="inv-status"><div class="inv-dot"></div><span class="inv-status-text">Active — Updated 2024</span></div>
+        <div class="inv-status"><span class="inv-status-text">2017–2024</span></div>
         <div class="inv-title">Canadian Military Exports — Global Flow Map</div>
         <div class="inv-desc">A structural map of Canadian military exports 2021–2024. Four billion dollars in annual flows across five corporate exporters and five conflict zones with documented Canadian equipment.</div>
       </div>
     </a>
 
-    <a class="inv-card" id="fire-card" href="investigations/quebec-fires/">
+    <a class="inv-card" id="fire-card" href="investigations/quebec-fires/" data-category="environment">
       <div class="inv-thumb" id="fire-thumb" style="background:#080f0a;">
         <canvas id="fire-canvas"></canvas>
       </div>
@@ -167,13 +166,13 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
         <div class="inv-meta-cell"><div class="inv-meta-label">Source</div><div class="inv-meta-val">SOPFEU · CWFIS · NASA</div></div>
       </div>
       <div class="inv-body">
-        <div class="inv-status"><div class="inv-dot"></div><span class="inv-status-text">Active — 2010 to Present</span></div>
+        <div class="inv-status"><span class="inv-status-text">2010–2024</span></div>
         <div class="inv-title">Québec Forest Fire Record</div>
         <div class="inv-desc">A spatial record of 7,931 fires across Québec from 2010 to 2024. The 2023 fire season burned 4.3 million hectares — the largest in recorded history.</div>
       </div>
     </a>
 
-    <div class="inv-card" id="lebanon-card" style="cursor:default;">
+    <div class="inv-card" id="lebanon-card" style="cursor:default;" data-category="infrastructure">
       <div class="inv-thumb" id="lebanon-thumb" style="background:#f0ece6;">
         <canvas id="lebanon-canvas"></canvas>
       </div>
@@ -183,7 +182,7 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
         <div class="inv-meta-cell"><div class="inv-meta-label">Status</div><div class="inv-meta-val">In Development</div></div>
       </div>
       <div class="inv-body">
-        <div class="inv-status"><div class="inv-dot pending"></div><span class="inv-status-text">In Development</span></div>
+        <div class="inv-status"><span class="inv-status-text">1982–2024</span></div>
         <div class="inv-title">Civilian Infrastructure Damage in Lebanon</div>
         <div class="inv-desc">A spatial record of civilian infrastructure destruction across Lebanese wars from 1982 to 2024. Hospitals, schools, water systems, and residential districts mapped from satellite imagery and public damage assessments.</div>
       </div>
@@ -198,13 +197,13 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
     <div class="about-statement">All relevant data is public.<br>Contemporary power operates overtly.</div>
   </div>
   <div class="about-body">
-    Overt Lab is an investigative design studio based in Montréal. We assemble publicly available signals into spatial and structural evidence — mapping the flows, networks, and decisions that shape public life in Québec and beyond.<br><br>
+    Overt Lab assembles publicly available data into visual, spatial, and structural evidence — mapping the flows, networks, and decisions that shape public life.<br><br>
     We do not accuse. We do not editorialize. We map structures and let people draw their own conclusions.
   </div>
 </section>
 
 <footer>
-  <div class="footer-text">Overt Lab — Montréal</div>
+  <div class="footer-text">Overt Lab</div>
   <div class="footer-text">All data public record</div>
 </footer>
 
@@ -220,6 +219,17 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',function(){
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.inv-card').forEach(card=>{
+      if(filter==='all'||card.dataset.category===filter){
+        card.style.display='';
+        card.style.opacity='1';
+      } else {
+        card.style.display='none';
+        card.style.opacity='0';
+      }
+    });
+    setTimeout(drawAll, 80);
   });
 });
 
