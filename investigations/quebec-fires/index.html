@@ -47,7 +47,9 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 #map-wrapper { flex: 1; position: relative; overflow: hidden; }
 #map { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-#left-panel { width: 260px; background: rgba(15,26,32,0.97); border-right: 1px solid #2a3a42; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden; z-index: 10; }
+#left-panel { width: 260px; background: rgba(15,26,32,0.97); border-right: 1px solid #2a3a42; display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; overflow-x: hidden; z-index: 10; }
+#left-panel::-webkit-scrollbar { width: 3px; }
+#left-panel::-webkit-scrollbar-thumb { background: #2a3a42; }
 .panel-section { border-bottom: 1px solid #1e2e36; padding: 16px 18px; }
 .section-label { font-size: 8px; letter-spacing: .22em; color: #7aabb8; text-transform: uppercase; margin-bottom: 12px; }
 
@@ -56,7 +58,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 #year-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: #2a3a42; outline: none; cursor: pointer; margin-bottom: 8px; }
 #year-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--fire); cursor: pointer; border: 2px solid var(--ink); box-shadow: 0 0 8px rgba(192,57,43,.6); }
 #year-slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--fire); cursor: pointer; border: 2px solid var(--ink); }
-.year-range { display: flex; justify-content: space-between; font-size: 8px; color: #8ab8c8; letter-spacing: .1em; }
+.year-range { display: flex; justify-content: space-between; font-size: 8px; color: #6a9aaa; letter-spacing: .1em; }
 
 .ba-btns { display: flex; gap: 6px; }
 .ba-btn { flex: 1; font-family: var(--mono); font-size: 9px; letter-spacing: .14em; padding: 8px; border: 1px solid #2a3a42; background: transparent; color: #8ab0bc; cursor: pointer; text-transform: uppercase; transition: all .15s; text-align: center; }
@@ -80,9 +82,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .smoke-sw-label { font-size: 7px; letter-spacing: .1em; color: #7aabb8; text-align: center; margin-top: 2px; }
 #smoke-status { font-size: 7.5px; letter-spacing: .08em; color: #7aabb8; margin-top: 8px; line-height: 1.6; }
 
-#stats-area { flex: 1; overflow-y: auto; padding: 16px 18px; }
-#stats-area::-webkit-scrollbar { width: 3px; }
-#stats-area::-webkit-scrollbar-thumb { background: #2a3a42; }
+#stats-area { flex: 1; padding: 16px 18px; }
 .stat-block { margin-bottom: 18px; }
 .stat-num { font-size: 22px; font-weight: 600; letter-spacing: -.01em; color: var(--paper); line-height: 1; }
 .stat-num.fire-col { color: var(--fire); }
@@ -96,7 +96,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .bar-val { font-size: 7px; color: #7aabb8; width: 36px; flex-shrink: 0; letter-spacing: .06em; }
 
 #source-bar { height: 22px; background: #0a1418; border-top: 1px solid #1e2e36; display: flex; align-items: center; padding: 0 20px; gap: 24px; flex-shrink: 0; }
-.src-item { font-size: 7.5px; letter-spacing: .1em; color: #8ab8c8; display: flex; align-items: center; gap: 5px; }
+.src-item { font-size: 7.5px; letter-spacing: .1em; color: #6a9aaa; display: flex; align-items: center; gap: 5px; }
 .src-dot { width: 5px; height: 5px; border-radius: 50%; }
 
 #map-legend { position: absolute; top: 16px; right: 16px; background: rgba(15,26,32,.92); border: 1px solid #2a3a42; padding: 12px 14px; z-index: 10; backdrop-filter: blur(6px); }
@@ -110,7 +110,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 #tooltip { position: absolute; background: rgba(10,18,22,.97); border: 1px solid #2a3a42; padding: 12px 16px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .08em; color: var(--paper); z-index: 200; pointer-events: none; display: none; max-width: 260px; line-height: 1; }
 .tt-header { color: #e05a40; letter-spacing: .16em; font-size: 9px; font-weight:600; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e2e36; }
 .tt-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 6px; }
-.tt-key { color: #8abccc; font-size: 8px; letter-spacing: .12em; flex-shrink: 0; }
+.tt-key { color: #7aaabb; font-size: 8px; letter-spacing: .12em; flex-shrink: 0; }
 .tt-val { color: #f0ede8; font-size: 9px; letter-spacing: .04em; text-align: right; font-weight:500; }
 .tt-val.loading { color: #7aabb8; font-style: italic; }
 .tt-divider { height: 1px; background: #1e2e36; margin: 8px 0; }
@@ -121,7 +121,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .loading-bar-wrap { width: 200px; height: 1px; background: #1e2e36; position: relative; overflow: hidden; }
 .loading-bar { position: absolute; height: 100%; background: var(--fire); animation: load 2s ease forwards; }
 @keyframes load { from{width:0} to{width:100%} }
-.loading-text { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; color: #8ab8c8; text-transform: uppercase; }
+.loading-text { font-family: var(--mono); font-size: 8px; letter-spacing: .18em; color: #6a9aaa; text-transform: uppercase; }
 
 /* SOURCES PANEL */
 #sources-btn {
@@ -160,12 +160,12 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
 .sp-name { font-size: 9px; letter-spacing: .14em; color: var(--paper); margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
 .sp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .sp-desc { font-size: 7.5px; letter-spacing: .08em; color: #7aabb8; line-height: 1.7; margin-left: 14px; }
-.sp-url { font-size: 7px; letter-spacing: .08em; color: #8ab8c8; margin-left: 14px; margin-top: 3px; }
-.sp-note { font-size: 7.5px; letter-spacing: .08em; color: #8ab8c8; line-height: 1.7; margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e2e36; }
+.sp-url { font-size: 7px; letter-spacing: .08em; color: #6a9aaa; margin-left: 14px; margin-top: 3px; }
+.sp-note { font-size: 7.5px; letter-spacing: .08em; color: #6a9aaa; line-height: 1.7; margin-top: 14px; padding-top: 10px; border-top: 1px solid #1e2e36; }
 
 /* TIME CONTROLS */
 .time-row { margin-bottom: 2px; }
-.time-label { font-size: 8px; letter-spacing: .18em; color: #8ab8c8; text-transform: uppercase; margin-bottom: 4px; }
+.time-label { font-size: 8px; letter-spacing: .18em; color: #6a9aaa; text-transform: uppercase; margin-bottom: 4px; }
 .time-divider { height: 1px; background: #1e2e36; margin: 14px 0; }
 #month-display { font-size: 28px; font-weight: 600; letter-spacing: -.01em; color: var(--paper); line-height: 1; margin-bottom: 2px; }
 #month-sub { font-size: 8px; letter-spacing: .14em; color: #7aabb8; margin-bottom: 14px; }
@@ -362,7 +362,7 @@ body { font-family: var(--mono); color: var(--paper); display: flex; flex-direct
       </div>
       <div class="sp-source" style="margin-top:14px;padding-top:14px;border-top:1px solid #1e2e36;">
         <div class="sp-name"><div class="sp-dot" style="background:var(--smoke-accent)"></div>NOAA HMS — Hazard Mapping System Smoke Polygons</div>
-        <div class="sp-desc">Daily satellite-derived smoke plumes manually annotated by NOAA analysts from GOES/MODIS/VIIRS imagery. Three density classes: light, medium, heavy. 2023 trial dataset clipped to Québec. Full 2010–2024 record pending.</div>
+        <div class="sp-desc">Daily satellite-derived smoke plumes manually annotated by NOAA analysts from GOES/MODIS/VIIRS imagery. Three density classes: light, medium, heavy. 2023 trial dataset clipped to Québec.</div>
         <div class="sp-url">satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/</div>
       </div>
     </div>
@@ -494,7 +494,7 @@ function toggleLayer(name){
     document.getElementById('smoke-detail').style.display=layers.smoke?'block':'none';
     document.getElementById('smoke-legend-map').style.display=layers.smoke?'block':'none';
     document.getElementById('smoke-src-item').style.display=layers.smoke?'flex':'none';
-    if(layers.smoke) loadSmokeLayer(); else hideSmokeLayer();
+    if(layers.smoke)loadSmokeLayer();else hideSmokeLayer();
     return;
   }
   layers[name]=!layers[name];
@@ -514,31 +514,21 @@ function hideSmokeLayer(){
 async function loadSmokeLayer(){
   if(!map)return;
   const st=document.getElementById('smoke-status');
-  if(activeYear!==2023){
-    if(st)st.textContent='Smoke data: 2023 only.';
-    hideSmokeLayer(); return;
-  }
+  if(activeYear!==2023){if(st)st.textContent='Smoke data: 2023 only.';hideSmokeLayer();return;}
   if(st)st.textContent='Loading…';
   if(!smokeLoaded&&!smokeLoading){
     smokeLoading=true;
     try{
-      if(!map.getSource('hms-smoke'))
-        map.addSource('hms-smoke',{type:'geojson',data:HMS_URL});
-      if(!map.getLayer('smoke-fill'))
-        map.addLayer({id:'smoke-fill',type:'fill',source:'hms-smoke',
-          paint:{'fill-color':['match',['get','density'],'light','rgba(210,185,130,0.18)','medium','rgba(185,130,60,0.32)','heavy','rgba(150,75,20,0.52)','rgba(210,185,130,0.18)']},
-          layout:{visibility:'visible'}},'sopfeu-heat');
-      if(!map.getLayer('smoke-stroke'))
-        map.addLayer({id:'smoke-stroke',type:'line',source:'hms-smoke',
-          paint:{'line-color':['match',['get','density'],'light','rgba(210,185,130,0.4)','medium','rgba(185,130,60,0.6)','heavy','rgba(150,75,20,0.8)','rgba(210,185,130,0.4)'],'line-width':0.5},
-          layout:{visibility:'visible'}},'sopfeu-heat');
-      smokeLoaded=true; smokeLoading=false;
-      updateSmokeFilter();
-    }catch(e){
-      smokeLoading=false;
-      if(st)st.textContent='Data unavailable. Place hms_smoke_quebec_2023.geojson in /data/';
-    }
-  } else if(smokeLoaded){
+      if(!map.getSource('hms-smoke'))map.addSource('hms-smoke',{type:'geojson',data:HMS_URL});
+      if(!map.getLayer('smoke-fill'))map.addLayer({id:'smoke-fill',type:'fill',source:'hms-smoke',
+        paint:{'fill-color':['match',['get','density'],'light','rgba(210,185,130,0.18)','medium','rgba(185,130,60,0.32)','heavy','rgba(150,75,20,0.52)','rgba(210,185,130,0.18)']},
+        layout:{visibility:'visible'}},'sopfeu-heat');
+      if(!map.getLayer('smoke-stroke'))map.addLayer({id:'smoke-stroke',type:'line',source:'hms-smoke',
+        paint:{'line-color':['match',['get','density'],'light','rgba(210,185,130,0.4)','medium','rgba(185,130,60,0.6)','heavy','rgba(150,75,20,0.8)','rgba(210,185,130,0.4)'],'line-width':0.5},
+        layout:{visibility:'visible'}},'sopfeu-heat');
+      smokeLoaded=true;smokeLoading=false;updateSmokeFilter();
+    }catch(e){smokeLoading=false;if(st)st.textContent='Place hms_smoke_quebec_2023.geojson in /data/';}
+  }else if(smokeLoaded){
     if(map.getLayer('smoke-fill'))map.setLayoutProperty('smoke-fill','visibility','visible');
     if(map.getLayer('smoke-stroke'))map.setLayoutProperty('smoke-stroke','visibility','visible');
     updateSmokeFilter();
@@ -548,18 +538,14 @@ async function loadSmokeLayer(){
 function updateSmokeFilter(){
   if(!map||!smokeLoaded||!layers.smoke)return;
   const st=document.getElementById('smoke-status');
-  if(activeYear!==2023){
-    hideSmokeLayer();
-    if(st)st.textContent='Smoke data: 2023 only.';
-    return;
-  }
+  if(activeYear!==2023){hideSmokeLayer();if(st)st.textContent='Smoke data: 2023 only.';return;}
   if(map.getLayer('smoke-fill'))map.setLayoutProperty('smoke-fill','visibility','visible');
   if(map.getLayer('smoke-stroke'))map.setLayoutProperty('smoke-stroke','visibility','visible');
   let filter;
   if(activeMonth&&activeMonth>=5&&activeMonth<=10){
     filter=['==',['get','month'],activeMonth];
     if(st)st.textContent=MONTH_NAMES[activeMonth-1]+' 2023 · smoke plumes';
-  } else {
+  }else{
     filter=['boolean',true];
     if(st)st.textContent='May–Oct 2023 · all smoke days';
   }
@@ -838,5 +824,6 @@ document.getElementById('month-slider').addEventListener('input', function() {
 document.getElementById('year-slider').addEventListener('input',function(){updateMapData(parseInt(this.value));});
 window.addEventListener('DOMContentLoaded',()=>{updateStats(2023);setTimeout(()=>initMap(MAPBOX_TOKEN),400);});
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"cc514ca9cc8845319738b9e70f9ff09c","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
