@@ -104,6 +104,18 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
 .drawer ul{list-style:none;}
 .drawer ul li{border-bottom:1px solid var(--rule);}
 .drawer ul li a{display:block;padding:14px 0;font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;}
+
+/* LANG SWITCHER */
+.lang-switch { display:flex; align-items:center; gap:2px; margin-left:16px; }
+.lang-switch a {
+  font-family:var(--mono); font-size:9px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); text-decoration:none;
+  padding:3px 6px; transition:color .12s;
+}
+.lang-switch a:hover { color:var(--ink); }
+.lang-switch a.active { color:var(--ink); font-weight:700; }
+.lang-switch span { color:var(--rule); font-size:9px; }
 </style>
 </head>
 <body>
@@ -118,6 +130,11 @@ footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-ite
     <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()">
       <span></span><span></span><span></span>
     </button>
+  </div>
+  <div class="lang-switch">
+    <a href="/" class="active">EN</a>
+    <span>/</span>
+    <a href="/fr/">FR</a>
   </div>
 </nav>
 

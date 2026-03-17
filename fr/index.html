@@ -3,548 +3,436 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overt Lab — Studio de Design Investigatif</title>
-<meta name="description" content="Overt Lab cartographie les structures du pouvoir public à partir de données accessibles. Toutes les données pertinentes sont publiques. Le pouvoir contemporain opère ouvertement.">
-<meta property="og:title" content="Overt Lab" />
-<meta property="og:description" content="Studio de design investigatif. Nous assemblons des signaux publics en preuves spatiales et structurelles." />
-<meta property="og:type" content="website" />
+<title>Overt Lab — Studio de design et de données</title>
+<meta name="description" content="Overt Lab assemble des données publiques en preuves visuelles, spatiales et structurelles.">
 <link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:      #ffffff;
-  --bg-2:    #f7f7f5;
-  --ink:     #0d0f0e;
-  --ink-2:   #3a3c3a;
-  --ink-3:   #8a8880;
-  --ink-4:   #c8c6c0;
-  --rule:    #e4e4e0;
-  --yellow:  #f5c800;
-  --sans:    'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --mono:    'Courier New', Courier, monospace;
+  --bg:#ffffff; --ink:#0a0a0a; --ink-2:#383838; --ink-3:#888;
+  --rule:#e0e0e0; --yellow:#FFEE00;
+  --sans:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'Courier New',Courier,monospace;
 }
-html { font-size:16px; scroll-behavior:smooth; }
-body { background:var(--bg); color:var(--ink); font-family:var(--sans); min-height:100vh; -webkit-font-smoothing:antialiased; }
-::-webkit-scrollbar { width:3px; }
-::-webkit-scrollbar-track { background:var(--bg); }
-::-webkit-scrollbar-thumb { background:var(--rule); }
-nav {
-  position:fixed; top:0; left:0; right:0; z-index:100;
-  height:56px; display:flex; align-items:center; justify-content:space-between;
-  padding:0 48px;
-  border-bottom:1px solid var(--rule);
-  background:rgba(255,255,255,0.97);
-  backdrop-filter:blur(12px);
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:52px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:var(--bg);border-bottom:1px solid var(--rule);
 }
-.nav-logo { display:inline-flex; align-items:center; gap:12px; text-decoration:none; }
-.nav-logo-box { background:var(--ink); padding:7px 11px 6px; display:inline-flex; align-items:center; }
-.nav-logo-box span { font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:.08em; color:var(--yellow); text-transform:uppercase; line-height:1; }
-.nav-logo-box span em { font-style:normal; color:#ffffff; }
-.nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
-.nav-links a { font-family:var(--mono); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); text-decoration:none; transition:color .15s; }
-.nav-links a:hover { color:var(--ink); }
-.nav-lang { border-left:1px solid var(--rule); padding-left:32px; }
-.investigations { padding-top:100px; border-bottom:1px solid var(--rule); }
-.inv-header { padding:48px 48px 0; display:flex; align-items:baseline; justify-content:space-between; gap:24px; }
-.inv-header-label { font-family:var(--mono); font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); }
-.inv-header-count { font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:var(--ink-4); }
-.inv-row { display:grid; grid-template-columns:56px 1fr 240px auto 32px; gap:0 40px; align-items:start; padding:40px 48px; border-top:1px solid var(--rule); text-decoration:none; color:inherit; position:relative; transition:background .12s; }
-.inv-row:hover { background:var(--bg-2); }
-.inv-row:hover .inv-title { color:var(--ink); }
-.inv-row:hover .inv-arrow { opacity:1; transform:translate(3px,-3px); }
-.inv-thumb { width:240px; aspect-ratio:16/10; overflow:hidden; border:1px solid var(--rule); flex-shrink:0; background:var(--bg-2); }
-.inv-thumb img { width:100%; height:100%; object-fit:cover; object-position:top left; display:block; transition:opacity .2s; }
-.inv-row:hover .inv-thumb img { opacity:0.85; }
-.inv-thumb-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--bg-2); }
-.inv-thumb-placeholder span { font-family:var(--mono); font-size:8px; letter-spacing:.16em; color:var(--ink-4); text-transform:uppercase; }
-.inv-num { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--ink-4); padding-top:4px; }
-.inv-body { min-width:0; }
-.inv-status { display:flex; align-items:center; gap:8px; margin-bottom:14px; font-family:var(--mono); font-size:9px; letter-spacing:.18em; text-transform:uppercase; }
-.inv-dot { width:6px; height:6px; background:var(--yellow); border-radius:50%; flex-shrink:0; animation:pulse 2.8s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
-.inv-status-text { color:var(--ink-2); }
-.inv-title { font-family:var(--sans); font-size:clamp(20px,2.4vw,28px); font-weight:700; line-height:1.15; letter-spacing:-.02em; color:var(--ink-2); margin-bottom:14px; transition:color .15s; }
-.inv-desc { font-family:var(--sans); font-size:14px; line-height:1.8; color:var(--ink-3); margin-bottom:20px; font-weight:300; max-width:640px; }
-.inv-tags { display:flex; gap:8px; flex-wrap:wrap; }
-.inv-tag { font-family:var(--mono); font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); padding:3px 8px; border:1px solid var(--rule); }
-.inv-aside { text-align:right; font-family:var(--mono); font-size:9px; letter-spacing:.1em; line-height:2.4; color:var(--ink-3); padding-top:4px; white-space:nowrap; }
-.inv-aside strong { color:var(--ink); display:block; font-weight:500; }
-.inv-arrow { font-family:var(--mono); font-size:16px; color:var(--ink-4); opacity:0; transition:opacity .15s, transform .2s; padding-top:4px; align-self:start; }
-.inv-placeholder { display:grid; grid-template-columns:56px 1fr; gap:0 40px; padding:24px 48px; border-top:1px solid var(--rule); align-items:center; }
-.inv-ph-num { font-family:var(--mono); font-size:10px; letter-spacing:.14em; color:var(--rule); }
-.inv-ph-text { font-family:var(--mono); font-size:9px; letter-spacing:.18em; color:var(--rule); text-transform:uppercase; }
-.ticker { background:var(--ink); padding:11px 0; overflow:hidden; position:relative; border-bottom:1px solid var(--rule); }
-.ticker-inner { display:flex; animation:ticker 44s linear infinite; white-space:nowrap; }
-.ticker-item { font-family:var(--mono); font-size:9px; letter-spacing:.18em; color:rgba(255,255,255,.3); padding:0 52px; flex-shrink:0; }
-.ticker-item strong { color:rgba(255,255,255,.75); margin-right:8px; }
-@keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
-.premise { padding:80px 48px; border-bottom:1px solid var(--rule); display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-.premise-eyebrow { font-family:var(--mono); font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); margin-bottom:32px; display:flex; align-items:center; gap:14px; }
-.premise-eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--yellow); flex-shrink:0; }
-h2.premise-title { font-family:var(--sans); font-size:clamp(28px,3.2vw,42px); font-weight:700; line-height:1.1; letter-spacing:-.02em; color:var(--ink); margin-bottom:28px; }
-h2.premise-title em { font-style:normal; color:var(--ink-3); font-weight:400; }
-.premise-body { font-family:var(--sans); font-size:15px; line-height:1.9; color:var(--ink-2); font-weight:300; padding-left:16px; border-left:2px solid var(--yellow); }
-.axiom { padding:20px 0; border-bottom:1px solid var(--rule); }
-.axiom:first-child { border-top:1px solid var(--rule); }
-.axiom-n { font-family:var(--mono); font-size:8px; letter-spacing:.22em; color:var(--ink-4); text-transform:uppercase; margin-bottom:8px; }
-.axiom-text { font-family:var(--sans); font-size:13px; line-height:1.8; color:var(--ink-2); font-weight:300; }
-.axiom-text strong { color:var(--ink); font-weight:500; }
-.methodology { padding:80px 48px; border-bottom:1px solid var(--rule); display:grid; grid-template-columns:200px 1fr; gap:80px; align-items:start; }
-.sticky-label { position:sticky; top:76px; }
-.sec-label { font-family:var(--mono); font-size:9px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-3); display:flex; align-items:center; gap:16px; }
-.sec-label::after { content:''; display:block; flex:1; height:1px; background:var(--rule); }
-.method-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); }
-.method-item { background:var(--bg); padding:32px; }
-.method-n { font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:var(--yellow); margin-bottom:12px; }
-.method-title { font-family:var(--sans); font-size:14px; font-weight:600; color:var(--ink); margin-bottom:10px; letter-spacing:-.01em; }
-.method-text { font-family:var(--sans); font-size:13px; line-height:1.8; color:var(--ink-2); font-weight:300; }
-.contribute { padding:80px 48px; border-bottom:1px solid var(--rule); display:grid; grid-template-columns:200px 1fr; gap:80px; align-items:start; }
-.contribute-intro { font-family:var(--sans); font-size:15px; line-height:1.85; color:var(--ink-2); font-weight:300; margin-bottom:40px; }
-.contribute-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); margin-bottom:36px; }
-.cw { background:var(--bg); padding:28px; }
-.cw-label { font-family:var(--mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; }
-.cw-text { font-family:var(--sans); font-size:13px; line-height:1.8; color:var(--ink-2); font-weight:300; }
-.contribute-cta { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); text-decoration:none; border:1px solid var(--ink); padding:13px 24px; transition:background .15s, color .15s; }
-.contribute-cta:hover { background:var(--ink); color:var(--bg); }
-footer { padding:28px 48px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-.footer-l { font-family:var(--mono); font-size:9px; letter-spacing:.14em; color:var(--ink-3); }
-.footer-l strong { color:var(--ink); }
-.footer-r { font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:var(--ink-4); text-transform:uppercase; }
-.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
-.nav-hamburger span { display:block; width:22px; height:1.5px; background:var(--ink); transition:transform .2s, opacity .2s; }
-.nav-hamburger.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
-.nav-hamburger.open span:nth-child(2) { opacity:0; }
-.nav-hamburger.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
-/* ── INVESTIGATION BAR ── */
-#inv-bar { position:fixed; top:56px; left:0; right:0; z-index:99; height:44px; background:var(--bg); border-bottom:1px solid var(--rule); display:flex; align-items:stretch; padding:0 48px; gap:0; }
-.inv-bar-trigger { font-family:var(--mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-4); display:flex; align-items:center; gap:10px; padding-right:28px; border-right:1px solid var(--rule); cursor:default; flex-shrink:0; }
-.inv-bar-trigger-arrow { font-size:7px; color:var(--ink-4); transition:transform .2s; }
-.inv-bar-cats { display:flex; align-items:stretch; gap:0; flex:1; overflow:hidden; }
-.inv-cat { position:relative; display:flex; align-items:center; padding:0 20px; font-family:var(--mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); cursor:default; transition:color .12s, background .12s; white-space:nowrap; user-select:none; border-right:1px solid var(--rule); }
-.inv-cat:last-child { border-right:none; }
-.inv-cat:hover { color:#ffffff; background:#141614; }
-.inv-cat.has-active { color:#ffffff; background:#141614; }
-.inv-cat-count { font-size:7px; color:var(--ink-4); margin-left:6px; letter-spacing:.08em; }
-.inv-cat:hover .inv-cat-count, .inv-cat.has-active .inv-cat-count { color:rgba(255,255,255,0.4); }
-.inv-cat::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .18s ease; }
-.inv-cat:hover::after, .inv-cat.has-active::after { transform:scaleX(1); }
+.nav-logo{display:inline-flex;align-items:center;text-decoration:none;}
+.nav-logo-box{background:var(--yellow);padding:5px 9px 4px;display:inline-flex;align-items:center;}
+.nav-logo-overt{font-family:var(--sans);font-size:13px;font-weight:800;letter-spacing:.01em;color:var(--ink);text-transform:uppercase;line-height:1;}
+.nav-logo-lab{font-family:var(--sans);font-size:13px;font-weight:400;letter-spacing:.01em;color:var(--ink);text-transform:uppercase;line-height:1;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-hamburger{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;width:36px;height:36px;}
+.nav-hamburger span{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;}
 
-/* ── FLYOUT ── */
-.inv-flyout { position:fixed; top:100px; left:0; right:0; background:#141614; border-bottom:1px solid rgba(255,255,255,0.08); z-index:98; display:none; grid-template-columns:260px 1fr; }
-.inv-flyout.open { display:grid; }
-.flyout-list { border-right:1px solid rgba(255,255,255,0.08); padding:8px 0; }
-.flyout-item { display:flex; align-items:baseline; gap:16px; padding:14px 28px; text-decoration:none; color:inherit; transition:background .1s; cursor:pointer; border-left:2px solid transparent; }
-.flyout-item:hover, .flyout-item.active { background:rgba(255,255,255,0.05); border-left-color:var(--yellow); }
-.flyout-item-num { font-family:var(--mono); font-size:8px; letter-spacing:.14em; color:rgba(255,255,255,0.2); flex-shrink:0; }
-.flyout-item-name { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:rgba(255,255,255,0.5); line-height:1.5; }
-.flyout-item:hover .flyout-item-name, .flyout-item.active .flyout-item-name { color:rgba(255,255,255,0.9); }
-.flyout-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; margin-bottom:1px; display:inline-block; }
-.flyout-detail { padding:0; display:grid; grid-template-columns:1fr 280px; }
-.flyout-detail-inner { padding:28px 36px; display:flex; flex-direction:column; gap:12px; }
-.flyout-detail-empty { font-family:var(--mono); font-size:9px; letter-spacing:.18em; color:rgba(255,255,255,0.2); text-transform:uppercase; padding:28px 36px; }
-.flyout-d-img { border-left:1px solid rgba(255,255,255,0.08); overflow:hidden; background:#0a0c0a; }
-.flyout-d-img img { width:100%; height:100%; object-fit:cover; object-position:top left; display:block; opacity:0.75; }
-.flyout-d-img-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#0a0c0a; }
-.flyout-d-img-placeholder span { font-family:var(--mono); font-size:8px; letter-spacing:.18em; color:rgba(255,255,255,0.15); text-transform:uppercase; }
-.flyout-d-status { font-family:var(--mono); font-size:8px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.4); display:flex; align-items:center; gap:8px; }
-.flyout-d-title { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:-.02em; line-height:1.2; color:rgba(255,255,255,0.92); }
-.flyout-d-desc { font-family:var(--sans); font-size:13px; line-height:1.75; color:rgba(255,255,255,0.45); font-weight:300; max-width:560px; }
-.flyout-d-tags { display:flex; gap:6px; flex-wrap:wrap; }
-.flyout-d-tag { font-family:var(--mono); font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,0.35); padding:2px 7px; border:1px solid rgba(255,255,255,0.12); }
-.flyout-d-cta { display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.85); text-decoration:none; border:1px solid rgba(255,255,255,0.25); padding:9px 18px; margin-top:4px; align-self:flex-start; transition:background .15s, color .15s, border-color .15s; }
-.flyout-d-cta:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.5); }
-.flyout-d-pending { font-family:var(--mono); font-size:9px; letter-spacing:.16em; color:rgba(255,255,255,0.2); text-transform:uppercase; padding-top:8px; }
-
-/* ── DARK DRAWER ── */
-.nav-drawer { display:none; position:fixed; top:56px; left:0; right:0; background:#141614; border-bottom:1px solid rgba(255,255,255,0.08); z-index:99; padding:16px 0; }
-.nav-drawer.open { display:block; }
-.nav-drawer a { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none; padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.06); transition:background .12s, color .12s; }
-.nav-drawer a:last-child { border-bottom:none; }
-.nav-drawer a:hover { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.9); }
-
-@media(max-width:1100px){ nav { padding:0 32px; } #inv-bar { padding:0 32px; } .inv-header { padding:36px 32px 0; } .inv-row { padding:32px 32px; gap:0 28px; } .premise { padding:64px 32px; gap:48px; } .methodology, .contribute { padding:64px 32px; gap:48px; } footer { padding:24px 32px; } }
-@media(max-width:1100px) and (min-width:769px){ .inv-row { grid-template-columns:48px 1fr 180px auto 28px; } .inv-thumb { width:180px; } .flyout-detail { grid-template-columns:1fr 200px; } }
-@media(max-width:768px){
-  nav { padding:0 20px; }
-  .nav-links { display:none; }
-  .nav-hamburger { display:flex; }
-  #inv-bar { display:none; }
-  .inv-flyout { display:none !important; }
-  .investigations { padding-top:72px; }
-  .inv-header { padding:28px 20px 0; }
-  .inv-row { grid-template-columns:36px 1fr; gap:0 16px; padding:28px 20px; }
-  .inv-aside, .inv-arrow, .inv-thumb { display:none; }
-  .inv-title { font-size:18px; }
-  .inv-desc { font-size:13px; }
-  .premise { grid-template-columns:1fr; padding:48px 20px; gap:40px; }
-  h2.premise-title { font-size:28px; }
-  .premise-body { font-size:14px; }
-  .methodology { grid-template-columns:1fr; padding:48px 20px; gap:20px; }
-  .sticky-label { position:static; }
-  .method-grid { grid-template-columns:1fr; }
-  .method-item { padding:24px 20px; }
-  .contribute { grid-template-columns:1fr; padding:48px 20px; gap:20px; }
-  .contribute-grid { grid-template-columns:1fr; }
-  .cw { padding:20px; }
-  .contribute-intro { font-size:14px; }
-  footer { padding:20px; flex-direction:column; align-items:flex-start; gap:8px; }
-  .footer-r { display:none; }
+/* FILTER BAR */
+.filter-bar{
+  margin-top:52px;border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;padding:0 24px;height:44px;overflow-x:auto;
 }
-@media(min-width:1600px){ nav { padding:0 72px; } #inv-bar { padding:0 72px; } .inv-header { padding:56px 72px 0; } .inv-row { padding:48px 72px; gap:0 56px; grid-template-columns:64px 1fr 300px auto 40px; } .inv-thumb { width:300px; } .premise { padding:96px 72px; gap:96px; } .methodology, .contribute { padding:96px 72px; gap:96px; } footer { padding:32px 72px; } .flyout-detail { grid-template-columns:1fr 360px; } }
+.filter-btn{
+  font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);background:none;border:none;padding:0 20px;height:44px;cursor:pointer;
+  white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s;
+}
+.filter-btn:hover{color:var(--ink);}
+.filter-btn.active{color:var(--ink);border-bottom-color:var(--ink);}
+
+/* GRID */
+.investigations{padding:28px 24px;}
+.inv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+
+/* CARD */
+.inv-card{
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;
+  border:1px solid var(--rule);transition:border-color .15s;overflow:hidden;
+}
+.inv-card:hover{border-color:#aaa;}
+
+/* THUMB */
+.inv-thumb{width:100%;aspect-ratio:4/3;min-height:200px;overflow:hidden;position:relative;flex-shrink:0;}
+.inv-thumb canvas{position:absolute;inset:0;width:100%;height:100%;}
+
+/* META */
+.inv-meta{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);height:52px;
+}
+.inv-meta-cell{
+  padding:8px 14px;border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+}
+.inv-meta-cell:last-child{border-right:none;}
+.inv-meta-label{font-size:8px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px;white-space:nowrap;}
+.inv-meta-val{font-size:11px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* BODY */
+.inv-body{padding:16px 14px 22px;}
+.inv-status{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+
+.inv-status-text{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);}
+.inv-title{font-size:14px;font-weight:700;line-height:1.3;letter-spacing:-.01em;color:var(--ink);margin-bottom:8px;}
+.inv-desc{font-size:12px;line-height:1.65;color:var(--ink-2);}
+
+/* ABOUT */
+.about{padding:64px 24px 72px;border-top:2px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:0 80px;}
+.about-label{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px;}
+.about-statement{font-size:20px;font-weight:600;line-height:1.5;color:var(--ink);}
+.about-body{padding-top:23px;font-size:13px;line-height:1.8;color:var(--ink-2);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
+.footer-text{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
+
+/* DRAWER */
+.drawer{
+  position:fixed;top:52px;left:0;bottom:0;width:280px;
+  background:var(--bg);border-right:1px solid var(--rule);
+  z-index:90;transform:translateX(-100%);transition:transform .25s ease;
+  padding:28px;
+}
+.drawer.open{transform:translateX(0);}
+.drawer ul{list-style:none;}
+.drawer ul li{border-bottom:1px solid var(--rule);}
+.drawer ul li a{display:block;padding:14px 0;font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;}
+
+/* LANG SWITCHER */
+.lang-switch { display:flex; align-items:center; gap:2px; margin-left:16px; }
+.lang-switch a {
+  font-family:var(--mono); font-size:9px; font-weight:500;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); text-decoration:none;
+  padding:3px 6px; transition:color .12s;
+}
+.lang-switch a:hover { color:var(--ink); }
+.lang-switch a.active { color:var(--ink); font-weight:700; }
+.lang-switch span { color:var(--rule); font-size:9px; }
 </style>
 </head>
 <body>
 
 <nav>
-  <a class="nav-logo" href="/fr/">
-    <div class="nav-logo-box"><span>Overt<em>Lab</em></span></div>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-box">
+      <span class="nav-logo-overt">Overt</span><span class="nav-logo-lab">Lab</span>
+    </div>
   </a>
-  <ul class="nav-links">
-    <li><a href="#about">À propos</a></li>
-    <li><a href="#methodology">Méthodologie</a></li>
-    <li><a href="#contribute">Contribuer</a></li>
-    <li><a href="/" class="nav-lang">EN</a></li>
-  </ul>
-  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right">
+    <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="lang-switch">
+    <a href="/">EN</a>
+    <span>/</span>
+    <a href="/fr/" class="active">FR</a>
+  </div>
 </nav>
 
-<div class="nav-drawer" id="nav-drawer">
-  <a href="#about" class="drawer-link">À propos</a>
-  <a href="#methodology" class="drawer-link">Méthodologie</a>
-  <a href="#contribute" class="drawer-link">Contribuer</a>
-  <a href="/" class="drawer-link">EN</a>
+<div class="drawer" id="drawer">
+  <ul>
+    <li><a href="#investigations">Enquêtes</a></li>
+    <li><a href="#about">À propos</a></li>
+    <li><a href="mailto:contact@overtlab.org">Contact</a></li>
+  </ul>
 </div>
 
-<!-- INVESTIGATION BAR -->
-<div id="inv-bar">
-  <div class="inv-bar-trigger">
-    Enquêtes
-    <span class="inv-bar-trigger-arrow">&#9660;</span>
-  </div>
-  <div class="inv-bar-cats" id="inv-bar-cats"></div>
-</div>
-
-<!-- FLYOUT PANEL -->
-<div id="inv-flyout" class="inv-flyout">
-  <div class="flyout-list" id="flyout-list"></div>
-  <div class="flyout-detail" id="flyout-detail">
-    <div class="flyout-detail-empty">Survolez une enquête</div>
-  </div>
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">Tout</button>
+  <button class="filter-btn" data-filter="arms-trade">Commerce des armes</button>
+  <button class="filter-btn" data-filter="environment">Environnement</button>
+  <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+  <button class="filter-btn" data-filter="finance">Finance</button>
 </div>
 
 <section class="investigations" id="investigations">
-  <div class="inv-header">
-    <div class="inv-header-label">Enquêtes</div>
-    <div class="inv-header-count">1 Active &mdash; 1 En développement</div>
-  </div>
-  <div class="inv-list">
+  <div class="inv-grid">
 
-    <a class="inv-row" href="/investigations/canadian-arms/">
-      <div class="inv-num">001</div>
+    <a class="inv-card" id="arms-card" href="investigations/canadian-arms/" data-category="arms-trade">
+      <div class="inv-thumb" id="arms-thumb" style="background:#0d1c28;">
+        <canvas id="arms-canvas"></canvas>
+      </div>
+      <div class="inv-meta">
+        <div class="inv-meta-cell"><div class="inv-meta-label">Période</div><div class="inv-meta-val">2017–2024</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Destinations</div><div class="inv-meta-val">20 pays</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Source</div><div class="inv-meta-val">Affaires mondiales Canada</div></div>
+      </div>
       <div class="inv-body">
-        <div class="inv-status">
-          <div class="inv-dot"></div>
-          <span class="inv-status-text">En ligne &middot; Mis à jour 2024</span>
-        </div>
-        <div class="inv-title">Exportations militaires canadiennes &mdash; Carte des flux mondiaux</div>
-        <div class="inv-desc">Une cartographie structurelle des exportations militaires canadiennes 2021&ndash;2024. Quatre milliards de dollars en flux annuels. Cinq exportateurs corporatifs. Cinq zones de conflit avec des équipements canadiens documentés. Toutes les données proviennent des rapports annuels d'Affaires mondiales Canada et des dépôts parlementaires.</div>
-        <div class="inv-tags">
-          <span class="inv-tag">Commerce des armes</span>
-          <span class="inv-tag">Réseau corporatif</span>
-          <span class="inv-tag">Déploiements connus</span>
-        </div>
+        <div class="inv-status"><span class="inv-status-text">2017–2024</span></div>
+        <div class="inv-title">Exportations militaires canadiennes — Carte des flux</div>
+        <div class="inv-desc">Une cartographie des exportations militaires canadiennes 2017–2024. Quatre milliards de dollars en flux annuels vers vingt pays dont cinq zones de conflit avec équipement canadien documenté.</div>
       </div>
-      <div class="inv-thumb">
-        <img src="/investigations/canadian-arms/thumb.jpg" alt="Exportations militaires canadiennes — aperçu" loading="lazy">
-      </div>
-      <div class="inv-aside">
-        Données<strong>2021&ndash;2024</strong>
-        Destinations<strong>20 pays</strong>
-        Source<strong>AMC &middot; RCAM</strong>
-      </div>
-      <div class="inv-arrow">&#8599;</div>
     </a>
 
-    <div class="inv-row" style="cursor:default;">
-      <div class="inv-num" style="color:var(--ink-4);">002</div>
+    <a class="inv-card" id="fire-card" href="investigations/quebec-fires/" data-category="environment">
+      <div class="inv-thumb" id="fire-thumb" style="background:#080f0a;">
+        <canvas id="fire-canvas"></canvas>
+      </div>
+      <div class="inv-meta">
+        <div class="inv-meta-cell"><div class="inv-meta-label">Période</div><div class="inv-meta-val">2010–2024</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Feux enregistrés</div><div class="inv-meta-val">7 931</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Source</div><div class="inv-meta-val">SOPFEU · CWFIS · NASA</div></div>
+      </div>
       <div class="inv-body">
-        <div class="inv-status">
-          <div class="inv-dot" style="background:var(--ink-4);animation:none;"></div>
-          <span class="inv-status-text" style="color:var(--ink-4);">En développement</span>
-        </div>
-        <div class="inv-title" style="color:var(--ink-4);">Permis d'industries extractives &mdash; Mines canadiennes à l'étranger</div>
-        <div class="inv-desc" style="color:var(--ink-4);">Une cartographie structurelle des permis miniers canadiens, filiales et incidents documentés en Afrique subsaharienne et en Amérique latine. Sources: dépôts RNCan, divulgations TSX et registres environnementaux des pays hôtes.</div>
-        <div class="inv-tags">
-          <span class="inv-tag" style="color:var(--ink-4);border-color:var(--rule);">Industrie extractive</span>
-          <span class="inv-tag" style="color:var(--ink-4);border-color:var(--rule);">Réseau corporatif</span>
-          <span class="inv-tag" style="color:var(--ink-4);border-color:var(--rule);">Dépôts de permis</span>
-        </div>
+        <div class="inv-status"><span class="inv-status-text">2010–2024</span></div>
+        <div class="inv-title">Registre des incendies de forêt au Québec</div>
+        <div class="inv-desc">Un registre spatial de 7 931 incendies au Québec de 2010 à 2024. La saison 2023 a brülé 4,3 millions d’hectares — la plus grande saison de l’histoire.</div>
       </div>
-      <div class="inv-thumb">
-        <div class="inv-thumb-placeholder"><span>En développement</span></div>
+    </a>
+
+    <div class="inv-card" id="lebanon-card" style="cursor:default;" data-category="infrastructure">
+      <div class="inv-thumb" id="lebanon-thumb" style="background:#f0ece6;">
+        <canvas id="lebanon-canvas"></canvas>
       </div>
-      <div class="inv-aside" style="color:var(--ink-4);">
-        Données<strong style="color:var(--ink-4);">À déterminer</strong>
-        Région<strong style="color:var(--ink-4);">Afrique &middot; AmLat</strong>
-        Source<strong style="color:var(--ink-4);">RNCan &middot; TSX</strong>
+      <div class="inv-meta">
+        <div class="inv-meta-cell"><div class="inv-meta-label">Période</div><div class="inv-meta-val">1982–2024</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Lieu</div><div class="inv-meta-val">Liban</div></div>
+        <div class="inv-meta-cell"><div class="inv-meta-label">Statut</div><div class="inv-meta-val">En développement</div></div>
+      </div>
+      <div class="inv-body">
+        <div class="inv-status"><span class="inv-status-text">1982–2024</span></div>
+        <div class="inv-title">Dommages aux infrastructures civiles au Liban</div>
+        <div class="inv-desc">Un registre spatial des destructions d’infrastructures civiles lors des guerres au Liban de 1982 à 2024. Hôpitaux, écoles, réseaux d’eau et quartiers résidentiels cartographiés à partir d’images satellites.</div>
       </div>
     </div>
 
   </div>
 </section>
 
-<!-- TICKER — disabled, re-enable by removing comment tags
-<div class="ticker">
-  <div class="ticker-inner">
-    <span class="ticker-item"><strong>2,504 G$ CAD</strong> Exportations militaires canadiennes 2024</span>
-    <span class="ticker-item"><strong>51,7%</strong> Part destinée à l'Arabie saoudite</span>
-    <span class="ticker-item"><strong>63 unités</strong> VBL expédiés 2024</span>
-    <span class="ticker-item"><strong>416,7 M$</strong> Exportations vers l'Ukraine 2023</span>
-    <span class="ticker-item"><strong>30,6 M$</strong> Record exportations Israël 2023</span>
-    <span class="ticker-item"><strong>61+</strong> VBL canadiens détruits au Yémen</span>
-    <span class="ticker-item"><strong>Source</strong> Affaires mondiales Canada &middot; RCAM &middot; Données publiques</span>
-    <span class="ticker-item"><strong>2,504 G$ CAD</strong> Exportations militaires canadiennes 2024</span>
-    <span class="ticker-item"><strong>51,7%</strong> Part destinée à l'Arabie saoudite</span>
-    <span class="ticker-item"><strong>63 unités</strong> VBL expédiés 2024</span>
-    <span class="ticker-item"><strong>416,7 M$</strong> Exportations vers l'Ukraine 2023</span>
-    <span class="ticker-item"><strong>30,6 M$</strong> Record exportations Israël 2023</span>
-    <span class="ticker-item"><strong>61+</strong> VBL canadiens détruits au Yémen</span>
-    <span class="ticker-item"><strong>Source</strong> Affaires mondiales Canada &middot; RCAM &middot; Données publiques</span>
-  </div>
-</div>
--->
-
-<section class="premise" id="about">
+<section class="about" id="about">
   <div>
-    <div class="premise-eyebrow">Studio de design investigatif</div>
-    <h2 class="premise-title">
-      Toutes les données<br>pertinentes sont publiques.<br>
-      <em>Le pouvoir opère<br>ouvertement.</em>
-    </h2>
-    <p class="premise-body">
-      Overt Lab assemble des signaux publics en preuves spatiales et structurelles. Nous cartographions les systèmes de pouvoir &mdash; financiers, militaires, extractifs, infrastructurels &mdash; et laissons les gens tirer leurs propres conclusions.
-    </p>
+    <div class="about-label">À propos</div>
+    <div class="about-statement">Toutes les données pertinentes sont publiques.<br>Le pouvoir contemporain opère ouvertement.</div>
   </div>
-  <div>
-    <div class="axiom">
-      <div class="axiom-n">01 &mdash; Prémisse</div>
-      <div class="axiom-text">Le pouvoir contemporain ne se cache pas. Il dépose des permis, publie des rapports annuels, enregistre des filiales et lance des appels d'offres. Le dossier est public. <strong>L'assemblage est le travail.</strong></div>
-    </div>
-    <div class="axiom">
-      <div class="axiom-n">02 &mdash; Méthode</div>
-      <div class="axiom-text">Nous collectons, recoupons et spatialisons des données issues de dépôts gouvernementaux, de divulgations d'entreprises, de registres internationaux et de journalisme vérifié. <strong>Rien dans notre travail n'est spéculatif.</strong></div>
-    </div>
-    <div class="axiom">
-      <div class="axiom-n">03 &mdash; Position</div>
-      <div class="axiom-text">Ni accusateur. Ni militant. Ni sensationnaliste. <strong>Nous cartographions les structures et laissons les gens tirer leurs conclusions.</strong></div>
-    </div>
-  </div>
-</section>
-
-<section class="methodology" id="methodology">
-  <div class="sticky-label">
-    <div class="sec-label">Méthodologie</div>
-  </div>
-  <div>
-    <div class="method-grid">
-      <div class="method-item">
-        <div class="method-n">01</div>
-        <div class="method-title">Primauté des sources</div>
-        <div class="method-text">Chaque donnée remonte à une source primaire &mdash; dépôts gouvernementaux, rapports statutaires, registres ONU, divulgations d'entreprises. Les sources secondaires servent uniquement à interpréter ou contextualiser les données primaires.</div>
-      </div>
-      <div class="method-item">
-        <div class="method-n">02</div>
-        <div class="method-title">Preuve structurelle</div>
-        <div class="method-text">Nous documentons les relations entre entités &mdash; financières, contractuelles, géographiques, temporelles. Nous ne spéculons pas sur les intentions. La structure est la preuve.</div>
-      </div>
-      <div class="method-item">
-        <div class="method-n">03</div>
-        <div class="method-title">Raisonnement spatial</div>
-        <div class="method-text">Les données sont rendues spatialement chaque fois que c'est pertinent. La géographie, la topologie des réseaux et la séquence temporelle révèlent des schémas que les données tabulaires masquent.</div>
-      </div>
-      <div class="method-item">
-        <div class="method-n">04</div>
-        <div class="method-title">Sources ouvertes uniquement</div>
-        <div class="method-text">Overt Lab n'utilise pas de documents divulgués, de sources anonymes ou d'informations non publiques. Si cela ne peut pas être vérifié à partir du dossier public, cela n'apparaît pas dans notre travail.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="contribute" id="contribute">
-  <div class="sticky-label">
-    <div class="sec-label">Contribuer</div>
-  </div>
-  <div>
-    <p class="contribute-intro">Overt Lab est construit sur le dossier public. Si vous avez trouvé des données publiques pertinentes, déposé des demandes d'accès à l'information ou avez une expertise dans un domaine que nous cartographions, nous souhaitons vous entendre.</p>
-    <div class="contribute-grid">
-      <div class="cw">
-        <div class="cw-label">Données</div>
-        <div class="cw-text">Documents publics, dépôts de permis, données de registres d'entreprises, soumissions ONU, archives parlementaires &mdash; tout ce qui provient du dossier public est pertinent.</div>
-      </div>
-      <div class="cw">
-        <div class="cw-label">AIPRP / FOIA</div>
-        <div class="cw-text">Avez-vous déposé des demandes d'accès à l'information ayant produit des documents pertinents? Nous nous intéressons à ce que le dossier révèle.</div>
-      </div>
-      <div class="cw">
-        <div class="cw-label">Expertise</div>
-        <div class="cw-text">Chercheurs, analystes, journalistes et praticiens avec une expertise en commerce des armes, industries extractives, infrastructures ou réseaux corporatifs.</div>
-      </div>
-      <div class="cw">
-        <div class="cw-label">Design + Développement</div>
-        <div class="cw-text">Nous construisons nos outils publiquement. Les designers et développeurs souhaitant contribuer aux outils d'investigation sont les bienvenus.</div>
-      </div>
-    </div>
-    <a class="contribute-cta" href="/cdn-cgi/l/email-protection#5d34333b321d322b382f29313c3f73322f3a">Nous contacter &#8599;</a>
+  <div class="about-body">
+    Overt Lab assemble des données publiques en preuves visuelles, spatiales et structurelles — cartographiant les flux, les réseaux et les décisions qui façonnent la vie publique.<br><br>
+    Nous n’accusons pas. Nous n’éditorialisons pas. Nous cartographions les structures et laissons les gens tirer leurs propres conclusions.
   </div>
 </section>
 
 <footer>
-  <div class="footer-l"><strong>Overt Lab</strong> &mdash; Studio de design investigatif &middot; <a href="/cdn-cgi/l/email-protection#6c05020a032c031a091e18000d0e42031e0b" style="color:inherit;text-decoration:none;"><span class="__cf_email__" data-cfemail="1c75727a735c736a796e68707d7e32736e7b">[email&#160;protected]</span></a></div>
-  <div class="footer-r">Toutes les données pertinentes sont publiques &middot; Le pouvoir contemporain opère ouvertement</div>
+  <div class="footer-text">Overt Lab</div>
+  <div class="footer-text">Toutes les données sont publiques</div>
 </footer>
 
 <script>
-// ── HAMBURGER ──────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const drawer = document.getElementById('nav-drawer');
-const drawerLinks = drawer.querySelectorAll('.drawer-link');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  drawer.classList.toggle('open');
+function toggleDrawer(){
+  document.getElementById('drawer').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  const d=document.getElementById('drawer'),h=document.getElementById('hamburger');
+  if(d.classList.contains('open')&&!d.contains(e.target)&&!h.contains(e.target)) d.classList.remove('open');
 });
-drawerLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    drawer.classList.remove('open');
-  });
-});
-
-// ── INVESTIGATION BAR ──────────────────────
-const INV_DATA = {
-  categories: [
-    {
-      id: 'arms-trade',
-      label: 'Commerce des armes',
-      investigations: [
-        {
-          num: '001',
-          name: 'Exportations militaires canadiennes — Carte des flux mondiaux',
-          status: 'live',
-          statusLabel: 'En ligne · Mis à jour 2024',
-          desc: 'Une cartographie structurelle des exportations militaires canadiennes 2021–2024. Quatre milliards de dollars en flux annuels. Cinq exportateurs corporatifs. Cinq zones de conflit.',
-          tags: ['Commerce des armes', 'Réseau corporatif', 'Déploiements connus'],
-          href: '/investigations/canadian-arms/',
-          thumb: '/investigations/canadian-arms/thumb.jpg',
-          meta: '2021–2024 · 20 pays · AMC · RCAM'
-        }
-      ]
-    },
-    {
-      id: 'extractive',
-      label: 'Industrie extractive',
-      investigations: [
-        {
-          num: '002',
-          name: 'Permis miniers canadiens à l\'étranger',
-          status: 'pending',
-          statusLabel: 'En développement',
-          desc: 'Une cartographie structurelle des permis miniers canadiens, filiales et incidents documentés en Afrique subsaharienne et en Amérique latine.',
-          tags: ['Industrie extractive', 'Réseau corporatif', 'Dépôts de permis'],
-          href: null,
-          meta: 'À déterminer · Afrique · AmLat · RNCan · TSX'
-        }
-      ]
-    },
-    { id: 'infrastructure', label: 'Infrastructure', investigations: [] },
-    { id: 'finance', label: 'Finance', investigations: [] }
-  ]
-};
-
-const catsEl   = document.getElementById('inv-bar-cats');
-const flyout   = document.getElementById('inv-flyout');
-const listEl   = document.getElementById('flyout-list');
-const detailEl = document.getElementById('flyout-detail');
-let activeCategory = null;
-
-INV_DATA.categories.forEach(cat => {
-  const el = document.createElement('div');
-  el.className = 'inv-cat';
-  el.dataset.id = cat.id;
-  const count = cat.investigations.length;
-  el.innerHTML = `${cat.label}<span class="inv-cat-count">${count > 0 ? count : '—'}</span>`;
-  catsEl.appendChild(el);
-  el.addEventListener('mouseenter', () => {
-    document.querySelectorAll('.inv-cat').forEach(c => c.classList.remove('has-active'));
-    el.classList.add('has-active');
-    activeCategory = cat;
-    openFlyout(cat);
-  });
-});
-
-function openFlyout(cat) {
-  flyout.classList.add('open');
-  listEl.innerHTML = '';
-  if (cat.investigations.length === 0) {
-    listEl.innerHTML = `<div style="padding:20px 28px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,0.2);text-transform:uppercase;">Aucune enquête</div>`;
-    detailEl.innerHTML = `<div class="flyout-detail-empty">—</div>`;
-    return;
-  }
-  cat.investigations.forEach((inv, i) => {
-    const item = document.createElement('div');
-    item.className = 'flyout-item' + (i === 0 ? ' active' : '');
-    const dotColor = inv.status === 'live' ? 'var(--yellow)' : 'rgba(255,255,255,0.2)';
-    item.innerHTML = `<span class="flyout-item-num">${inv.num}</span><span class="flyout-dot" style="background:${dotColor}"></span><span class="flyout-item-name">${inv.name}</span>`;
-    item.addEventListener('mouseenter', () => {
-      document.querySelectorAll('.flyout-item').forEach(x => x.classList.remove('active'));
-      item.classList.add('active');
-      renderDetail(inv);
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.inv-card').forEach(card=>{
+      if(filter==='all'||card.dataset.category===filter){
+        card.style.display='';
+        card.style.opacity='1';
+      } else {
+        card.style.display='none';
+        card.style.opacity='0';
+      }
     });
-    listEl.appendChild(item);
+    setTimeout(drawAll, 80);
   });
-  renderDetail(cat.investigations[0]);
+});
+
+function drawAll(){
+
+  // ── ARMS ── static only
+  (function(){
+    const cv=document.getElementById('arms-canvas');
+    const th=document.getElementById('arms-thumb');
+    if(!cv||!th)return;
+    const rect=th.getBoundingClientRect();
+    const W=rect.width||th.clientWidth||400,H=rect.height||th.clientHeight||300;
+    cv.width=W;cv.height=H;
+    cv.style.width=W+'px';cv.style.height=H+'px';
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#0d1c28';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(40,80,100,0.3)';ctx.lineWidth=0.5;
+    for(let i=0;i<=12;i++){ctx.beginPath();ctx.moveTo(i/12*W,0);ctx.lineTo(i/12*W,H);ctx.stroke();}
+    for(let i=0;i<=8;i++){ctx.beginPath();ctx.moveTo(0,i/8*H);ctx.lineTo(W,i/8*H);ctx.stroke();}
+    const ox=W*0.18,oy=H*0.28;
+    const dests=[
+      {x:W*0.58,y:H*0.40,col:'#e07820',r:7},
+      {x:W*0.55,y:H*0.32,col:'#c0392b',r:5},
+      {x:W*0.54,y:H*0.26,col:'#2a9060',r:5},
+      {x:W*0.50,y:H*0.23,col:'#c07820',r:4},
+      {x:W*0.62,y:H*0.42,col:'#2a8a9a',r:4},
+      {x:W*0.78,y:H*0.65,col:'#3a6fba',r:5},
+      {x:W*0.47,y:H*0.22,col:'#c07820',r:3},
+    ];
+    dests.forEach(d=>{
+      const mx=(ox+d.x)/2,my=Math.min(oy,d.y)-Math.abs(d.x-ox)*0.22;
+      const g=ctx.createLinearGradient(ox,oy,d.x,d.y);
+      g.addColorStop(0,'rgba(255,238,0,0.7)');g.addColorStop(1,d.col+'bb');
+      ctx.strokeStyle=g;ctx.lineWidth=Math.max(0.8,d.r*0.18);
+      ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(ox,oy);ctx.quadraticCurveTo(mx,my,d.x,d.y);ctx.stroke();
+      ctx.setLineDash([]);
+      const grd=ctx.createRadialGradient(d.x,d.y,0,d.x,d.y,d.r*3);
+      grd.addColorStop(0,d.col+'cc');grd.addColorStop(1,d.col+'00');
+      ctx.fillStyle=grd;ctx.beginPath();ctx.arc(d.x,d.y,d.r*3,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=d.col;ctx.beginPath();ctx.arc(d.x,d.y,d.r*0.45,0,Math.PI*2);ctx.fill();
+    });
+    const og=ctx.createRadialGradient(ox,oy,0,ox,oy,20);
+    og.addColorStop(0,'rgba(255,238,0,1)');og.addColorStop(1,'rgba(255,238,0,0)');
+    ctx.fillStyle=og;ctx.beginPath();ctx.arc(ox,oy,20,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FFEE00';ctx.beginPath();ctx.arc(ox,oy,4.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.45)';ctx.font=`700 ${W*0.048}px Inter,sans-serif`;
+    ctx.textAlign='right';ctx.fillText('$4.2B',W*0.96,H*0.86);
+    ctx.font=`400 ${W*0.022}px Inter,sans-serif`;ctx.fillStyle='rgba(255,255,255,0.22)';
+    ctx.fillText('Annual military exports',W*0.96,H*0.92);ctx.textAlign='left';
+  })();
+
+  // ── FIRES ── static only, seeded scatter across Quebec shape
+  (function(){
+    const cv=document.getElementById('fire-canvas');
+    const th=document.getElementById('fire-thumb');
+    if(!cv||!th)return;
+    const rect=th.getBoundingClientRect();
+    const W=rect.width||th.clientWidth||400,H=rect.height||th.clientHeight||300;
+    cv.width=W;cv.height=H;
+    cv.style.width=W+'px';cv.style.height=H+'px';
+    const ctx=cv.getContext('2d');
+    const BBOX={minLon:-79.5,maxLon:-57.0,minLat:45.0,maxLat:63.0};
+    function proj(lon,lat){
+      const x=(lon-BBOX.minLon)/(BBOX.maxLon-BBOX.minLon)*W;
+      const m=a=>Math.log(Math.tan(Math.PI/4+a*Math.PI/360));
+      const y=(1-(m(lat)-m(BBOX.minLat))/(m(BBOX.maxLat)-m(BBOX.minLat)))*H;
+      return[x,y];
+    }
+    function drawFires(fires){
+      fires.forEach(f=>{
+        const[lon,lat]=f.geometry.coordinates;
+        if(lon<BBOX.minLon||lon>BBOX.maxLon||lat<BBOX.minLat||lat>BBOX.maxLat)return;
+        const[x,y]=proj(lon,lat);
+        const area=f.properties.area||f.properties.area_ha||100;
+        const r=Math.min(Math.max(Math.sqrt(area)*0.013,0.9),4);
+        const t=Math.min(area/80000,1);
+        const red=Math.round(180+t*75),grn=Math.round(40+t*140);
+        const g=ctx.createRadialGradient(x,y,0,x,y,r*3.5);
+        g.addColorStop(0,`rgba(${red},${grn},0,0.85)`);
+        g.addColorStop(1,`rgba(${red},${grn},0,0)`);
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*3.5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='rgba(255,220,80,0.9)';
+        ctx.beginPath();ctx.arc(x,y,Math.max(r*0.4,0.8),0,Math.PI*2);ctx.fill();
+      });
+      ctx.fillStyle='rgba(255,255,255,0.06)';
+      ctx.font=`800 ${W*0.22}px Inter,sans-serif`;
+      ctx.textAlign='right';ctx.fillText('2023',W*0.97,H*0.94);ctx.textAlign='left';
+    }
+
+    fetch('/data/sopfeu-fires.geojson')
+      .then(r=>r.json())
+      .then(g=>drawFires(g.features||[]))
+      .catch(()=>{
+        // Seeded fallback — realistic Quebec fire distribution across the province
+        function rng(n){return Math.abs(Math.sin(n*127.1+2023)*43758.5453)%1;}
+        const zones=[
+          {minLon:-76,maxLon:-68,minLat:50,maxLat:58,n:80},
+          {minLon:-79,maxLon:-74,minLat:47,maxLat:50,n:25},
+          {minLon:-75,maxLon:-71,minLat:46.5,maxLat:49,n:20},
+          {minLon:-68,maxLon:-63,minLat:49,maxLat:52,n:15},
+          {minLon:-73,maxLon:-69,minLat:48,maxLat:51,n:15},
+        ];
+        const fake=[];
+        zones.forEach((z,zi)=>{
+          for(let i=0;i<z.n;i++){
+            const lon=z.minLon+rng(zi*1000+i*3)*(z.maxLon-z.minLon);
+            const lat=z.minLat+rng(zi*1000+i*7)*(z.maxLat-z.minLat);
+            const area=500+rng(zi*1000+i*13)*200000;
+            fake.push({geometry:{coordinates:[lon,lat]},properties:{area}});
+          }
+        });
+        drawFires(fake);
+      });
+  })();
+
+  // ── LEBANON ── static isometric building
+  (function(){
+    const cv=document.getElementById('lebanon-canvas');
+    const th=document.getElementById('lebanon-thumb');
+    if(!cv||!th)return;
+    const rect=th.getBoundingClientRect();
+    const W=rect.width||th.clientWidth||400,H=rect.height||th.clientHeight||300;
+    cv.width=W;cv.height=H;
+    cv.style.width=W+'px';cv.style.height=H+'px';
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#f0ece6';ctx.fillRect(0,0,W,H);
+    const tW=W*0.085,tH=tW*0.5,ox=W*0.5,oy=H*0.15;
+    function iso(c,r,z){return{x:ox+(c-r)*tW,y:oy+(c+r)*tH-z*tH*1.85};}
+    function face(pts,fill,stroke){
+      ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+      for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+      ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+      if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();}
+    }
+    const ol='rgba(50,42,35,0.3)';
+    face([iso(0,0,0),iso(7,0,0),iso(7,7,0),iso(0,7,0)],'#ddd8d0',null);
+    ctx.strokeStyle='rgba(100,90,80,0.1)';ctx.lineWidth=0.4;
+    for(let i=0;i<=7;i++){
+      ctx.beginPath();ctx.moveTo(iso(i,0,0).x,iso(i,0,0).y);ctx.lineTo(iso(i,7,0).x,iso(i,7,0).y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(iso(0,i,0).x,iso(0,i,0).y);ctx.lineTo(iso(7,i,0).x,iso(7,i,0).y);ctx.stroke();
+    }
+    for(let f=0;f<3;f++){
+      face([iso(3.5,1,f),iso(3.5,3.2,f),iso(3.5,3.2,f+1),iso(3.5,1,f+1)],'#ccc6bc',ol);
+      face([iso(3.5,3.2,f),iso(5.5,3.2,f),iso(5.5,3.2,f+1),iso(3.5,3.2,f+1)],'#bab4aa',ol);
+      if(f===2)face([iso(3.5,1,3),iso(5.5,1,3),iso(5.5,3.2,3),iso(3.5,3.2,3)],'#d4cec4',ol);
+    }
+    for(let f=0;f<2;f++){
+      face([iso(0.5,3.5,f),iso(0.5,5.2,f),iso(0.5,5.2,f+1),iso(0.5,3.5,f+1)],'#ccc6bc',ol);
+      face([iso(0.5,5.2,f),iso(2,5.2,f),iso(2,5.2,f+1),iso(0.5,5.2,f+1)],'#bab4aa',ol);
+      if(f===1)face([iso(0.5,3.5,2),iso(2,3.5,2),iso(2,5.2,2),iso(0.5,5.2,2)],'#d4cec4',ol);
+    }
+    face([iso(1,1,0),iso(1,3,0),iso(1,3,1),iso(1,1,1)],'#c8c2b8',ol);
+    face([iso(1,3,0),iso(3,3,0),iso(3,3,1),iso(1,3,1)],'#b8b2a8',ol);
+    face([iso(1,1,1),iso(1,3,1),iso(1,3,2),iso(1,1,2)],'#c8c2b8',ol);
+    face([iso(1,3,1),iso(3,3,1),iso(3,3,2),iso(1,3,2)],'#c8a87a',ol);
+    face([iso(1,1,2),iso(1,2,2),iso(1,2,2.7),iso(1,1,2.7)],'#c8c2b8',ol);
+    face([iso(1,1,2),iso(2.2,1,2),iso(2.2,1,2.5),iso(1,1,2.5)],'#d4b88a',ol);
+    face([iso(1.2,1.3,2),iso(2.8,1.2,2),iso(2.9,2.8,2),iso(1.1,2.9,2)],'#c0a870','rgba(50,42,35,0.4)');
+    [[0.5,0.5,0.18],[1.0,0.8,0.14],[0.4,1.5,0.16],[1.6,0.5,0.12]].forEach(([rc,rr,rs])=>{
+      face([iso(1+rc,1+rr,2),iso(1+rc+rs*1.8,1+rr,2),iso(1+rc+rs*1.8,1+rr+rs,2),iso(1+rc,1+rr+rs,2)],'#a89060','rgba(50,42,35,0.5)');
+      face([iso(1+rc,1+rr,2+rs),iso(1+rc+rs*1.8,1+rr,2+rs),iso(1+rc+rs*1.8,1+rr+rs,2+rs),iso(1+rc,1+rr+rs,2+rs)],'#c0a870','rgba(50,42,35,0.4)');
+    });
+    [[0.5,0.6],[1.2,0.4],[0.3,1.4],[1.5,0.9]].forEach(([rc,rr],i)=>{
+      const b=iso(1+rc,1+rr,2.05),t2=iso(1+rc+0.04,1+rr+0.04,2.4+i*0.05);
+      ctx.strokeStyle='#888070';ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(t2.x,t2.y);ctx.stroke();
+    });
+    const a1=iso(3.2,2,2.5),a2=iso(3.2,2,0);
+    ctx.strokeStyle='rgba(180,50,30,0.8)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(a1.x,a1.y);ctx.lineTo(a2.x,a2.y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(180,50,30,0.9)';ctx.font=`600 ${Math.max(8,W*0.018)}px Inter,sans-serif`;
+    ctx.fillText('COLLAPSE ZONE',a1.x+5,(a1.y+a2.y)/2+3);
+    ctx.fillStyle='rgba(50,42,35,0.4)';ctx.font=`400 ${Math.max(7,W*0.015)}px 'Courier New',monospace`;
+    ctx.fillText("33°52'N  35°30'E  —  BEIRUT",W*0.04,H*0.06);
+    const sbx=W*0.04,sby=H*0.92,sbw=W*0.1;
+    ctx.fillStyle='rgba(50,42,35,0.4)';ctx.fillRect(sbx,sby,sbw,1.5);
+    ctx.fillRect(sbx,sby-3,1.5,7);ctx.fillRect(sbx+sbw,sby-3,1.5,7);
+    ctx.font=`400 ${Math.max(7,W*0.013)}px 'Courier New',monospace`;
+    ctx.fillText('50m',sbx+sbw/2-8,sby-5);
+  })();
 }
 
-function renderDetail(inv) {
-  const dotColor = inv.status === 'live' ? 'var(--yellow)' : 'rgba(255,255,255,0.2)';
-  const animStyle = inv.status === 'live' ? 'animation:pulse 2.8s ease-in-out infinite' : '';
-  const tags = inv.tags.map(t => `<span class="flyout-d-tag">${t}</span>`).join('');
-  const cta = inv.href
-    ? `<a class="flyout-d-cta" href="${inv.href}">Ouvrir l'enquête &#8599;</a>`
-    : `<div class="flyout-d-pending">En développement — Pas encore disponible</div>`;
-  const imgCol = inv.thumb
-    ? `<div class="flyout-d-img"><img src="${inv.thumb}" alt="${inv.name}" loading="lazy"></div>`
-    : `<div class="flyout-d-img"><div class="flyout-d-img-placeholder"><span>Aucun aperçu</span></div></div>`;
-  detailEl.innerHTML = `
-    <div class="flyout-detail-inner">
-      <div class="flyout-d-status"><span style="width:5px;height:5px;border-radius:50%;background:${dotColor};${animStyle};display:inline-block;flex-shrink:0;"></span>${inv.statusLabel}</div>
-      <div class="flyout-d-title">${inv.name}</div>
-      <div class="flyout-d-desc">${inv.desc}</div>
-      <div class="flyout-d-tags">${tags}</div>
-      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:rgba(255,255,255,0.25)">${inv.meta}</div>
-      ${cta}
-    </div>
-    ${imgCol}`;
-}
+if(document.readyState==='complete') setTimeout(drawAll,300);
+else window.addEventListener('load',()=>setTimeout(drawAll,300));
+window.addEventListener('resize',()=>setTimeout(drawAll,50));
 
-const invBar = document.getElementById('inv-bar');
-let closeTimer;
-function scheduleClose() {
-  closeTimer = setTimeout(() => {
-    flyout.classList.remove('open');
-    document.querySelectorAll('.inv-cat').forEach(c => c.classList.remove('has-active'));
-    activeCategory = null;
-  }, 120);
-}
-function cancelClose() { clearTimeout(closeTimer); }
-invBar.addEventListener('mouseleave', scheduleClose);
-invBar.addEventListener('mouseenter', cancelClose);
-flyout.addEventListener('mouseleave', scheduleClose);
-flyout.addEventListener('mouseenter', cancelClose);
 </script>
 </body>
 </html>
